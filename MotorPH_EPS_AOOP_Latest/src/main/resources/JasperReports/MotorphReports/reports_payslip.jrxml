@@ -1,0 +1,385 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="MotorPHPayslip" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ce3565ad-0fa5-4b84-b78a-d84fc93c44cb">
+	<property name="com.jaspersoft.studio.report.description" value="EmployeePayslip"/>
+	<property name="net.sf.jasperreports.data.adapter" value="MotorPH.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<dataset name="Dataset1" uuid="701d1274-7d2f-426e-867c-ec87314bf14e">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MotorPH"/>
+		<parameter name="CurrentEID" class="java.lang.Integer"/>
+		<query language="SQL"><![CDATA[ SELECT * FROM payrollsystem_db.employee_deductions, employee_payroll_components, employee_payroll_variables
+]]></query>
+		<field name="EID" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="EID"/>
+			<property name="com.jaspersoft.studio.field.label" value="EID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_deductions"/>
+		</field>
+		<field name="Deduction_ID" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="Deduction_ID"/>
+			<property name="com.jaspersoft.studio.field.label" value="Deduction_ID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_deductions"/>
+		</field>
+		<field name="Amount" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Amount"/>
+			<property name="com.jaspersoft.studio.field.label" value="Amount"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_deductions"/>
+		</field>
+		<field name="COLUMN_4" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="EID"/>
+			<property name="com.jaspersoft.studio.field.label" value="EID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Basic_Salary" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Basic_Salary"/>
+			<property name="com.jaspersoft.studio.field.label" value="Basic_Salary"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Rice_Subsidy" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Rice_Subsidy"/>
+			<property name="com.jaspersoft.studio.field.label" value="Rice_Subsidy"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Phone_Allowance" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Phone_Allowance"/>
+			<property name="com.jaspersoft.studio.field.label" value="Phone_Allowance"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Clothing_Allowance" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Clothing_Allowance"/>
+			<property name="com.jaspersoft.studio.field.label" value="Clothing_Allowance"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Half_Month_Rate" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Half_Month_Rate"/>
+			<property name="com.jaspersoft.studio.field.label" value="Half_Month_Rate"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="Hourly_Rate" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Hourly_Rate"/>
+			<property name="com.jaspersoft.studio.field.label" value="Hourly_Rate"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+		</field>
+		<field name="COLUMN_11" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="EID"/>
+			<property name="com.jaspersoft.studio.field.label" value="EID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+		</field>
+		<field name="Over_Time" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="Over_Time"/>
+			<property name="com.jaspersoft.studio.field.label" value="Over_Time"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+		</field>
+		<field name="Performance_Bonus" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Performance_Bonus"/>
+			<property name="com.jaspersoft.studio.field.label" value="Performance_Bonus"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+		</field>
+		<field name="Holiday_Pay" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="Holiday_Pay"/>
+			<property name="com.jaspersoft.studio.field.label" value="Holiday_Pay"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+		</field>
+	</dataset>
+	<query language="sql"><![CDATA[SELECT * FROM payrollsystem_db.employee, 
+designations, 
+employee_deductions, 
+employee_payroll_components, 
+employee_payroll_variables]]></query>
+	<field name="EID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="EID"/>
+		<property name="com.jaspersoft.studio.field.label" value="EID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Last_Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Last_Name"/>
+		<property name="com.jaspersoft.studio.field.label" value="Last_Name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="First_Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="First_Name"/>
+		<property name="com.jaspersoft.studio.field.label" value="First_Name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Birthday" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="Birthday"/>
+		<property name="com.jaspersoft.studio.field.label" value="Birthday"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Address"/>
+		<property name="com.jaspersoft.studio.field.label" value="Address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Phone_Number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Phone_Number"/>
+		<property name="com.jaspersoft.studio.field.label" value="Phone_Number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Status"/>
+		<property name="com.jaspersoft.studio.field.label" value="Status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="Designation_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Designation_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="Designation_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="designations"/>
+	</field>
+	<field name="Designation_Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Designation_Name"/>
+		<property name="com.jaspersoft.studio.field.label" value="Designation_Name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="designations"/>
+	</field>
+	<field name="Deduction_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Deduction_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="Deduction_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_deductions"/>
+	</field>
+	<field name="Amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="Amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_deductions"/>
+	</field>
+	<field name="Basic_Salary" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Basic_Salary"/>
+		<property name="com.jaspersoft.studio.field.label" value="Basic_Salary"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Rice_Subsidy" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Rice_Subsidy"/>
+		<property name="com.jaspersoft.studio.field.label" value="Rice_Subsidy"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Phone_Allowance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Phone_Allowance"/>
+		<property name="com.jaspersoft.studio.field.label" value="Phone_Allowance"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Clothing_Allowance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Clothing_Allowance"/>
+		<property name="com.jaspersoft.studio.field.label" value="Clothing_Allowance"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Half_Month_Rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Half_Month_Rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="Half_Month_Rate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Hourly_Rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Hourly_Rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="Hourly_Rate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_components"/>
+	</field>
+	<field name="Over_Time" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Over_Time"/>
+		<property name="com.jaspersoft.studio.field.label" value="Over_Time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+	</field>
+	<field name="Performance_Bonus" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Performance_Bonus"/>
+		<property name="com.jaspersoft.studio.field.label" value="Performance_Bonus"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+	</field>
+	<field name="Holiday_Pay" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Holiday_Pay"/>
+		<property name="com.jaspersoft.studio.field.label" value="Holiday_Pay"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_variables"/>
+	</field>
+	<variable name="PayslipNumber" class="java.lang.Integer">
+		<expression><![CDATA["PS" + String.format("%06d", $V{REPORT_COUNT})]]></expression>
+	</variable>
+	<background splitType="Stretch"/>
+	<title height="109" splitType="Stretch">
+		<element kind="image" uuid="2e505906-21a7-4292-a61f-a5ddbd1b325e" x="0" y="10" width="80" height="70" linkType="None" linkTarget="Self">
+			<expression><[CDATA["MotorPHLogo small.png"]]></expression> 
+		</element>
+		<element kind="staticText" uuid="85dac123-f5c7-4fee-8a6e-5337cb75d927" x="380" y="0" width="80" height="18" fontName="Cambria" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[PAY SLIP #]]></text>
+		</element>
+		<element kind="staticText" uuid="18111718-efa9-484f-a18b-03275067fcc8" x="380" y="18" width="80" height="20" fontName="Cambria" bold="true" vTextAlign="Middle">
+			<text><![CDATA[EID]]></text>
+		</element>
+		<element kind="staticText" uuid="7bb743d9-f998-4ebd-97eb-561d3e7787c4" x="380" y="38" width="80" height="20" fontName="Cambria" bold="true" vTextAlign="Middle">
+			<text><![CDATA[NAME]]></text>
+		</element>
+		<element kind="staticText" uuid="6c90e034-5652-4e8f-8c6c-1d9c4cbaa834" x="380" y="58" width="150" height="18" fontName="Cambria" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[EMPLOYEE DESIGNATION]]></text>
+		</element>
+		<element kind="staticText" uuid="d8251e0b-eac5-4711-ab5d-30b5f54ed344" x="380" y="84" width="150" height="18" fontName="Cambria" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[PAY PERIOD]]></text>
+		</element>
+		<element kind="staticText" uuid="2a2d677f-911c-4487-9435-60a32cd45dbb" x="90" y="10" width="170" height="70" fontName="Georgia" fontSize="33.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[MotorPH]]></text>
+		</element>
+		<element kind="textField" uuid="8b53949d-3862-4352-be2e-48e8ff4fa337" x="680" y="0" width="121" height="18" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[String.format("%010d", $V{PayslipNumber})]]></expression>
+		</element>
+		<element kind="textField" uuid="723548c0-d3d5-46ee-9b56-229552412e4e" x="680" y="18" width="121" height="18" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{EID}]]></expression>
+		</element>
+		<element kind="textField" uuid="2e3c71d0-a22e-45f7-837d-8f9857cf98a4" x="680" y="36" width="121" height="18" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{Last_Name} + $F{First_Name}]]></expression>
+		</element>
+		<element kind="textField" uuid="ae6d70e5-8194-449b-a0fd-1bd45966e72a" x="681" y="54" width="121" height="18" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{Designation_Name}]]></expression>
+		</element>
+		<element kind="textField" uuid="df964a3f-bb15-468f-84af-d14b7c1e1ce0" x="681" y="84" width="121" height="18" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[DATERANGE(NOW( ))]]></expression>
+		</element>
+	</title>
+	<pageHeader height="35" splitType="Stretch">
+		<element kind="staticText" uuid="be7f5112-d657-4799-b32a-b2821a5ec579" x="316" y="5" width="170" height="30" markup="none" fontName="Cambria" fontSize="16.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Employee Pay Slip]]></text>
+		</element>
+	</pageHeader>
+	<detail>
+		<band height="398" splitType="Stretch">
+			<element kind="staticText" uuid="6cd4fc77-6455-4994-9bbe-5c9036be21f8" x="0" y="362" width="120" height="18" fontName="Cambria" fontSize="8.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+				<text><![CDATA[TOTAL:]]></text>
+			</element>
+			<element kind="staticText" uuid="ab1e25ef-f362-4548-9e84-60905d6a5457" x="0" y="281" width="120" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Communication Allowance]]></text>
+			</element>
+			<element kind="staticText" uuid="860dc3e2-2dab-4106-af97-2754f4ca3047" x="0" y="61" width="102" height="20" fontName="Cambria" fontSize="10.0" vTextAlign="Middle">
+				<text><![CDATA[Daily Rate]]></text>
+			</element>
+			<element kind="staticText" uuid="fdaf9587-cdd6-49ac-b649-561593ae8c3e" x="0" y="101" width="102" height="20" fontName="Cambria" fontSize="10.0" vTextAlign="Middle">
+				<text><![CDATA[Overtime]]></text>
+			</element>
+			<element kind="staticText" uuid="9a55beae-c40f-4809-aa62-4fa98142e73d" x="0" y="230" width="280" height="18" fontName="Cambria" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[BENEFITS]]></text>
+			</element>
+			<element kind="staticText" uuid="e7bd7c98-c3a6-4ca9-8de1-cc8d685ef365" x="0" y="41" width="102" height="20" fontName="Cambria" fontSize="10.0" vTextAlign="Middle">
+				<text><![CDATA[Monthly Rate]]></text>
+			</element>
+			<element kind="staticText" uuid="628dc9da-8ff0-46c8-b034-14c57e830662" x="0" y="81" width="102" height="20" fontName="Cambria" fontSize="10.0" vTextAlign="Middle">
+				<text><![CDATA[Days Worked]]></text>
+			</element>
+			<element kind="staticText" uuid="7e037e0f-4039-41ed-92ff-3abbc29a10bd" x="0" y="261" width="120" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Rice Subsidy]]></text>
+			</element>
+			<element kind="staticText" uuid="9dde9093-fe30-4e2d-a63a-a5b84ab89148" x="0" y="301" width="120" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Clothing Allowance]]></text>
+			</element>
+			<element kind="staticText" uuid="c647dcc8-3724-4a04-bc93-65b49ea16e04" x="0" y="160" width="102" height="18" fontName="Cambria" fontSize="8.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+				<text><![CDATA[GROSS INCOME:]]></text>
+			</element>
+			<element kind="staticText" uuid="4df9dc02-c246-4b9b-a2f3-812c6a794189" x="0" y="10" width="280" height="18" fontName="Cambria" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[EARNINGS]]></text>
+			</element>
+			<element kind="staticText" uuid="c55f902c-474e-46ff-a332-c2421f243a6e" x="479" y="163" width="133" height="18" fontName="Cambria" fontSize="8.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+				<text><![CDATA[TOTAL:]]></text>
+			</element>
+			<element kind="staticText" uuid="6ce384f8-b666-4d24-b83c-41594f4fb3f4" x="480" y="81" width="132" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Pag-IBIG Fund]]></text>
+			</element>
+			<element kind="staticText" uuid="2a3a6e9d-f8e3-433d-a36a-2c29935ad229" x="480" y="10" width="300" height="18" fontName="Cambria" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[DEDUCTIONS]]></text>
+			</element>
+			<element kind="staticText" uuid="f1cb7708-e252-42bb-834a-3b31abd27869" x="480" y="41" width="132" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Social Security System]]></text>
+			</element>
+			<element kind="staticText" uuid="5d1a7cd4-993f-49dd-942b-9a8b587d01a1" x="480" y="101" width="132" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Withholding Tax]]></text>
+			</element>
+			<element kind="staticText" uuid="983a4684-8297-4fda-9107-b9096b28a231" x="480" y="61" width="132" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Philippine Health Insurance]]></text>
+			</element>
+			<element kind="staticText" uuid="11eb9ff5-ba13-4a5f-b0be-af6f8466ff4b" x="480" y="230" width="300" height="18" fontName="Cambria" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[SUMMARY]]></text>
+			</element>
+			<element kind="staticText" uuid="7e59da28-5e32-4d6f-a153-43c32fc80c8c" x="480" y="280" width="86" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Benefits]]></text>
+			</element>
+			<element kind="staticText" uuid="81312bc6-a66a-4aac-9d55-e12957ac6a09" x="480" y="260" width="86" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Gross Income]]></text>
+			</element>
+			<element kind="staticText" uuid="480c3159-8dcc-4520-b989-61b35128972c" x="480" y="361" width="86" height="18" fontName="Cambria" fontSize="10.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+				<text><![CDATA[NET PAY:]]></text>
+			</element>
+			<element kind="staticText" uuid="bbc4fdab-24b6-49a2-91a9-eacd3ee1873c" x="480" y="299" width="85" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Deductions:]]></text>
+			</element>
+			<element kind="staticText" uuid="1d8f6932-6c19-42e6-9392-73adcbc2e4d0" x="480" y="121" width="132" height="20" fontName="Cambria" vTextAlign="Middle">
+				<text><![CDATA[Loan]]></text>
+			</element>
+			<element kind="textField" uuid="c90e6c1e-aedb-4545-84a6-0ec628577159" x="236" y="42" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Half_Month_Rate}.multiply(new java.math.BigDecimal(2))]]></expression>
+			</element>
+			<element kind="textField" uuid="0b615d67-ec43-4e39-9090-de18d40ffa61" x="236" y="62" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Hourly_Rate}.multiply(new java.math.BigDecimal(8))]]></expression>
+			</element>
+			<element kind="textField" uuid="89b41077-89f9-4a72-ae6b-9326bd3edb1b" x="236" y="82" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[22]]></expression>
+			</element>
+			<element kind="textField" uuid="eddde30d-0e8d-4163-ae54-cb39f0cf3495" x="236" y="100" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[0]]></expression>
+			</element>
+			<element kind="textField" uuid="15a0b8e8-2d32-4007-aa6f-6f8d083a091a" x="235" y="160" width="44" height="19" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Basic_Salary}]]></expression>
+			</element>
+			<element kind="textField" uuid="ae8bb582-2729-408f-8466-72be5ffa86b0" x="735" y="159" width="44" height="19" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[(($F{Deduction_ID}.equals(1) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(2) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(3) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(4) ? $F{Amount} : new BigDecimal(0)))]]></expression>
+			</element>
+			<element kind="textField" uuid="5060d55f-9299-47b0-a973-ad241a0e7586" x="736" y="99" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Deduction_ID}.equals(4) ? $F{Amount} : new BigDecimal(0)]]></expression>
+			</element>
+			<element kind="textField" uuid="3ed464b2-15af-4d7b-9928-cbbc2e7fc569" x="736" y="41" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Deduction_ID}.equals(1) ? $F{Amount} : new BigDecimal(0)]]></expression>
+			</element>
+			<element kind="textField" uuid="393b3865-c23b-42a7-bb89-1cbcbae39305" x="736" y="61" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Deduction_ID}.equals(2) ? $F{Amount} : new BigDecimal(0)]]></expression>
+			</element>
+			<element kind="textField" uuid="c47089ae-c3cc-427a-b29a-ed9a5bac8281" x="736" y="81" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Deduction_ID}.equals(3) ? $F{Amount} : new BigDecimal(0)]]></expression>
+			</element>
+			<element kind="textField" uuid="38944814-ec7d-4cd8-871b-bc70fffc6886" x="736" y="118" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[0]]></expression>
+			</element>
+			<element kind="textField" uuid="5dc81d14-f4df-42d7-8fd2-68990c6f8752" x="236" y="261" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Rice_Subsidy}]]></expression>
+			</element>
+			<element kind="textField" uuid="95cc72c7-f5c1-404a-9c9a-29beec26d6ac" x="236" y="281" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Phone_Allowance}]]></expression>
+			</element>
+			<element kind="textField" uuid="2eb6f520-40c2-44dd-a7c1-c9ee430fa2ed" x="236" y="301" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Clothing_Allowance}]]></expression>
+			</element>
+			<element kind="textField" uuid="29c5e311-f422-4bb5-a405-ca88e1bd237f" x="235" y="360" width="44" height="19" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Rice_Subsidy}.add($F{Phone_Allowance}).add($F{Clothing_Allowance})]]></expression>
+			</element>
+			<element kind="textField" uuid="9644eece-e953-4425-8d77-27301192f6f4" x="736" y="279" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Rice_Subsidy}.add($F{Phone_Allowance}).add($F{Clothing_Allowance})]]></expression>
+			</element>
+			<element kind="textField" uuid="0b8d7342-594e-403f-a82e-0846d349fa0d" x="736" y="299" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[(($F{Deduction_ID}.equals(1) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(2) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(3) ? $F{Amount} : new BigDecimal(0)))
+.add(($F{Deduction_ID}.equals(4) ? $F{Amount} : new BigDecimal(0)))]]></expression>
+			</element>
+			<element kind="textField" uuid="eb92c1c6-fec2-44ac-8fc2-a714e6e62fee" x="735" y="359" width="44" height="19" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Basic_Salary}.add($F{Rice_Subsidy}).add($F{Phone_Allowance}).add($F{Clothing_Allowance})
+.subtract(
+    ($F{Deduction_ID}.equals(1) ? $F{Amount} : new BigDecimal(0))
+    .add($F{Deduction_ID}.equals(2) ? $F{Amount} : new BigDecimal(0))
+    .add($F{Deduction_ID}.equals(3) ? $F{Amount} : new BigDecimal(0))
+    .add($F{Deduction_ID}.equals(4) ? $F{Amount} : new BigDecimal(0))
+)]]></expression>
+			</element>
+			<element kind="textField" uuid="9811eb6c-e57b-4c7e-ae30-ea611d054ba4" x="736" y="260" width="44" height="19" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{Basic_Salary}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<lastPageFooter height="23">
+		<element kind="textField" uuid="c7507eed-a170-46c2-bfef-a400979dfcff" x="609" y="4" width="192" height="16" fontName="Cambria" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new java.util.Date())]]></expression>
+		</element>
+		<element kind="staticText" uuid="6d4b121e-c5b9-44c6-9151-1c3c6d3a04d5" x="529" y="3" width="80" height="18" fontName="Cambria" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[DATE:]]></text>
+		</element>
+	</lastPageFooter>
+</jasperReport>

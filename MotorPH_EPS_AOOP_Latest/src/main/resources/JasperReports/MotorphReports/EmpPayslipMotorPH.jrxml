@@ -1,0 +1,388 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Employee Payslip" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a3d7f7e8-5b3d-4f3d-9d3d-7b3d7f7e8d3d">
+	<property name="com.jasperreports.print.create.bookmarks" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB Connection"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="EID" class="java.lang.Integer"/>
+	<parameter name="Period_Start" class="java.util.Date"/>
+	<parameter name="Period_End" class="java.util.Date"/>
+	<parameter name="LOGO_IMAGE" class="java.io.InputStream"/>
+	<field name="employeeId" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="employeeId"/>
+		<property name="com.jaspersoft.studio.field.label" value="employeeId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="employeeName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="employeeName"/>
+		<property name="com.jaspersoft.studio.field.label" value="employeeName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="position" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="position"/>
+		<property name="com.jaspersoft.studio.field.label" value="position"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="department" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="department"/>
+		<property name="com.jaspersoft.studio.field.label" value="department"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="monthlyRate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="monthlyRate"/>
+		<property name="com.jaspersoft.studio.field.label" value="monthlyRate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="dailyRate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="dailyRate"/>
+		<property name="com.jaspersoft.studio.field.label" value="dailyRate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="daysWorked" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="daysWorked"/>
+		<property name="com.jaspersoft.studio.field.label" value="daysWorked"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="overtimeHours" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="overtimeHours"/>
+		<property name="com.jaspersoft.studio.field.label" value="overtimeHours"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="overtimePay" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="overtimePay"/>
+		<property name="com.jaspersoft.studio.field.label" value="overtimePay"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="grossIncome" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="grossIncome"/>
+		<property name="com.jaspersoft.studio.field.label" value="grossIncome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="riceSubsidy" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="riceSubsidy"/>
+		<property name="com.jaspersoft.studio.field.label" value="riceSubsidy"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="phoneAllowance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="phoneAllowance"/>
+		<property name="com.jaspersoft.studio.field.label" value="phoneAllowance"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="clothingAllowance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="clothingAllowance"/>
+		<property name="com.jaspersoft.studio.field.label" value="clothingAllowance"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="totalBenefits" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="totalBenefits"/>
+		<property name="com.jaspersoft.studio.field.label" value="totalBenefits"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="sssContribution" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sssContribution"/>
+		<property name="com.jaspersoft.studio.field.label" value="sssContribution"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="philhealthContribution" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="philhealthContribution"/>
+		<property name="com.jaspersoft.studio.field.label" value="philhealthContribution"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="pagibigContribution" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="pagibigContribution"/>
+		<property name="com.jaspersoft.studio.field.label" value="pagibigContribution"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="withholdingTax" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="withholdingTax"/>
+		<property name="com.jaspersoft.studio.field.label" value="withholdingTax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="totalDeductions" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="totalDeductions"/>
+		<property name="com.jaspersoft.studio.field.label" value="totalDeductions"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<field name="takeHomePay" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="takeHomePay"/>
+		<property name="com.jaspersoft.studio.field.label" value="takeHomePay"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee_payroll_summary"/>
+	</field>
+	<title height="120" splitType="Stretch">
+		<element kind="rectangle" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="0" y="0" width="555" height="110">
+			<pen lineWidth="0.5"/>
+		</element>
+		<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="210" y="0" width="200" height="40" forecolor="#253D90" fontName="SansSerif" fontSize="29.0" bold="true" italic="true" vTextAlign="Bottom">
+			<text><![CDATA[MotorPH]]></text>
+		</element>
+		<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="210" y="40" width="300" height="15" fontName="SansSerif" fontSize="10.0" bold="true">
+			<text><![CDATA[7 Jupiter Avenue cor. F. Sandoval Jr.,]]></text>
+		</element>
+		<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="210" y="55" width="300" height="15" fontName="SansSerif" fontSize="10.0" bold="true">
+			<text><![CDATA[Bagong Nayon, Quezon City]]></text>
+		</element>
+		<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="210" y="70" width="300" height="15" fontName="SansSerif" fontSize="10.0" bold="true">
+			<text><![CDATA[Phone: (028) 911-5071 / (028) 911-5072 / (028) 911-5073]]></text>
+		</element>
+		<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="210" y="85" width="300" height="15" fontName="SansSerif" fontSize="10.0" bold="true">
+			<text><![CDATA[Email: corporate@motorph.com]]></text>
+		</element>
+		<element kind="image" uuid="2f37902b-2cef-4dae-bd50-f3aa745b2c58" x="50" y="9" width="120" height="92">
+			<expression><![CDATA[$P{LOGO_IMAGE}]]></expression>
+		</element>
+	</title>
+	<detail>
+		<band height="665" splitType="Stretch">
+			<element kind="rectangle" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="0" y="0" width="555" height="665">
+				<pen lineWidth="0.25"/>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="30" y="80" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Employee ID:]]></text>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box>
+					<pen lineWidth="0.0" lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="155" y="80" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{employeeId}]]></expression>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="30" y="110" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Employee Name:]]></text>
+				<box>
+					<pen lineWidth="0.0" lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="155" y="110" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{employeeName}]]></expression>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="405" y="80" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[new SimpleDateFormat("MMM dd, yyyy").format($P{Period_End})]]></expression>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000103"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="280" y="110" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[EMPLOYEE POSITION
+/ DEPARTMENT:]]></text>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box>
+					<pen lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="405" y="110" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{position} + " / " + $F{department}]]></expression>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000103"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="0" y="160" width="555" height="15" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" fontSize="10.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[EARNINGS]]></text>
+				<property name="com.jaspersoft.studio.element.name" value="Earning"/>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="190" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Monthly Rate:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="190" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00" linkType="None" linkTarget="Self">
+				<expression><![CDATA[$F{monthlyRate}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="210" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Daily Rate:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="210" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{dailyRate}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="230" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Days Worked:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="230" width="50" height="15" fontName="SansSerif">
+				<expression><![CDATA[$F{daysWorked}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="250" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Overtime:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="250" width="50" height="15" fontName="SansSerif">
+				<expression><![CDATA[$F{overtimeHours}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="20" y="270" width="435" height="15" backcolor="#EFEFEF" fontName="SansSerif" bold="true">
+				<text><![CDATA[GROSS INCOME:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="455" y="270" width="100" height="15" backcolor="#EFEFEF" fontName="SansSerif" pattern="₱#,##0.00" bold="true">
+				<expression><![CDATA[$F{grossIncome}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="0" y="300" width="555" height="15" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" fontSize="10.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[BENEFITS]]></text>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="330" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Rice Subsidy:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="330" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{riceSubsidy}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="350" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Phone Allowance:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="350" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{phoneAllowance}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="370" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Clothing Allowance:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="370" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{clothingAllowance}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="20" y="390" width="435" height="15" backcolor="#EFEFEF" fontName="SansSerif" bold="true">
+				<text><![CDATA[TOTAL:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="455" y="390" width="100" height="15" backcolor="#EFEFEF" fontName="SansSerif" pattern="₱#,##0.00" bold="true">
+				<expression><![CDATA[$F{totalBenefits}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="0" y="420" width="555" height="15" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" fontSize="10.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[DEDUCTIONS]]></text>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="450" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Social Security System]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="450" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{sssContribution}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="470" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[PhilHealth:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="470" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{philhealthContribution}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="490" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Pag-ibig:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="490" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{pagibigContribution}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="510" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Withholding Tax:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="510" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{withholdingTax}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="20" y="530" width="435" height="15" backcolor="#EFEFEF" fontName="SansSerif" underline="false" bold="true">
+				<text><![CDATA[Total Deductions:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="455" y="530" width="100" height="15" backcolor="#EFEFEF" fontName="SansSerif" pattern="₱#,##0.00" bold="true">
+				<expression><![CDATA[$F{sssContribution}.add($F{philhealthContribution}).add($F{pagibigContribution}).add($F{withholdingTax})]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="0" y="560" width="555" height="15" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" fontSize="10.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[SUMMARY]]></text>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="590" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Gross Income:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="590" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{grossIncome}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="610" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Benefits:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="610" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{totalBenefits}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="20" y="630" width="435" height="15" fontName="SansSerif" bold="true">
+				<text><![CDATA[Deductions:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="455" y="630" width="100" height="15" fontName="SansSerif" pattern="₱#,##0.00">
+				<expression><![CDATA[$F{sssContribution}.add($F{philhealthContribution}).add($F{pagibigContribution}).add($F{withholdingTax})]]></expression>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="20" y="650" width="435" height="15" backcolor="#EFEFEF" fontName="SansSerif" underline="true" bold="true">
+				<text><![CDATA[TAKE HOME PAY:]]></text>
+			</element>
+			<element kind="textField" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" mode="Opaque" x="455" y="650" width="100" height="15" backcolor="#EFEFEF" fontName="SansSerif" pattern="₱#,##0.00" bold="true">
+				<expression><![CDATA[$F{grossIncome}.add($F{totalBenefits}).subtract($F{sssContribution}.add($F{philhealthContribution}).add($F{pagibigContribution}).add($F{withholdingTax}))]]></expression>
+			</element>
+			<element kind="textField" uuid="75bfe80f-f470-40d7-8063-e8c226c18dd5" x="405" y="50" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[new SimpleDateFormat("MMM dd, yyyy").format($P{Period_Start})]]></expression>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000103"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="3093a4c5-6dc3-42e8-9ba2-67986949b797" mode="Opaque" x="30" y="50" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[PAYSLIP NO]]></text>
+				<box>
+					<pen lineWidth="0.0" lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e4c51d47-e7b1-498d-bff6-7d01e00fbd00" x="155" y="50" width="125" height="30" fontName="SansSerif" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA["Pay_" + System.currentTimeMillis()]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="99a8be15-95a5-4003-a165-354818e258a1" mode="Opaque" x="280" y="80" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[PERIOD END DATE:]]></text>
+				<box>
+					<pen lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="1b589d2c-55a6-4ea9-a73b-34f7c45edadc" mode="Opaque" x="280" y="50" width="125" height="30" forecolor="#FFFFFF" backcolor="#253D90" fontName="SansSerif" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[PERIOD START DATE:]]></text>
+				<box>
+					<pen lineColor="#253D90"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#030000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#253D90"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="d4f7e8a3-7d3d-4f3d-9d3d-7b3d7f7e8d3d" x="0" y="-10" width="555" height="664" forecolor="#253D90" fontName="SansSerif" fontSize="14.0" underline="true" bold="true" hTextAlign="Center">
+				<text><![CDATA[
+EMPLOYEE PAYSLIP]]></text>
+			</element>
+		</band>
+	</detail>
+</jasperReport>
