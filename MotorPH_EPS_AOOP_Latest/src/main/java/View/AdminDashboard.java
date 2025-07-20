@@ -17,7 +17,9 @@ import Repository.DataAccessObjects.TableDataFetcher;
 import ViewModel.RoleAuthenticator;
 import ViewModel.AdminRole;
 import ViewModel.DBQueries.ReportColumns;
+import ViewModel.TimeManager;
 import ViewModel.UserSession;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -43,6 +45,8 @@ public class AdminDashboard extends javax.swing.JFrame {
     private final DefaultTableModel tableModel;
     private TableDataFetcher tableDataFetcher;
     private DefaultTableModel employeeTableModel;
+    
+    private TimeManager timeManager;
     
     
     /**
@@ -73,6 +77,10 @@ public class AdminDashboard extends javax.swing.JFrame {
         
         // Initialize and integrate controller
         employeeData = new EmployeeDataAccess();
+        
+         // Initialize time manager for real-time date and time display
+        timeManager = new TimeManager(dateTodayLabel, timeNowLabel);
+        timeManager.startClock();
         
         
         // Add ListSelectionListener to enable/disable buttons based on table selection
@@ -379,8 +387,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         refreshButton = new javax.swing.JButton();
         employeePayslip = new javax.swing.JButton();
         employeeProfile = new javax.swing.JButton();
-        viewSettingsBtn1 = new javax.swing.JButton();
         reactivateEmployeeButton = new javax.swing.JButton();
+        dateTodayLabel = new javax.swing.JLabel();
+        timeNowLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -392,11 +401,17 @@ public class AdminDashboard extends javax.swing.JFrame {
         NavigationPanel.setToolTipText("");
 
         dashboardLabel.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        dashboardLabel.setForeground(new java.awt.Color(51, 51, 51));
+        dashboardLabel.setForeground(new java.awt.Color(0, 35, 102));
         dashboardLabel.setText("Dashboard");
         dashboardLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
             }
         });
 
@@ -407,6 +422,12 @@ public class AdminDashboard extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
+            }
         });
 
         viewSettingsButton.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -415,6 +436,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         viewSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewSettingsButtonMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseExited(evt);
             }
         });
 
@@ -429,6 +456,14 @@ public class AdminDashboard extends javax.swing.JFrame {
         viewProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewProfileButton.setForeground(new java.awt.Color(0, 35, 102));
         viewProfileButton.setText("View Profile");
+        viewProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseExited(evt);
+            }
+        });
         viewProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewProfileButtonActionPerformed(evt);
@@ -450,6 +485,14 @@ public class AdminDashboard extends javax.swing.JFrame {
         viewTimesheetButton1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewTimesheetButton1.setForeground(new java.awt.Color(0, 35, 102));
         viewTimesheetButton1.setText("Timesheet");
+        viewTimesheetButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewTimesheetButton1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewTimesheetButton1MouseExited(evt);
+            }
+        });
         viewTimesheetButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewTimesheetButton1ActionPerformed(evt);
@@ -459,6 +502,14 @@ public class AdminDashboard extends javax.swing.JFrame {
         leaveButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         leaveButton.setForeground(new java.awt.Color(0, 35, 102));
         leaveButton.setText("Time-Off App");
+        leaveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseExited(evt);
+            }
+        });
         leaveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 leaveButtonActionPerformed(evt);
@@ -468,6 +519,14 @@ public class AdminDashboard extends javax.swing.JFrame {
         viewSettingsBtn.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewSettingsBtn.setForeground(new java.awt.Color(0, 35, 102));
         viewSettingsBtn.setText("Settings");
+        viewSettingsBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseExited(evt);
+            }
+        });
         viewSettingsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewSettingsBtnActionPerformed(evt);
@@ -521,10 +580,18 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 35, 102));
         jLabel5.setText("Quick Actions");
 
-        addButton.setBackground(new java.awt.Color(0, 35, 102));
+        addButton.setBackground(new java.awt.Color(94, 158, 217));
         addButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         addButton.setForeground(new java.awt.Color(255, 255, 255));
         addButton.setText("Add");
+        addButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                addButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                addButtonMouseExited(evt);
+            }
+        });
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
@@ -546,40 +613,72 @@ public class AdminDashboard extends javax.swing.JFrame {
         employeeTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(employeeTable);
 
-        updateButton.setBackground(new java.awt.Color(0, 35, 102));
+        updateButton.setBackground(new java.awt.Color(94, 158, 217));
         updateButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         updateButton.setForeground(new java.awt.Color(255, 255, 255));
         updateButton.setText("Update");
+        updateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                updateButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                updateButtonMouseExited(evt);
+            }
+        });
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
             }
         });
 
-        searchButton.setBackground(new java.awt.Color(0, 35, 102));
+        searchButton.setBackground(new java.awt.Color(94, 158, 217));
         searchButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         searchButton.setForeground(new java.awt.Color(255, 255, 255));
         searchButton.setText("Search");
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                searchButtonMouseExited(evt);
+            }
+        });
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchButtonActionPerformed(evt);
             }
         });
 
-        deleteButton.setBackground(new java.awt.Color(0, 35, 102));
+        deleteButton.setBackground(new java.awt.Color(255, 107, 107));
         deleteButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         deleteButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteButton.setText("Delete");
+        deleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                deleteButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                deleteButtonMouseExited(evt);
+            }
+        });
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
             }
         });
 
-        sortButton.setBackground(new java.awt.Color(0, 35, 102));
+        sortButton.setBackground(new java.awt.Color(94, 158, 217));
         sortButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         sortButton.setForeground(new java.awt.Color(255, 255, 255));
         sortButton.setText("Sort");
+        sortButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sortButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sortButtonMouseExited(evt);
+            }
+        });
         sortButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sortButtonActionPerformed(evt);
@@ -643,57 +742,87 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        refreshButton.setBackground(new java.awt.Color(0, 35, 102));
+        refreshButton.setBackground(new java.awt.Color(94, 158, 217));
         refreshButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         refreshButton.setForeground(new java.awt.Color(255, 255, 255));
         refreshButton.setText("Refresh");
+        refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseExited(evt);
+            }
+        });
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
             }
         });
 
-        employeePayslip.setBackground(new java.awt.Color(0, 35, 102));
+        employeePayslip.setBackground(new java.awt.Color(94, 158, 217));
         employeePayslip.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         employeePayslip.setForeground(new java.awt.Color(255, 255, 255));
         employeePayslip.setText("Employee Payslip");
         employeePayslip.setToolTipText("");
+        employeePayslip.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                employeePayslipMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                employeePayslipMouseExited(evt);
+            }
+        });
         employeePayslip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 employeePayslipActionPerformed(evt);
             }
         });
 
-        employeeProfile.setBackground(new java.awt.Color(0, 35, 102));
+        employeeProfile.setBackground(new java.awt.Color(94, 158, 217));
         employeeProfile.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         employeeProfile.setForeground(new java.awt.Color(255, 255, 255));
         employeeProfile.setText("Employee Profile");
         employeeProfile.setToolTipText("");
+        employeeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                employeeProfileMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                employeeProfileMouseExited(evt);
+            }
+        });
         employeeProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 employeeProfileActionPerformed(evt);
             }
         });
 
-        viewSettingsBtn1.setBackground(new java.awt.Color(0, 35, 102));
-        viewSettingsBtn1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        viewSettingsBtn1.setForeground(new java.awt.Color(255, 255, 255));
-        viewSettingsBtn1.setText("Settings");
-        viewSettingsBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewSettingsBtn1ActionPerformed(evt);
-            }
-        });
-
-        reactivateEmployeeButton.setBackground(new java.awt.Color(0, 35, 102));
+        reactivateEmployeeButton.setBackground(new java.awt.Color(94, 158, 217));
         reactivateEmployeeButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         reactivateEmployeeButton.setForeground(new java.awt.Color(255, 255, 255));
         reactivateEmployeeButton.setText("Former Employees");
+        reactivateEmployeeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                reactivateEmployeeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                reactivateEmployeeButtonMouseExited(evt);
+            }
+        });
         reactivateEmployeeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reactivateEmployeeButtonActionPerformed(evt);
             }
         });
+
+        dateTodayLabel.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
+        dateTodayLabel.setForeground(new java.awt.Color(0, 35, 102));
+        dateTodayLabel.setText("Date Today");
+
+        timeNowLabel.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
+        timeNowLabel.setForeground(new java.awt.Color(0, 35, 102));
+        timeNowLabel.setText("Time Now");
 
         javax.swing.GroupLayout dashboardPanelLayout = new javax.swing.GroupLayout(dashboardPanel);
         dashboardPanel.setLayout(dashboardPanelLayout);
@@ -710,7 +839,11 @@ public class AdminDashboard extends javax.swing.JFrame {
                         .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(dashboardPanelLayout.createSequentialGroup()
                                 .addComponent(dashboardPane)
-                                .addGap(0, 969, Short.MAX_VALUE))
+                                .addGap(584, 584, 584)
+                                .addComponent(dateTodayLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(timeNowLabel)
+                                .addGap(91, 91, 91))
                             .addGroup(dashboardPanelLayout.createSequentialGroup()
                                 .addComponent(addButton)
                                 .addGap(18, 18, 18)
@@ -723,18 +856,14 @@ public class AdminDashboard extends javax.swing.JFrame {
                                 .addComponent(sortButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(refreshButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                                 .addComponent(employeeProfile)
                                 .addGap(18, 18, 18)
                                 .addComponent(employeePayslip)
                                 .addGap(18, 18, 18)
                                 .addComponent(reactivateEmployeeButton)
                                 .addGap(21, 21, 21))
-                            .addGroup(dashboardPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(viewSettingsBtn1)
-                                .addGap(160, 160, 160)))))
+                            .addComponent(jLabel5))))
                 .addContainerGap())
             .addComponent(profilePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -742,31 +871,30 @@ public class AdminDashboard extends javax.swing.JFrame {
             dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dashboardPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(dashboardPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(dashboardPanelLayout.createSequentialGroup()
-                        .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5)
-                        .addGap(14, 14, 14)
-                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addButton)
-                            .addComponent(updateButton)
-                            .addComponent(searchButton)
-                            .addComponent(deleteButton)
-                            .addComponent(sortButton)
-                            .addComponent(refreshButton)
-                            .addComponent(employeePayslip)
-                            .addComponent(employeeProfile)
-                            .addComponent(reactivateEmployeeButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dashboardPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(viewSettingsBtn1)))
+                    .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dateTodayLabel)
+                        .addComponent(timeNowLabel))
+                    .addComponent(dashboardPane))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addGap(14, 14, 14)
+                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(updateButton)
+                    .addComponent(searchButton)
+                    .addComponent(deleteButton)
+                    .addComponent(sortButton)
+                    .addComponent(refreshButton)
+                    .addComponent(employeePayslip)
+                    .addComponent(employeeProfile)
+                    .addComponent(reactivateEmployeeButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
@@ -1094,10 +1222,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewTimesheetButton1ActionPerformed
 
-    private void viewSettingsBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewSettingsBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_viewSettingsBtn1ActionPerformed
-
     private void reactivateEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reactivateEmployeeButtonActionPerformed
       // Check if adminRole was initialized successfully before using it
         if (adminRole != null) {
@@ -1113,6 +1237,142 @@ public class AdminDashboard extends javax.swing.JFrame {
             );
         }
     }//GEN-LAST:event_reactivateEmployeeButtonActionPerformed
+
+    private void leaveButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseEntered
+        leaveButton.setBackground(new Color(0,35,102));
+        leaveButton.setForeground(Color.white);
+    }//GEN-LAST:event_leaveButtonMouseEntered
+
+    private void leaveButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseExited
+        leaveButton.setBackground(Color.white);
+        leaveButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_leaveButtonMouseExited
+
+    private void addButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseEntered
+        addButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_addButtonMouseEntered
+
+    private void addButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseExited
+        addButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_addButtonMouseExited
+
+    private void updateButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseEntered
+        updateButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_updateButtonMouseEntered
+
+    private void updateButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseExited
+        updateButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_updateButtonMouseExited
+
+    private void deleteButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseEntered
+        deleteButton.setBackground(new Color(220,38,38));
+    }//GEN-LAST:event_deleteButtonMouseEntered
+
+    private void deleteButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseExited
+        deleteButton.setBackground(new Color(255,107,107));
+    }//GEN-LAST:event_deleteButtonMouseExited
+
+    private void searchButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseEntered
+        searchButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_searchButtonMouseEntered
+
+    private void searchButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseExited
+        searchButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_searchButtonMouseExited
+
+    private void sortButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseEntered
+        sortButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_sortButtonMouseEntered
+
+    private void sortButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseExited
+        sortButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_sortButtonMouseExited
+
+    private void refreshButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseEntered
+        refreshButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_refreshButtonMouseEntered
+
+    private void refreshButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseExited
+        refreshButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_refreshButtonMouseExited
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void viewSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseEntered
+       viewSettingsButton.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_viewSettingsButtonMouseEntered
+
+    private void viewSettingsButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseExited
+        viewSettingsButton.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_viewSettingsButtonMouseExited
+
+    private void viewTimesheetButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTimesheetButton1MouseEntered
+        viewTimesheetButton1.setBackground(new Color(0,35,102));
+        viewTimesheetButton1.setForeground(Color.white);
+    }//GEN-LAST:event_viewTimesheetButton1MouseEntered
+
+    private void viewTimesheetButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTimesheetButton1MouseExited
+        viewTimesheetButton1.setBackground(Color.white);
+        viewTimesheetButton1.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewTimesheetButton1MouseExited
+
+    private void viewProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseEntered
+        viewProfileButton.setBackground(new Color(0,35,102));
+        viewProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_viewProfileButtonMouseEntered
+
+    private void viewProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseExited
+        viewProfileButton.setBackground(Color.white);
+        viewProfileButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewProfileButtonMouseExited
+
+    private void viewSettingsBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseEntered
+        viewSettingsBtn.setBackground(new Color(0,35,102));
+        viewSettingsBtn.setForeground(Color.white);
+    }//GEN-LAST:event_viewSettingsBtnMouseEntered
+
+    private void viewSettingsBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseExited
+        viewSettingsBtn.setBackground(Color.white);
+        viewSettingsBtn.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewSettingsBtnMouseExited
+
+    private void employeeProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeProfileMouseEntered
+        employeeProfile.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_employeeProfileMouseEntered
+
+    private void employeeProfileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeProfileMouseExited
+        employeeProfile.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_employeeProfileMouseExited
+
+    private void employeePayslipMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeePayslipMouseEntered
+        employeePayslip.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_employeePayslipMouseEntered
+
+    private void employeePayslipMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeePayslipMouseExited
+        employeePayslip.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_employeePayslipMouseExited
+
+    private void reactivateEmployeeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reactivateEmployeeButtonMouseEntered
+        reactivateEmployeeButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_reactivateEmployeeButtonMouseEntered
+
+    private void reactivateEmployeeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reactivateEmployeeButtonMouseExited
+        reactivateEmployeeButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_reactivateEmployeeButtonMouseExited
 
     /**
      * @param args the command line arguments
@@ -1164,6 +1424,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel dashboardLabel;
     private javax.swing.JLabel dashboardPane;
     private javax.swing.JPanel dashboardPanel;
+    private javax.swing.JLabel dateTodayLabel;
     private javax.swing.JButton deleteButton;
     private javax.swing.JLabel designationWithEid;
     private javax.swing.JButton employeePayslip;
@@ -1187,10 +1448,10 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JButton sortButton;
+    private javax.swing.JLabel timeNowLabel;
     private javax.swing.JButton updateButton;
     private javax.swing.JButton viewProfileButton;
     private javax.swing.JButton viewSettingsBtn;
-    private javax.swing.JButton viewSettingsBtn1;
     private javax.swing.JLabel viewSettingsButton;
     private javax.swing.JButton viewTimesheetButton1;
     // End of variables declaration//GEN-END:variables

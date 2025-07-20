@@ -18,10 +18,13 @@ import Model.EmployeeDetails;
 import ViewModel.RoleAuthenticator;
 import ViewModel.SalaryCalculator;
 import ViewModel.TimeManager;
+import ViewModel.TimesheetController;
 import ViewModel.UserSession;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -34,6 +37,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         // Core components
         private TimeManager timeManager;
         private RoleAuthenticator roleAuthenticator;
+        private TimesheetController timesheetController;
         private String loggedInUsername;
         private String username;
 
@@ -59,6 +63,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         setExtendedState(JFrame.NORMAL);
         setResizable(false);
         setLocationRelativeTo(null);
+        
+        setupProgressBarColors();
 
         // Store in UserSession
         UserSession.getInstance().setUsername(username);
@@ -69,6 +75,9 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         // Initialize time manager for real-time date and time display
         timeManager = new TimeManager(dateTodayLabel, timeNowLabel);
         timeManager.startClock();
+
+        // Initialize TimesheetController
+        timesheetController = new TimesheetController();
     }
 
      /**
@@ -100,12 +109,23 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         timeManager = new TimeManager(dateTodayLabel, timeNowLabel);
         timeManager.startClock();
         
+        setupProgressBarColors();
+
+        // Initialize TimesheetController
+        timesheetController = new TimesheetController();
+        
         // Stores the username
         this.loggedInUsername = username;
         UserSession.getInstance().setUsername(username);
         
         // Load employee data and initialize dashboard
         initializeDashboard(username);
+        
+        // Initialize TimesheetController
+        timesheetController = new TimesheetController();
+        
+        // Update time-in/time-out buttons and labels
+        updateButtonAndLabelStates();
     }
      
     /**
@@ -122,6 +142,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         int eid) 
     {
         initComponents();
+        
+        setupProgressBarColors();
         
         // Update UI with user data
         String fullNameLbl = firstName + " " + lastName;
@@ -193,6 +215,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     {
         initComponents();
         
+        setupProgressBarColors();
+        
         // Update UI with user data
         String fullNameLbl = firstName + " " + lastName;
         String designationWithEidLbl = designation + " -- " + eid;
@@ -227,6 +251,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         
         initComponents();
         
+        setupProgressBarColors();
+        
     }
     
     
@@ -243,6 +269,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             String userName) {
         
         initComponents();
+        
+        setupProgressBarColors();
         
         this.loggedInUsername = userName;
         
@@ -330,6 +358,11 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                 
                 // Update UI with employee data
                 updateUI();
+
+                // Update time-in/time-out buttons and labels
+                updateButtonAndLabelStates();
+                
+                setupProgressBarColors();
             }
             else {
                 JOptionPane.showMessageDialog(this, 
@@ -356,6 +389,61 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             return Float.parseFloat(value);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+    
+    private void setupProgressBarColors() {
+        annualProgress.setBackground(new Color(5,150,105));
+        annualProgress.setForeground(new Color(0,35,102));
+        
+        sickProgress.setBackground(new Color(94,158,217));
+        sickProgress.setForeground(new Color(0,35,102));
+        
+        annualProgress.setBackground(new Color(5,150,105));
+        annualProgress.setForeground(new Color(0,35,102));
+    }
+    
+    
+    private void handleTimeAction(String recordType, javax.swing.JButton button, javax.swing.JLabel label) {
+        if (employeeDetails == null) {
+            JOptionPane.showMessageDialog(this, "Employee data not loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+            if (!employeeDetails.getDesignation().contains("Rank and File")) {
+                JOptionPane.showMessageDialog(this, "This feature is available only for Rank and File employees.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+                try {
+                    Time recordedTime = timesheetController.recordTime(employeeDetails.getEid(), recordType);
+                    if (recordedTime != null) {
+                        label.setText(recordedTime.toString());
+                        button.setEnabled(false);
+
+                        if (recordType.equals("Time In")) {
+                            timeOutButton.setEnabled(true);
+                        }
+
+                        JOptionPane.showMessageDialog(this, recordType + " recorded successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "You have already recorded your " + recordType.toLowerCase() + " for today.", "Already Recorded", JOptionPane.WARNING_MESSAGE);
+                    }
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeDashboard.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "An error occurred while recording time.", "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+     }
+
+    private void updateButtonAndLabelStates() {
+        // Reset buttons and labels to default state for new session
+        timeInButton.setEnabled(true);
+        timeOutButton.setEnabled(false);
+        timeInLabel.setText("You have not clocked in yet.");
+        timeOutLabel.setText("You have not clocked out yet.");
+
+        if (employeeDetails == null) {
+            return; // Employee data not yet loaded
         }
     }
     
@@ -431,7 +519,6 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         totalAllowancesLabel = new javax.swing.JLabel();
         totalDeductionsLabel = new javax.swing.JLabel();
         netPayLabel = new javax.swing.JLabel();
-        cycleLabel = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         totalIncentivesLabel = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
@@ -447,6 +534,10 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         compensationLeaveRemaining = new javax.swing.JLabel();
         dateTodayLabel = new javax.swing.JLabel();
         timeNowLabel = new javax.swing.JLabel();
+        timeOutButton = new javax.swing.JButton();
+        timeInButton = new javax.swing.JButton();
+        timeInLabel = new javax.swing.JLabel();
+        timeOutLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -463,6 +554,14 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         dashboardLabel.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
         dashboardLabel.setForeground(new java.awt.Color(51, 51, 51));
         dashboardLabel.setText("Dashboard");
+        dashboardLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
+        });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
         payrollLabel.setForeground(new java.awt.Color(51, 51, 51));
@@ -470,6 +569,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         payrollLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
             }
         });
 
@@ -479,6 +584,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         settingsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 settingsLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseExited(evt);
             }
         });
 
@@ -503,15 +614,31 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         designationWithEid.setText("designationWithEid");
 
         viewProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        viewProfileButton.setForeground(new java.awt.Color(0, 35, 102));
         viewProfileButton.setText("View Profile");
         viewProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewProfileButtonMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseExited(evt);
+            }
         });
 
         leaveButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        leaveButton.setForeground(new java.awt.Color(0, 35, 102));
         leaveButton.setText("Apply Leave");
+        leaveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseExited(evt);
+            }
+        });
         leaveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 leaveButtonActionPerformed(evt);
@@ -561,10 +688,18 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 35, 102));
         jLabel5.setText("Quick Actions");
 
-        viewPayslipButton.setBackground(new java.awt.Color(0, 35, 102));
+        viewPayslipButton.setBackground(new java.awt.Color(94, 158, 217));
         viewPayslipButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewPayslipButton.setForeground(new java.awt.Color(255, 255, 255));
         viewPayslipButton.setText("View Payslip");
+        viewPayslipButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewPayslipButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewPayslipButtonMouseExited(evt);
+            }
+        });
         viewPayslipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewPayslipButtonActionPerformed(evt);
@@ -715,10 +850,6 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         netPayLabel.setForeground(new java.awt.Color(143, 143, 143));
         netPayLabel.setText("0.00");
 
-        cycleLabel.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        cycleLabel.setForeground(new java.awt.Color(143, 143, 143));
-        cycleLabel.setText("March 2025");
-
         jLabel21.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(143, 143, 143));
         jLabel21.setText("Incentives:");
@@ -755,11 +886,9 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                                                 .addGap(2, 2, 2)
                                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(netPayLabel)
-                                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                                        .addComponent(totalDeductionsLabel)
-                                                        .addGap(41, 41, 41)
-                                                        .addComponent(cycleLabel))
-                                                    .addComponent(totalIncentivesLabel)))))))
+                                                    .addComponent(totalDeductionsLabel)
+                                                    .addComponent(totalIncentivesLabel))))
+                                        .addGap(104, 104, 104))))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -797,9 +926,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(netPayLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cycleLabel)
-                .addGap(55, 55, 55))
+                .addGap(82, 82, 82))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -808,12 +935,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(37, 61, 144));
         jLabel13.setText("Leave Credits");
 
-        annualProgress.setBackground(new java.awt.Color(102, 153, 255));
+        annualProgress.setBackground(new java.awt.Color(242, 242, 242));
         annualProgress.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         annualProgress.setString("100%");
         annualProgress.setStringPainted(true);
 
-        compensationProgress.setBackground(new java.awt.Color(102, 153, 255));
+        compensationProgress.setBackground(new java.awt.Color(242, 242, 242));
         compensationProgress.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         compensationProgress.setString("100%");
         compensationProgress.setStringPainted(true);
@@ -830,7 +957,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(10, 4, 4));
         jLabel16.setText("Compensation Leave");
 
-        sickProgress.setBackground(new java.awt.Color(102, 153, 255));
+        sickProgress.setBackground(new java.awt.Color(242, 242, 242));
         sickProgress.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         sickProgress.setString("80%");
         sickProgress.setStringPainted(true);
@@ -902,12 +1029,59 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         );
 
         dateTodayLabel.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
-        dateTodayLabel.setForeground(new java.awt.Color(143, 143, 143));
+        dateTodayLabel.setForeground(new java.awt.Color(0, 35, 102));
         dateTodayLabel.setText("Date Today");
 
         timeNowLabel.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
-        timeNowLabel.setForeground(new java.awt.Color(143, 143, 143));
+        timeNowLabel.setForeground(new java.awt.Color(0, 35, 102));
         timeNowLabel.setText("Time Now");
+
+        timeOutButton.setBackground(new java.awt.Color(94, 158, 217));
+        timeOutButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        timeOutButton.setForeground(new java.awt.Color(255, 255, 255));
+        timeOutButton.setText("Time Out");
+        timeOutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                timeOutButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                timeOutButtonMouseExited(evt);
+            }
+        });
+        timeOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeOutButtonActionPerformed(evt);
+            }
+        });
+
+        timeInButton.setBackground(new java.awt.Color(94, 158, 217));
+        timeInButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        timeInButton.setForeground(new java.awt.Color(255, 255, 255));
+        timeInButton.setText("Time In");
+        timeInButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                timeInButtonMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                timeInButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                timeInButtonMouseExited(evt);
+            }
+        });
+        timeInButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeInButtonActionPerformed(evt);
+            }
+        });
+
+        timeInLabel.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
+        timeInLabel.setForeground(new java.awt.Color(0, 35, 102));
+        timeInLabel.setText("You have not clocked in yet.");
+
+        timeOutLabel.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
+        timeOutLabel.setForeground(new java.awt.Color(0, 35, 102));
+        timeOutLabel.setText("You have not clocked out yet.");
 
         javax.swing.GroupLayout dashboardPanelLayout = new javax.swing.GroupLayout(dashboardPanel);
         dashboardPanel.setLayout(dashboardPanelLayout);
@@ -930,18 +1104,26 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                         .addComponent(viewPayslipButton)))
                 .addGap(18, 18, 18)
                 .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dashboardPanelLayout.createSequentialGroup()
-                        .addComponent(dateTodayLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(timeNowLabel)
-                        .addGap(132, 132, 132))
-                    .addGroup(dashboardPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(96, Short.MAX_VALUE))))
+                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(timeOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(timeInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(45, 45, 45)
+                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(timeInLabel)
+                            .addComponent(timeOutLabel))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(dashboardPanelLayout.createSequentialGroup()
                 .addContainerGap(17, Short.MAX_VALUE)
                 .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dashboardPane)
+                    .addGroup(dashboardPanelLayout.createSequentialGroup()
+                        .addComponent(dashboardPane)
+                        .addGap(653, 653, 653)
+                        .addComponent(dateTodayLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(timeNowLabel)
+                        .addGap(66, 66, 66))
                     .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29))
         );
@@ -949,22 +1131,27 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dashboardPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(dashboardPane)
+                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dashboardPane)
+                    .addComponent(dateTodayLabel)
+                    .addComponent(timeNowLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(dashboardPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(dateTodayLabel)
-                            .addComponent(timeNowLabel))
-                        .addGap(34, 34, 34))
+                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dashboardPanelLayout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(viewPayslipButton)
-                        .addGap(18, 18, 18)))
+                        .addGap(11, 11, 11)
+                        .addComponent(viewPayslipButton))
+                    .addGroup(dashboardPanelLayout.createSequentialGroup()
+                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(timeInButton)
+                            .addComponent(timeInLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(timeOutButton)
+                            .addComponent(timeOutLabel))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1224,6 +1411,86 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                 Logger.getLogger(EmployeeDashboard.class.getName());
         }
     }//GEN-LAST:event_leaveButtonActionPerformed
+
+    private void timeOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeOutButtonActionPerformed
+        handleTimeAction("Time Out", timeOutButton, timeOutLabel);
+    }//GEN-LAST:event_timeOutButtonActionPerformed
+
+    private void timeInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeInButtonActionPerformed
+        handleTimeAction("Time In", timeInButton, timeInLabel); 
+    }//GEN-LAST:event_timeInButtonActionPerformed
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void settingsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseEntered
+        settingsLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_settingsLabelMouseEntered
+
+    private void settingsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseExited
+        settingsLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_settingsLabelMouseExited
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void leaveButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseEntered
+        leaveButton.setBackground(new Color(0,35,102));
+        leaveButton.setForeground(Color.white);
+    }//GEN-LAST:event_leaveButtonMouseEntered
+
+    private void leaveButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseExited
+        leaveButton.setBackground(Color.white);
+        leaveButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_leaveButtonMouseExited
+
+    private void viewProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseEntered
+        viewProfileButton.setBackground(new Color(0,35,102));
+        viewProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_viewProfileButtonMouseEntered
+
+    private void timeInButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeInButtonMouseEntered
+        timeInButton.setBackground(new Color(5,150,105));
+    }//GEN-LAST:event_timeInButtonMouseEntered
+
+    private void timeInButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeInButtonMouseExited
+        timeInButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_timeInButtonMouseExited
+
+    private void timeOutButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeOutButtonMouseEntered
+        timeOutButton.setBackground(new Color(255,107,107));
+    }//GEN-LAST:event_timeOutButtonMouseEntered
+
+    private void timeOutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeOutButtonMouseExited
+        timeOutButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_timeOutButtonMouseExited
+
+    private void viewPayslipButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPayslipButtonMouseEntered
+        viewPayslipButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_viewPayslipButtonMouseEntered
+
+    private void viewPayslipButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPayslipButtonMouseExited
+        viewPayslipButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_viewPayslipButtonMouseExited
+
+    private void timeInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeInButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timeInButtonMouseClicked
+
+    private void viewProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseExited
+        viewProfileButton.setBackground(Color.white);
+        viewProfileButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewProfileButtonMouseExited
     
 
     /**
@@ -1270,7 +1537,6 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel basicSalaryLbl;
     private javax.swing.JLabel compensationLeaveRemaining;
     private javax.swing.JProgressBar compensationProgress;
-    private javax.swing.JLabel cycleLabel;
     private javax.swing.JLabel dashboardLabel;
     private javax.swing.JLabel dashboardPane;
     private javax.swing.JPanel dashboardPanel;
@@ -1315,8 +1581,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel settingsLabel;
     private javax.swing.JLabel sickLeaveRemaining;
     private javax.swing.JProgressBar sickProgress;
+    private javax.swing.JButton timeInButton;
+    private javax.swing.JLabel timeInLabel;
     private javax.swing.JLabel timeInLog;
     private javax.swing.JLabel timeNowLabel;
+    private javax.swing.JButton timeOutButton;
+    private javax.swing.JLabel timeOutLabel;
     private javax.swing.JLabel totalAllowancesLabel;
     private javax.swing.JLabel totalDeductionsLabel;
     private javax.swing.JLabel totalHoursWorked;

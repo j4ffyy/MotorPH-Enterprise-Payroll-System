@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.HeadlessException;
@@ -431,6 +432,12 @@ public class ViewTimesheet extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
         });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -440,14 +447,26 @@ public class ViewTimesheet extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
+            }
         });
 
         viewSettingsButton.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        viewSettingsButton.setForeground(new java.awt.Color(51, 51, 51));
+        viewSettingsButton.setForeground(new java.awt.Color(0, 35, 102));
         viewSettingsButton.setText("Settings");
         viewSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewSettingsButtonMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseExited(evt);
             }
         });
 
@@ -460,7 +479,16 @@ public class ViewTimesheet extends javax.swing.JFrame {
         profilePanel.setBackground(new java.awt.Color(0, 35, 102));
 
         viewProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        viewProfileButton.setForeground(new java.awt.Color(0, 35, 102));
         viewProfileButton.setText("View Profile");
+        viewProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseExited(evt);
+            }
+        });
         viewProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewProfileButtonActionPerformed(evt);
@@ -516,20 +544,36 @@ public class ViewTimesheet extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 35, 102));
         jLabel5.setText("Quick Actions");
 
-        viewSettingsBtn.setBackground(new java.awt.Color(0, 35, 102));
+        viewSettingsBtn.setBackground(new java.awt.Color(94, 158, 217));
         viewSettingsBtn.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewSettingsBtn.setForeground(new java.awt.Color(255, 255, 255));
         viewSettingsBtn.setText("Settings");
+        viewSettingsBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseExited(evt);
+            }
+        });
         viewSettingsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewSettingsBtnActionPerformed(evt);
             }
         });
 
-        addButton.setBackground(new java.awt.Color(0, 35, 102));
+        addButton.setBackground(new java.awt.Color(94, 158, 217));
         addButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         addButton.setForeground(new java.awt.Color(255, 255, 255));
         addButton.setText("Add");
+        addButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                addButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                addButtonMouseExited(evt);
+            }
+        });
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
@@ -551,10 +595,18 @@ public class ViewTimesheet extends javax.swing.JFrame {
         timesheetTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(timesheetTable);
 
-        sortButton.setBackground(new java.awt.Color(0, 35, 102));
+        sortButton.setBackground(new java.awt.Color(94, 158, 217));
         sortButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         sortButton.setForeground(new java.awt.Color(255, 255, 255));
         sortButton.setText("Sort");
+        sortButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sortButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sortButtonMouseExited(evt);
+            }
+        });
         sortButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sortButtonActionPerformed(evt);
@@ -618,40 +670,72 @@ public class ViewTimesheet extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        refreshButton.setBackground(new java.awt.Color(0, 35, 102));
+        refreshButton.setBackground(new java.awt.Color(94, 158, 217));
         refreshButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         refreshButton.setForeground(new java.awt.Color(255, 255, 255));
         refreshButton.setText("Refresh");
+        refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseExited(evt);
+            }
+        });
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
             }
         });
 
-        saveButton.setBackground(new java.awt.Color(0, 35, 102));
+        saveButton.setBackground(new java.awt.Color(94, 158, 217));
         saveButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         saveButton.setForeground(new java.awt.Color(255, 255, 255));
         saveButton.setText("Save");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                saveButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                saveButtonMouseExited(evt);
+            }
+        });
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
             }
         });
 
-        deleteButton.setBackground(new java.awt.Color(0, 35, 102));
+        deleteButton.setBackground(new java.awt.Color(255, 107, 107));
         deleteButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         deleteButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteButton.setText("Delete");
+        deleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                deleteButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                deleteButtonMouseExited(evt);
+            }
+        });
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
             }
         });
 
-        updateButton.setBackground(new java.awt.Color(0, 35, 102));
+        updateButton.setBackground(new java.awt.Color(94, 158, 217));
         updateButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         updateButton.setForeground(new java.awt.Color(255, 255, 255));
         updateButton.setText("Update");
+        updateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                updateButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                updateButtonMouseExited(evt);
+            }
+        });
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
@@ -945,6 +1029,96 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             timesheetController.showUpdateDialog(this, attendanceID, tableModel);
             saveButton.setEnabled(true); // Enable the saveButton when an update was made
     }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void viewSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseEntered
+        viewSettingsButton.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_viewSettingsButtonMouseEntered
+
+    private void viewSettingsButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseExited
+        viewSettingsButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewSettingsButtonMouseExited
+
+    private void viewProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseEntered
+        viewProfileButton.setBackground(new Color(0,35,102));
+        viewProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_viewProfileButtonMouseEntered
+
+    private void viewProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseExited
+        viewProfileButton.setBackground(Color.white);
+        viewProfileButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewProfileButtonMouseExited
+
+    private void addButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseEntered
+        addButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_addButtonMouseEntered
+
+    private void addButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addButtonMouseExited
+        addButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_addButtonMouseExited
+
+    private void updateButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseEntered
+        updateButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_updateButtonMouseEntered
+
+    private void updateButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseExited
+        updateButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_updateButtonMouseExited
+
+    private void deleteButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseEntered
+        deleteButton.setBackground(new Color(220,38,38));
+    }//GEN-LAST:event_deleteButtonMouseEntered
+
+    private void deleteButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseExited
+        deleteButton.setBackground(new Color(255,107,107));
+    }//GEN-LAST:event_deleteButtonMouseExited
+
+    private void sortButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseEntered
+        sortButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_sortButtonMouseEntered
+
+    private void sortButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseExited
+        sortButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_sortButtonMouseExited
+
+    private void refreshButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseEntered
+        refreshButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_refreshButtonMouseEntered
+
+    private void refreshButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseExited
+        refreshButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_refreshButtonMouseExited
+
+    private void saveButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseEntered
+        saveButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_saveButtonMouseEntered
+
+    private void saveButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseExited
+        saveButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_saveButtonMouseExited
+
+    private void viewSettingsBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseEntered
+        viewSettingsButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_viewSettingsBtnMouseEntered
+
+    private void viewSettingsBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseExited
+        viewSettingsButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_viewSettingsBtnMouseExited
 
     /**
      * @param args the command line arguments

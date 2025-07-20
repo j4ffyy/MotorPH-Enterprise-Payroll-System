@@ -13,6 +13,7 @@ import ViewModel.RoleAuthenticator;
 import ViewModel.DBQueries;
 import Repository.DataSource;
 import View.LoginPage;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -104,10 +105,18 @@ public class ChangePassword extends javax.swing.JFrame {
             }
         });
 
-        submitButton.setBackground(new java.awt.Color(37, 61, 144));
+        submitButton.setBackground(new java.awt.Color(94, 158, 217));
         submitButton.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         submitButton.setForeground(new java.awt.Color(255, 255, 255));
         submitButton.setText("Submit");
+        submitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                submitButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                submitButtonMouseExited(evt);
+            }
+        });
         submitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitButtonActionPerformed(evt);
@@ -316,6 +325,14 @@ public class ChangePassword extends javax.swing.JFrame {
     private void newPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPasswordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_newPasswordFieldActionPerformed
+
+    private void submitButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseEntered
+        submitButton.setBackground(new Color(0,35,102));        
+    }//GEN-LAST:event_submitButtonMouseEntered
+
+    private void submitButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseExited
+        submitButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_submitButtonMouseExited
 
     /**
      * @param args the command line arguments

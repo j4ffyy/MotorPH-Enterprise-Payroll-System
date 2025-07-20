@@ -16,6 +16,7 @@ import ViewModel.RoleAuthenticator;
 import ViewModel.TimeManager;
 import ViewModel.UserSession;
 import Repository.DataSource;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.sql.Connection;
@@ -100,10 +101,18 @@ public class ViewSettings extends JFrame {
         jLabel1.setText("Settings");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
-        leaveButton.setBackground(new java.awt.Color(0, 35, 102));
+        leaveButton.setBackground(new java.awt.Color(94, 158, 217));
         leaveButton.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         leaveButton.setForeground(new java.awt.Color(255, 255, 255));
         leaveButton.setText("Time-Off App");
+        leaveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                leaveButtonMouseExited(evt);
+            }
+        });
         leaveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 leaveButtonActionPerformed(evt);
@@ -111,10 +120,18 @@ public class ViewSettings extends JFrame {
         });
         jPanel1.add(leaveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 140, -1));
 
-        changePasswordButton.setBackground(new java.awt.Color(0, 35, 102));
+        changePasswordButton.setBackground(new java.awt.Color(94, 158, 217));
         changePasswordButton.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         changePasswordButton.setForeground(new java.awt.Color(255, 255, 255));
         changePasswordButton.setText("Change Password");
+        changePasswordButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                changePasswordButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                changePasswordButtonMouseExited(evt);
+            }
+        });
         changePasswordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changePasswordButtonActionPerformed(evt);
@@ -122,16 +139,24 @@ public class ViewSettings extends JFrame {
         });
         jPanel1.add(changePasswordButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 140, -1));
 
-        logoutButton.setBackground(new java.awt.Color(255, 0, 0));
+        logoutButton.setBackground(new java.awt.Color(255, 107, 107));
         logoutButton.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         logoutButton.setForeground(new java.awt.Color(255, 255, 255));
         logoutButton.setText("Log out");
+        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logoutButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                logoutButtonMouseExited(evt);
+            }
+        });
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 80, -1));
+        jPanel1.add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 250, 80, -1));
 
         dateTodayLabel.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         dateTodayLabel.setForeground(new java.awt.Color(37, 61, 144));
@@ -143,21 +168,37 @@ public class ViewSettings extends JFrame {
         timeNowLabel.setText("Time");
         jPanel1.add(timeNowLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, -1, -1));
 
-        homeButton.setBackground(new java.awt.Color(255, 0, 0));
+        homeButton.setBackground(new java.awt.Color(94, 158, 217));
         homeButton.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         homeButton.setForeground(new java.awt.Color(255, 255, 255));
         homeButton.setText("Home");
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
         homeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(homeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 260, 80, -1));
+        jPanel1.add(homeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 80, -1));
 
-        viewTimesheetButton1.setBackground(new java.awt.Color(0, 35, 102));
+        viewTimesheetButton1.setBackground(new java.awt.Color(94, 158, 217));
         viewTimesheetButton1.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         viewTimesheetButton1.setForeground(new java.awt.Color(255, 255, 255));
         viewTimesheetButton1.setText("Timesheet");
+        viewTimesheetButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewTimesheetButton1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewTimesheetButton1MouseExited(evt);
+            }
+        });
         viewTimesheetButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewTimesheetButton1ActionPerformed(evt);
@@ -250,7 +291,8 @@ public class ViewSettings extends JFrame {
     }//GEN-LAST:event_changePasswordButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-         // Close all open frames except the LoginPage we're about to open
+        UserSession.getInstance().clearSession(); 
+        // Close all open frames except the LoginPage we're about to open
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
             if (frame.isVisible() && !(frame instanceof LoginPage)) {
@@ -359,6 +401,46 @@ public class ViewSettings extends JFrame {
             JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_viewTimesheetButton1ActionPerformed
+
+    private void logoutButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseEntered
+        logoutButton.setBackground(new Color(220,38,38));
+    }//GEN-LAST:event_logoutButtonMouseEntered
+
+    private void logoutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseExited
+        logoutButton.setBackground(new Color(255,107,107));
+    }//GEN-LAST:event_logoutButtonMouseExited
+
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_homeButtonMouseExited
+
+    private void changePasswordButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changePasswordButtonMouseEntered
+        changePasswordButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_changePasswordButtonMouseEntered
+
+    private void changePasswordButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changePasswordButtonMouseExited
+        changePasswordButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_changePasswordButtonMouseExited
+
+    private void leaveButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseEntered
+        leaveButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_leaveButtonMouseEntered
+
+    private void leaveButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leaveButtonMouseExited
+        leaveButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_leaveButtonMouseExited
+
+    private void viewTimesheetButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTimesheetButton1MouseEntered
+        viewTimesheetButton1.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_viewTimesheetButton1MouseEntered
+
+    private void viewTimesheetButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewTimesheetButton1MouseExited
+        viewTimesheetButton1.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_viewTimesheetButton1MouseExited
 
     /**
      * @param args the command line arguments

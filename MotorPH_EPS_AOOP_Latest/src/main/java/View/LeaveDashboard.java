@@ -215,6 +215,12 @@ public class LeaveDashboard extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
         });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -224,6 +230,12 @@ public class LeaveDashboard extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
+            }
         });
 
         viewSettingsButton.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
@@ -232,6 +244,12 @@ public class LeaveDashboard extends javax.swing.JFrame {
         viewSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewSettingsButtonMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseExited(evt);
             }
         });
 
@@ -244,7 +262,16 @@ public class LeaveDashboard extends javax.swing.JFrame {
         profilePanel.setBackground(new java.awt.Color(0, 35, 102));
 
         viewProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        viewProfileButton.setForeground(new java.awt.Color(0, 35, 102));
         viewProfileButton.setText("View Profile");
+        viewProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseExited(evt);
+            }
+        });
         viewProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewProfileButtonActionPerformed(evt);
@@ -357,10 +384,18 @@ public class LeaveDashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        refreshButton.setBackground(new java.awt.Color(0, 35, 102));
+        refreshButton.setBackground(new java.awt.Color(94, 158, 217));
         refreshButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         refreshButton.setForeground(new java.awt.Color(255, 255, 255));
         refreshButton.setText("Refresh");
+        refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseExited(evt);
+            }
+        });
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
@@ -381,20 +416,36 @@ public class LeaveDashboard extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(leavesTable);
 
-        updateButton.setBackground(new java.awt.Color(0, 35, 102));
+        updateButton.setBackground(new java.awt.Color(94, 158, 217));
         updateButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         updateButton.setForeground(new java.awt.Color(255, 255, 255));
         updateButton.setText("Update");
+        updateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                updateButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                updateButtonMouseExited(evt);
+            }
+        });
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
             }
         });
 
-        sortButton.setBackground(new java.awt.Color(0, 35, 102));
+        sortButton.setBackground(new java.awt.Color(94, 158, 217));
         sortButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         sortButton.setForeground(new java.awt.Color(255, 255, 255));
         sortButton.setText("Sort");
+        sortButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sortButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sortButtonMouseExited(evt);
+            }
+        });
         sortButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sortButtonActionPerformed(evt);
@@ -691,6 +742,64 @@ public class LeaveDashboard extends javax.swing.JFrame {
     }
 
     }//GEN-LAST:event_sortButtonActionPerformed
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void viewSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseEntered
+        viewSettingsButton.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_viewSettingsButtonMouseEntered
+
+    private void viewSettingsButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseExited
+        viewSettingsButton.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_viewSettingsButtonMouseExited
+
+    private void viewProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseEntered
+        viewProfileButton.setBackground(new Color(0,35,102));
+        viewProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_viewProfileButtonMouseEntered
+
+    private void viewProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseExited
+        viewProfileButton.setBackground(Color.white);
+        viewProfileButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewProfileButtonMouseExited
+
+    private void refreshButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseEntered
+        refreshButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_refreshButtonMouseEntered
+
+    private void refreshButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseExited
+        refreshButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_refreshButtonMouseExited
+
+    private void updateButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseEntered
+        updateButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_updateButtonMouseEntered
+
+    private void updateButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateButtonMouseExited
+        updateButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_updateButtonMouseExited
+
+    private void sortButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseEntered
+        sortButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_sortButtonMouseEntered
+
+    private void sortButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sortButtonMouseExited
+        sortButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_sortButtonMouseExited
 
     /**
      * @param args the command line arguments

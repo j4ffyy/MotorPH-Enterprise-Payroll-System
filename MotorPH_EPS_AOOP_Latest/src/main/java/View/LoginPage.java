@@ -19,6 +19,7 @@ import Repository.DataSource;
 import View.AdminDashboard;
 import View.EmployeeDashboard;
 import ViewModel.RestrictedInput;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -191,10 +192,19 @@ public class LoginPage extends JFrame {
             }
         });
 
-        loginButton.setBackground(new java.awt.Color(37, 61, 144));
-        loginButton.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        loginButton.setBackground(new java.awt.Color(94, 158, 217));
+        loginButton.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         loginButton.setForeground(new java.awt.Color(255, 255, 255));
         loginButton.setText("Login");
+        loginButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loginButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loginButtonMouseExited(evt);
+            }
+        });
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
@@ -203,6 +213,14 @@ public class LoginPage extends JFrame {
 
         forgotPasswordButton.setFont(new java.awt.Font("Candara", 0, 10)); // NOI18N
         forgotPasswordButton.setText("Forgot Password");
+        forgotPasswordButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                forgotPasswordButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                forgotPasswordButtonMouseExited(evt);
+            }
+        });
         forgotPasswordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 forgotPasswordButtonActionPerformed(evt);
@@ -313,6 +331,9 @@ public class LoginPage extends JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        // Clear the session to reset before logging in
+        UserSession.getInstance().clearSession();
 
         // Verify credentials and get user details
         EmployeeDetails loggedInUser = roleAuthenticator.authenticateAndGetUserDetails(username, password);
@@ -369,15 +390,15 @@ public class LoginPage extends JFrame {
 
     private void forgotPasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPasswordButtonActionPerformed
         String username = usernameField.getText().trim();
-    if (!username.isEmpty()) {
-        new ForgotPassword(username).setVisible(true);
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(this,
-            "Please enter a username first",
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
-    }
+            if (!username.isEmpty()) {
+                new ForgotPassword(username).setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Please enter a username first",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_forgotPasswordButtonActionPerformed
 
     private void usernameFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFieldFocusLost
@@ -387,6 +408,22 @@ public class LoginPage extends JFrame {
     private void usernameFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFieldFocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldFocusGained
+
+    private void forgotPasswordButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotPasswordButtonMouseEntered
+       forgotPasswordButton.setForeground(Color.red);
+    }//GEN-LAST:event_forgotPasswordButtonMouseEntered
+
+    private void forgotPasswordButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotPasswordButtonMouseExited
+       forgotPasswordButton.setForeground(Color.black);
+    }//GEN-LAST:event_forgotPasswordButtonMouseExited
+
+    private void loginButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseEntered
+          loginButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_loginButtonMouseEntered
+
+    private void loginButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseExited
+        loginButton.setBackground(new Color(94,158,217));       
+    }//GEN-LAST:event_loginButtonMouseExited
 
     /**
      * @param args the command line arguments

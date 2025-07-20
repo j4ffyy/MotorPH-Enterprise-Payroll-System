@@ -663,4 +663,52 @@ public class TimesheetController {
             tableModel.addRow(row);
         }
     }
+    
+    public Time recordTime(int eid, String recordType) throws SQLException {
+        // Check if a record of the same type already exists for today
+        if (hasExistingRecord(eid, recordType)) {
+            return null; // Or throw an exception indicating a duplicate record
+        }
+
+        // Proceed to insert the new time record
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(dbQueries.addTimesheetEntry)) {
+            
+            long now = System.currentTimeMillis();
+            Date today = new Date(now);
+            Time currentTime = new Time(now);
+
+            ps.setInt(1, eid);
+            ps.setDate(2, new java.sql.Date(today.getTime()));
+            ps.setTime(3, currentTime);
+            ps.setString(4, recordType); // "Time In" or "Time Out"
+
+            int rowsAffected = ps.executeUpdate();
+            return (rowsAffected > 0) ? currentTime : null;
+        }
+    }
+
+    public boolean hasExistingRecord(int eid, String recordType) throws SQLException {
+        return false;
+    }
+    
+    public Time getTimeRecord(int eid, String recordType) throws SQLException {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(dbQueries.getTimesheetRecord)) {
+            
+            long now = System.currentTimeMillis();
+            Date today = new Date(now);
+
+            ps.setInt(1, eid);
+            ps.setDate(2, new java.sql.Date(today.getTime()));
+            ps.setString(3, recordType);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getTime("LogTime");
+                }
+            }
+        }
+        return null;
+    }
 }

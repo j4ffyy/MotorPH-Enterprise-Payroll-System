@@ -190,6 +190,8 @@ public class DBQueries {
             + "AND LogDate BETWEEN ? AND ? ORDER BY LogDate ASC";
     public final String deleteTimesheet = "DELETE FROM timesheet WHERE Attendance_ID = ?";
     public final String updateTimesheet = "UPDATE timesheet SET EID = ?, LogDate = ?, LogTime = ?, AttStatus = ? WHERE Attendance_ID = ?";
+    public final String checkTimesheetEntry = "SELECT COUNT(*) FROM timesheet WHERE EID = ? AND LogDate = ? AND AttStatus = ?";
+    public final String getTimesheetRecord = "SELECT LogTime FROM timesheet WHERE EID = ? AND LogDate = ? AND AttStatus = ?";
     
     // Leave management queries
     public final String applyLeave = "INSERT INTO leaves (Leave_ID, EID, Date_Filed, Date_From, Date_To, Reason_For_Leave, Leave_Status) VALUES (?, ?, ?, ?, ?, ?, ?)";

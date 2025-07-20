@@ -180,6 +180,12 @@ public class LeaveApplication extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 viewSettingsButtonMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsButtonMouseExited(evt);
+            }
         });
 
         dashboardPanel.setBackground(new java.awt.Color(245, 245, 245));
@@ -191,7 +197,16 @@ public class LeaveApplication extends javax.swing.JFrame {
         profilePanel.setBackground(new java.awt.Color(0, 35, 102));
 
         viewProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        viewProfileButton.setForeground(new java.awt.Color(0, 35, 102));
         viewProfileButton.setText("View Profile");
+        viewProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewProfileButtonMouseExited(evt);
+            }
+        });
         viewProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewProfileButtonActionPerformed(evt);
@@ -304,10 +319,18 @@ public class LeaveApplication extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        resetButton.setBackground(new java.awt.Color(0, 35, 102));
+        resetButton.setBackground(new java.awt.Color(255, 107, 107));
         resetButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         resetButton.setForeground(new java.awt.Color(255, 255, 255));
         resetButton.setText("Reset");
+        resetButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                resetButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                resetButtonMouseExited(evt);
+            }
+        });
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetButtonActionPerformed(evt);
@@ -340,6 +363,14 @@ public class LeaveApplication extends javax.swing.JFrame {
         reasonCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "< Select one >", "Vacation Leave", "Personal Time-Off", "Compensatory Time-Off", "Medical Leave", "Bereavement Leave", "Parental Leave", "Leave Without Pay" }));
 
         submitButton.setText("Submit");
+        submitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                submitButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                submitButtonMouseExited(evt);
+            }
+        });
         submitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitButtonActionPerformed(evt);
@@ -347,6 +378,14 @@ public class LeaveApplication extends javax.swing.JFrame {
         });
 
         clearButton.setText("Clear");
+        clearButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                clearButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                clearButtonMouseExited(evt);
+            }
+        });
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -405,10 +444,18 @@ public class LeaveApplication extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        homeButton.setBackground(new java.awt.Color(0, 35, 102));
+        homeButton.setBackground(new java.awt.Color(94, 158, 217));
         homeButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         homeButton.setForeground(new java.awt.Color(255, 255, 255));
         homeButton.setText("Home");
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
         homeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeButtonActionPerformed(evt);
@@ -428,9 +475,7 @@ public class LeaveApplication extends javax.swing.JFrame {
                             .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
                             .addComponent(dashboardPane)
-                            .addGroup(dashboardPanelLayout.createSequentialGroup()
-                                .addComponent(homeButton)
-                                .addGap(43, 43, 43))))
+                            .addComponent(homeButton)))
                     .addGroup(dashboardPanelLayout.createSequentialGroup()
                         .addGap(154, 154, 154)
                         .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -467,6 +512,12 @@ public class LeaveApplication extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
         });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -475,6 +526,12 @@ public class LeaveApplication extends javax.swing.JFrame {
         payrollLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
             }
         });
 
@@ -716,6 +773,76 @@ public class LeaveApplication extends javax.swing.JFrame {
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         leaveController.clearLeaveForm(dateFrom, dateTo, reasonCombo);
     }//GEN-LAST:event_clearButtonActionPerformed
+
+    private void resetButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resetButtonMouseEntered
+        resetButton.setBackground(new Color(220,38,38));
+    }//GEN-LAST:event_resetButtonMouseEntered
+
+    private void resetButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resetButtonMouseExited
+        resetButton.setBackground(new Color(255,107,107));
+    }//GEN-LAST:event_resetButtonMouseExited
+
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_homeButtonMouseExited
+
+    private void viewProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseEntered
+        viewProfileButton.setBackground(new Color(0,35,102));
+        viewProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_viewProfileButtonMouseEntered
+
+    private void viewProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProfileButtonMouseExited
+        viewProfileButton.setBackground(Color.white);
+        viewProfileButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewProfileButtonMouseExited
+
+    private void submitButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseEntered
+        submitButton.setBackground(new Color(0,35,102));
+        submitButton.setForeground(Color.white);
+    }//GEN-LAST:event_submitButtonMouseEntered
+
+    private void submitButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseExited
+        submitButton.setBackground(Color.white);
+        submitButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_submitButtonMouseExited
+
+    private void clearButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearButtonMouseEntered
+        clearButton.setBackground(new Color(255,107,107));
+        clearButton.setForeground(Color.white);
+    }//GEN-LAST:event_clearButtonMouseEntered
+
+    private void clearButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearButtonMouseExited
+        clearButton.setBackground(Color.white);
+        clearButton.setForeground(Color.black);
+    }//GEN-LAST:event_clearButtonMouseExited
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void viewSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseEntered
+        viewSettingsButton.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_viewSettingsButtonMouseEntered
+
+    private void viewSettingsButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsButtonMouseExited
+        viewSettingsButton.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_viewSettingsButtonMouseExited
 
     /**
      * @param args the command line arguments

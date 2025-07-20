@@ -4,11 +4,11 @@
  */
 package View;
 
-
 /**
  *
  * @author dashcodes and jaf 
  */
+
 import Repository.DataSource;
 import Model.Allowances;
 import View.PaySlip;
@@ -57,6 +57,8 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import Model.PayslipData;
 import Repository.EmployeeRepository;
 import Repository.PayslipRepository;
+import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 import java.util.List;
 
 
@@ -273,7 +275,7 @@ import java.util.List;
         float grossPay, 
         float totalAllowances, 
         float totalIncentives,
-        float totalDeductions,  // Added parameter
+        float totalDeductions,  
         float netPay) {
 
             /// Assigned jLabels + formatted values
@@ -557,38 +559,38 @@ import java.util.List;
             panel.add(new JLabel(String.valueOf(targetEid)));
             panel.add(new JLabel("Name:"));
             panel.add(new JLabel(targetEmployee.getFirstName() + " " + targetEmployee.getLastName()));
-            panel.add(new JLabel("Period Start (yyyy/MM/dd):"));
-            JTextField startField = new JTextField();
+            panel.add(new JLabel("Period Start:"));
+            JDateChooser startField = new JDateChooser();
+            startField.setDateFormatString("yyyy/MM/dd");
             panel.add(startField);
-            panel.add(new JLabel("Period End (yyyy/MM/dd):"));
-            JTextField endField = new JTextField();
+            panel.add(new JLabel("Period End:"));
+            JDateChooser endField = new JDateChooser();
+            endField.setDateFormatString("yyyy/MM/dd");
             panel.add(endField);
 
             int result = JOptionPane.showConfirmDialog(this, panel, "Generate Employee Report", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
-                    Date startDate = parseDate(startField.getText());
-                    Date endDate = parseDate(endField.getText());
+                    Date startDate = startField.getDate();
+                    Date endDate = endField.getDate();
 
-                    // Generate report
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("EID", targetEid);
-                    params.put("Period_Start", startDate);
-                    params.put("Period_End", endDate);
+                // Generate report
+                Map<String, Object> params = new HashMap<>();
+                params.put("EID", targetEid);
+                params.put("Period_Start", startDate);
+                params.put("Period_End", endDate);
 
-                    DBQueries dbQueries = new DBQueries();
-                    PayslipRepository payslipRepo = new PayslipRepository();
+                DBQueries dbQueries = new DBQueries();
+                PayslipRepository payslipRepo = new PayslipRepository();
 
-                    List<PayslipData> payslipData = payslipRepo.getEmployeePayslipData(targetEid, startDate, endDate);
-                    JRDataSource dataSource = new JRBeanCollectionDataSource(payslipData);
+                List<PayslipData> payslipData = payslipRepo.getEmployeePayslipData(targetEid, startDate, endDate);
+                JRDataSource dataSource = new JRBeanCollectionDataSource(payslipData);
 
-                    generateReport("EmpPayslipMotorPH.jrxml", params, dataSource);
-                    JOptionPane.showMessageDialog(this, "Employee Report generated successfully!");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Invalid EID format", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ParseException e) {
-                JOptionPane.showMessageDialog(this, "Invalid date format", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+                generateReport("EmpPayslipMotorPH.jrxml", params, dataSource);
+                JOptionPane.showMessageDialog(this, "Employee Report generated successfully!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid EID format", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }
     
     /**
@@ -662,7 +664,6 @@ import java.util.List;
         holidayPayAmount1 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
         performancePayAmount1 = new javax.swing.JLabel();
-        payrollCycle = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
         printButton = new javax.swing.JButton();
@@ -736,10 +737,16 @@ import java.util.List;
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
         });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        payrollLabel.setForeground(new java.awt.Color(51, 51, 51));
+        payrollLabel.setForeground(new java.awt.Color(0, 35, 102));
         payrollLabel.setText("Payroll");
 
         settingsLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -748,6 +755,12 @@ import java.util.List;
         settingsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 settingsLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseExited(evt);
             }
         });
 
@@ -767,8 +780,15 @@ import java.util.List;
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/blankephoto.png"))); // NOI18N
 
         editProfileButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        editProfileButton.setForeground(java.awt.Color.gray);
         editProfileButton.setText("View Profile");
+        editProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                editProfileButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                editProfileButtonMouseExited(evt);
+            }
+        });
         editProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editProfileButtonActionPerformed(evt);
@@ -796,7 +816,7 @@ import java.util.List;
                     .addComponent(designationWithEid))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editProfileButton)
-                .addGap(83, 83, 83))
+                .addGap(242, 242, 242))
         );
         profilePanelLayout.setVerticalGroup(
             profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -811,7 +831,7 @@ import java.util.List;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(designationWithEid))
                     .addGroup(profilePanelLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
+                        .addGap(40, 40, 40)
                         .addComponent(editProfileButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -822,10 +842,18 @@ import java.util.List;
         jLabel5.setForeground(new java.awt.Color(0, 35, 102));
         jLabel5.setText("Quick Actions");
 
-        homeButton.setBackground(new java.awt.Color(0, 35, 102));
+        homeButton.setBackground(new java.awt.Color(94, 158, 217));
         homeButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         homeButton.setForeground(new java.awt.Color(255, 255, 255));
         homeButton.setText("Home");
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
         homeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeButtonActionPerformed(evt);
@@ -955,9 +983,9 @@ import java.util.List;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel26)
                         .addGap(21, 21, 21)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel27))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel28)
                         .addGap(13, 13, 13)
@@ -977,11 +1005,11 @@ import java.util.List;
                         .addComponent(sssLabel)
                         .addGap(13, 13, 13)
                         .addComponent(philHealthLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(pagIbigLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(taxLabel)
-                        .addContainerGap())))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -1001,7 +1029,7 @@ import java.util.List;
         jLabel21.setForeground(new java.awt.Color(143, 143, 143));
         jLabel21.setText("Deductions:");
 
-        jLabel22.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
+        jLabel22.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         jLabel22.setText("Net Pay:");
 
         totalAllowances.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
@@ -1012,7 +1040,7 @@ import java.util.List;
         totalDeductions.setForeground(new java.awt.Color(143, 143, 143));
         totalDeductions.setText("0.00");
 
-        netPayAmount.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
+        netPayAmount.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         netPayAmount.setText("0.00");
 
         jLabel37.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
@@ -1035,30 +1063,33 @@ import java.util.List;
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel22)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel38)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel11)
-                        .addComponent(jLabel37))
-                    .addComponent(jLabel21))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel18)
-                        .addGap(48, 48, 48))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel22)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(netPayAmount)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel38)
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(totalAllowances)
-                                .addComponent(grossPay)
-                                .addComponent(totalIncentives1)
-                                .addComponent(totalDeductions)))
-                        .addGap(56, 56, 56))))
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel37))
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addGap(48, 48, 48))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(totalAllowances)
+                                    .addComponent(grossPay)
+                                    .addComponent(totalIncentives1)
+                                    .addComponent(totalDeductions)
+                                    .addComponent(netPayAmount))
+                                .addGap(60, 60, 60))))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1083,11 +1114,11 @@ import java.util.List;
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
                     .addComponent(totalDeductions))
-                .addGap(18, 18, 18)
+                .addGap(50, 50, 50)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
                     .addComponent(netPayAmount))
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -1131,10 +1162,6 @@ import java.util.List;
         performancePayAmount1.setForeground(new java.awt.Color(143, 143, 143));
         performancePayAmount1.setText("0.00");
 
-        payrollCycle.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        payrollCycle.setForeground(new java.awt.Color(143, 143, 143));
-        payrollCycle.setText("Payroll Cycle");
-
         jLabel15.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(37, 61, 144));
         jLabel15.setText("Incentives");
@@ -1146,10 +1173,6 @@ import java.util.List;
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(payrollCycle)
-                .addContainerGap())
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1210,25 +1233,39 @@ import java.util.List;
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel36)
                     .addComponent(performancePayAmount1))
-                .addGap(17, 17, 17)
-                .addComponent(payrollCycle)
-                .addGap(18, 18, 18))
+                .addGap(38, 38, 38))
         );
 
-        printButton.setBackground(new java.awt.Color(0, 35, 102));
+        printButton.setBackground(new java.awt.Color(94, 158, 217));
         printButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         printButton.setForeground(new java.awt.Color(255, 255, 255));
         printButton.setText("Print Report");
+        printButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                printButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                printButtonMouseExited(evt);
+            }
+        });
         printButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printButtonActionPerformed(evt);
             }
         });
 
-        viewPayslipButton.setBackground(new java.awt.Color(0, 35, 102));
+        viewPayslipButton.setBackground(new java.awt.Color(94, 158, 217));
         viewPayslipButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewPayslipButton.setForeground(new java.awt.Color(255, 255, 255));
         viewPayslipButton.setText("View Payslip");
+        viewPayslipButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewPayslipButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewPayslipButtonMouseExited(evt);
+            }
+        });
         viewPayslipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewPayslipButtonActionPerformed(evt);
@@ -1251,17 +1288,17 @@ import java.util.List;
                                 .addGap(6, 6, 6)
                                 .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(dashboardPanelLayout.createSequentialGroup()
-                                        .addComponent(homeButton)
-                                        .addGap(624, 624, 624)
-                                        .addComponent(viewPayslipButton)
-                                        .addGap(29, 29, 29)
-                                        .addComponent(printButton))
-                                    .addGroup(dashboardPanelLayout.createSequentialGroup()
                                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(homeButton))
+                                .addGap(18, 18, 18)
+                                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(dashboardPanelLayout.createSequentialGroup()
+                                        .addComponent(printButton)
+                                        .addGap(41, 41, 41)
+                                        .addComponent(viewPayslipButton)))))))
                 .addGap(85, 85, 85))
             .addComponent(profilePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -1546,6 +1583,56 @@ import java.util.List;
           }                
     }//GEN-LAST:event_viewPayslipButtonActionPerformed
 
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void settingsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseEntered
+        settingsLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_settingsLabelMouseEntered
+
+    private void settingsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseExited
+        settingsLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_settingsLabelMouseExited
+
+    private void editProfileButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editProfileButtonMouseEntered
+        editProfileButton.setBackground(new Color(0,35,102));
+        editProfileButton.setForeground(Color.white);
+    }//GEN-LAST:event_editProfileButtonMouseEntered
+
+    private void editProfileButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editProfileButtonMouseExited
+        editProfileButton.setBackground(Color.white);
+        editProfileButton.setForeground(Color.black);
+    }//GEN-LAST:event_editProfileButtonMouseExited
+
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_homeButtonMouseExited
+
+    private void printButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_printButtonMouseEntered
+        printButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_printButtonMouseEntered
+
+    private void printButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_printButtonMouseExited
+        printButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_printButtonMouseExited
+
+    private void viewPayslipButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPayslipButtonMouseEntered
+        viewPayslipButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_viewPayslipButtonMouseEntered
+
+    private void viewPayslipButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPayslipButtonMouseExited
+        viewPayslipButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_viewPayslipButtonMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -1638,7 +1725,6 @@ import java.util.List;
     private javax.swing.JLabel netPayAmount;
     private javax.swing.JLabel overTimePayAmount1;
     private javax.swing.JLabel pagIbigLabel;
-    private javax.swing.JLabel payrollCycle;
     private javax.swing.JLabel payrollLabel;
     private javax.swing.JLabel performancePayAmount1;
     private javax.swing.JLabel philHealthLabel;
@@ -1654,5 +1740,4 @@ import java.util.List;
     private javax.swing.JLabel totalIncentives1;
     private javax.swing.JButton viewPayslipButton;
     // End of variables declaration//GEN-END:variables
-
 }

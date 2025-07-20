@@ -19,6 +19,7 @@ import ViewModel.DBQueries;
 import ViewModel.RoleAuthenticator;
 import ViewModel.SalaryCalculator;
 import ViewModel.UserSession;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -119,6 +120,10 @@ public class EmployeePayslip extends javax.swing.JFrame {
     {
         initComponents();
         
+        setExtendedState(JFrame.NORMAL);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        
         // Update UI with user data
         String fullName = firstName + " " + lastName;
         String designationWithEid = designation + " -- " + eid;
@@ -150,7 +155,6 @@ public class EmployeePayslip extends javax.swing.JFrame {
      * @param totalIncentives Employee's total incentives
      * @param totalDeductions Employee's total deductions
      * @param netPay Employee's net pay
-     * @param connection Database connection
      */
     public EmployeePayslip(
         // Basic Information
@@ -184,8 +188,6 @@ public class EmployeePayslip extends javax.swing.JFrame {
         float netPay) 
     {
         initComponents();
-        
-       
         
         // Update UI with user data
         String fullNameLbl = firstName + " " + lastName;
@@ -263,8 +265,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
         
         // Gross Pay Section
         this.grossSalary1.setText(formatCurrency(salaryCalculator.getGrossPay()));
-        this.overTimeHours.setText(String.valueOf(overTime));
-        
+        this.overTimePay.setText(formatCurrency(salaryCalculator.getOverTimePay()));
+        this.holidayPayAmount1.setText(formatCurrency(salaryCalculator.getHolidayPay()));
+        this.performancePayAmount1.setText(formatCurrency(salaryCalculator.getPerformanceBonus()));        
         
         // Allowances Section
         this.riceAllowance.setText(formatCurrency(riceAllowance));
@@ -281,7 +284,8 @@ public class EmployeePayslip extends javax.swing.JFrame {
         this.grossSalary.setText(formatCurrency(salaryCalculator.getGrossPay()));
         this.totalAllowances.setText(formatCurrency(totalAllowances));
         this.totalIncentives1.setText(formatCurrency(totalIncentives));
-        this.totalDeductions.setText(formatCurrency(totalDeductions));
+        this.totalDeductionsLabel.setText(formatCurrency(totalDeductions));
+        
         this.netPayAmount.setText(formatCurrency(salaryCalculator.getNetPay()));
     }
     
@@ -550,7 +554,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         totalAllowances = new javax.swing.JLabel();
-        totalDeductions = new javax.swing.JLabel();
+        totalDeductionsLabel = new javax.swing.JLabel();
         netPayAmount = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         grossSalary = new javax.swing.JLabel();
@@ -562,9 +566,13 @@ public class EmployeePayslip extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        overTimeHours = new javax.swing.JLabel();
+        overTimePay = new javax.swing.JLabel();
         numberOfDays = new javax.swing.JLabel();
         grossSalary1 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        holidayPayAmount1 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        performancePayAmount1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -592,6 +600,14 @@ public class EmployeePayslip extends javax.swing.JFrame {
         homeButton.setFont(new java.awt.Font("Cambria", 1, 12)); // NOI18N
         homeButton.setForeground(new java.awt.Color(37, 61, 144));
         homeButton.setText("Home");
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
         homeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeButtonActionPerformed(evt);
@@ -822,9 +838,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
         totalAllowances.setForeground(new java.awt.Color(143, 143, 143));
         totalAllowances.setText("0.00");
 
-        totalDeductions.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        totalDeductions.setForeground(new java.awt.Color(143, 143, 143));
-        totalDeductions.setText("0.00");
+        totalDeductionsLabel.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        totalDeductionsLabel.setForeground(new java.awt.Color(143, 143, 143));
+        totalDeductionsLabel.setText("0.00");
 
         netPayAmount.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         netPayAmount.setText("0.00");
@@ -872,7 +888,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(grossSalary)
                                 .addComponent(totalAllowances)
-                                .addComponent(totalDeductions)
+                                .addComponent(totalDeductionsLabel)
                                 .addComponent(totalIncentives1)))))
                 .addGap(67, 67, 67))
         );
@@ -898,7 +914,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
-                    .addComponent(totalDeductions))
+                    .addComponent(totalDeductionsLabel))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
@@ -927,17 +943,33 @@ public class EmployeePayslip extends javax.swing.JFrame {
         jLabel36.setForeground(new java.awt.Color(143, 143, 143));
         jLabel36.setText("Over Time:");
 
-        overTimeHours.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
-        overTimeHours.setForeground(new java.awt.Color(143, 143, 143));
-        overTimeHours.setText("0.00");
+        overTimePay.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        overTimePay.setForeground(new java.awt.Color(143, 143, 143));
+        overTimePay.setText("0.00");
 
         numberOfDays.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         numberOfDays.setForeground(new java.awt.Color(143, 143, 143));
-        numberOfDays.setText("26");
+        numberOfDays.setText("22");
 
         grossSalary1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         grossSalary1.setForeground(new java.awt.Color(143, 143, 143));
         grossSalary1.setText("0.00");
+
+        jLabel40.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        jLabel40.setForeground(new java.awt.Color(143, 143, 143));
+        jLabel40.setText("Holiday Pay:");
+
+        holidayPayAmount1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        holidayPayAmount1.setForeground(new java.awt.Color(143, 143, 143));
+        holidayPayAmount1.setText("0.00");
+
+        jLabel41.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        jLabel41.setForeground(new java.awt.Color(143, 143, 143));
+        jLabel41.setText("Performance Bonus:");
+
+        performancePayAmount1.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
+        performancePayAmount1.setForeground(new java.awt.Color(143, 143, 143));
+        performancePayAmount1.setText("0.00");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -947,24 +979,30 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
-                        .addComponent(jLabel32)
-                        .addGap(82, 82, 82))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel35)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(numberOfDays)
-                        .addGap(114, 114, 114))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel35)
                             .addComponent(jLabel36)
                             .addComponent(jLabel33))
-                        .addGap(97, 97, 97)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(overTimeHours)
-                            .addComponent(grossSalary1))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(grossSalary1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(numberOfDays, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(overTimePay, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel41, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel40)
+                                .addGap(41, 41, 41)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(performancePayAmount1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(holidayPayAmount1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addComponent(jLabel32)))
+                .addGap(82, 82, 82))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -977,14 +1015,22 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel33)
                     .addComponent(grossSalary1))
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
                     .addComponent(numberOfDays))
-                .addGap(34, 34, 34)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel36)
-                    .addComponent(overTimeHours))
+                    .addComponent(overTimePay))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel40)
+                    .addComponent(holidayPayAmount1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel41)
+                    .addComponent(performancePayAmount1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1109,6 +1155,16 @@ public class EmployeePayslip extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_homeButtonActionPerformed
 
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setBackground(new Color(0,35,102));
+        homeButton.setForeground(Color.white);
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(Color.white);
+        homeButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_homeButtonMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -1153,6 +1209,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
     private javax.swing.JLabel fullName;
     private javax.swing.JLabel grossSalary;
     private javax.swing.JLabel grossSalary1;
+    private javax.swing.JLabel holidayPayAmount1;
     private javax.swing.JButton homeButton;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1178,22 +1235,25 @@ public class EmployeePayslip extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel netPayAmount;
     private javax.swing.JLabel numberOfDays;
-    private javax.swing.JLabel overTimeHours;
+    private javax.swing.JLabel overTimePay;
     private javax.swing.JLabel pagIbigContribution;
     private javax.swing.JLabel payPeriodLabel;
     private javax.swing.JLabel payrollCycle;
+    private javax.swing.JLabel performancePayAmount1;
     private javax.swing.JLabel philHealthContribution;
     private javax.swing.JLabel phoneAllowance;
     private javax.swing.JPanel profilePanel;
     private javax.swing.JLabel riceAllowance;
     private javax.swing.JLabel sssContribution;
     private javax.swing.JLabel totalAllowances;
-    private javax.swing.JLabel totalDeductions;
+    private javax.swing.JLabel totalDeductionsLabel;
     private javax.swing.JLabel totalIncentives1;
     private javax.swing.JLabel withholdingTax;
     // End of variables declaration//GEN-END:variables

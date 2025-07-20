@@ -15,6 +15,7 @@ import Repository.DataSource;
 import ViewModel.DBQueries;
 import ViewModel.RoleAuthenticator;
 import ViewModel.UserSession;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import javax.swing.*;
 import java.sql.Connection;
@@ -260,6 +261,12 @@ public class ViewProfile extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dashboardLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dashboardLabelMouseExited(evt);
+            }
         });
 
         payrollLabel.setFont(new java.awt.Font("Cambria", 0, 18)); // NOI18N
@@ -269,11 +276,28 @@ public class ViewProfile extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 payrollLabelMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                payrollLabelMouseExited(evt);
+            }
         });
 
         settingsLabel.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
         settingsLabel.setForeground(new java.awt.Color(0, 35, 102));
         settingsLabel.setText("Settings");
+        settingsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                settingsLabelMouseExited(evt);
+            }
+        });
 
         dashboardPanel.setBackground(new java.awt.Color(245, 245, 245));
 
@@ -289,6 +313,14 @@ public class ViewProfile extends javax.swing.JFrame {
 
         homeButton.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         homeButton.setText("Home");
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
         homeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeButtonActionPerformed(evt);
@@ -306,6 +338,14 @@ public class ViewProfile extends javax.swing.JFrame {
         viewSettingsBtn.setFont(new java.awt.Font("Cambria", 0, 12)); // NOI18N
         viewSettingsBtn.setForeground(new java.awt.Color(0, 35, 102));
         viewSettingsBtn.setText("Settings");
+        viewSettingsBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                viewSettingsBtnMouseExited(evt);
+            }
+        });
         viewSettingsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewSettingsBtnActionPerformed(evt);
@@ -642,12 +682,11 @@ public class ViewProfile extends javax.swing.JFrame {
                         .addGap(75, 75, 75)
                         .addComponent(payrollLabel)
                         .addGap(78, 78, 78)
-                        .addComponent(settingsLabel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NavigationPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel17)
-                        .addGap(454, 454, 454))))
+                        .addComponent(settingsLabel))
+                    .addGroup(NavigationPanelLayout.createSequentialGroup()
+                        .addGap(496, 496, 496)
+                        .addComponent(jLabel17)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(dashboardPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         NavigationPanelLayout.setVerticalGroup(
@@ -862,6 +901,73 @@ public class ViewProfile extends javax.swing.JFrame {
             Logger.getLogger(AdminDashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_viewSettingsBtnActionPerformed
+
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setBackground(new Color(0,35,102));
+        homeButton.setForeground(Color.white);
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(Color.white);
+        homeButton.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_homeButtonMouseExited
+
+    private void viewSettingsBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseEntered
+        viewSettingsBtn.setBackground(new Color(0,35,102));
+        viewSettingsBtn.setForeground(Color.white);
+    }//GEN-LAST:event_viewSettingsBtnMouseEntered
+
+    private void viewSettingsBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewSettingsBtnMouseExited
+        viewSettingsBtn.setBackground(Color.white);
+        viewSettingsBtn.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_viewSettingsBtnMouseExited
+
+    private void dashboardLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseEntered
+        dashboardLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_dashboardLabelMouseEntered
+
+    private void dashboardLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardLabelMouseExited
+        dashboardLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_dashboardLabelMouseExited
+
+    private void payrollLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseEntered
+        payrollLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_payrollLabelMouseEntered
+
+    private void payrollLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payrollLabelMouseExited
+        payrollLabel.setForeground(new Color(51,51,51));
+    }//GEN-LAST:event_payrollLabelMouseExited
+
+    private void settingsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseEntered
+        settingsLabel.setForeground(new Color(94,158,217));
+    }//GEN-LAST:event_settingsLabelMouseEntered
+
+    private void settingsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseExited
+        settingsLabel.setForeground(new Color(0,35,102));
+    }//GEN-LAST:event_settingsLabelMouseExited
+
+    private void settingsLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsLabelMouseClicked
+        try {
+            if (this.loggedInUsername == null || this.loggedInUsername.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "User session not found. Please log in again.", 
+                    "Session Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                    return;
+            }
+        
+                    // Opens ViewSettings and passes the username
+                    new ViewSettings (this.loggedInUsername).setVisible(true);
+                    this.dispose();
+                } catch (HeadlessException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Error opening EditProfile: " + ex.getMessage(), 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_settingsLabelMouseClicked
 
     private void payrollLabelMouseClicked(java.awt.event.MouseEvent evt) {                                          
         try {

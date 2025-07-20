@@ -3,6 +3,7 @@ package ViewModel;
 import Model.EmployeeDetails;
 import Repository.DataSource;
 import Repository.DataAccessObjects.EmployeeDataAccess;
+import com.toedter.calendar.JDateChooser;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,13 +13,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import ViewModel.RestrictedInput;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -160,10 +162,17 @@ public class AdminRole {
 
         final JTextField lastNameField = new JTextField(20);
         final JTextField firstNameField = new JTextField(20);
-        final JTextField birthDayField = new JTextField(20);
-        birthDayField.setDocument(new DateDocument());
-        setPlaceholder(birthDayField, "MM/DD/YYYY");
-
+        
+        // Switch to JDateChooser from JTextField
+        final JDateChooser birthDayChooser = new JDateChooser();
+        birthDayChooser.setDateFormatString("MM/dd/yyyy"); 
+        birthDayChooser.setPreferredSize(new Dimension(200, 25));
+        birthDayChooser.setToolTipText("Select birth date");
+        Calendar minDate = Calendar.getInstance();
+        minDate.add(Calendar.YEAR, -100);
+        birthDayChooser.setMinSelectableDate(minDate.getTime());
+        birthDayChooser.setMaxSelectableDate(new Date());
+        
         final JTextField addressField = new JTextField(20);
         final JTextField phoneField = new JTextField(15);
         phoneField.setDocument(new PhoneNumberDocument());
@@ -181,7 +190,7 @@ public class AdminRole {
         tinField.setDocument(new GovernmentIDDocument(9));
         setPlaceholder(tinField, "XXX-XXX-XXX-XXX");
 
-                    final JTextField pagIbigField = new JTextField(employee.getPagIbig());
+        final JTextField pagIbigField = new JTextField(employee.getPagIbig());
         pagIbigField.setDocument(new GovernmentIDDocument(12));
         setPlaceholder(pagIbigField, "XXXX-XXXX-XXXX");
 
@@ -196,7 +205,7 @@ public class AdminRole {
         addFormField(formPanel, "EID:", eidField);
         addFormField(formPanel, "Last Name:", lastNameField);
         addFormField(formPanel, "First Name:", firstNameField);
-        addFormField(formPanel, "Birthday (MM/DD/YYYY):", birthDayField);
+        addFormField(formPanel, "Birthday:", birthDayChooser);
         addFormField(formPanel, "Address:", addressField);
         addFormField(formPanel, "Phone Number:", phoneField);
         addFormField(formPanel, "SSS #:", sssField);
@@ -222,7 +231,7 @@ public class AdminRole {
                 eidField, 
                 lastNameField, 
                 firstNameField, 
-                birthDayField, 
+                birthDayChooser, 
                 addressField, 
                 phoneField, 
                 sssField, 
@@ -235,7 +244,22 @@ public class AdminRole {
         addDialog.setVisible(true);
     }
 
-    private void addEmployeeAction(JDialog addDialog, DefaultTableModel tableModel, JTextField eidField, JTextField lastNameField, JTextField firstNameField, JTextField birthDayField, JTextField addressField, JTextField phoneField, JTextField sssField, JTextField philHealthField, JTextField tinField, JTextField pagIbigField, JComboBox<String> statusCombo, JComboBox<String> designationCombo, JTextField salaryField) {
+    private void addEmployeeAction(
+            JDialog addDialog, 
+            DefaultTableModel tableModel, 
+            JTextField eidField, 
+            JTextField lastNameField, 
+            JTextField firstNameField, 
+            JDateChooser birthDayChooser, 
+            JTextField addressField, 
+            JTextField phoneField, 
+            JTextField sssField, 
+            JTextField philHealthField, 
+            JTextField tinField, 
+            JTextField pagIbigField, 
+            JComboBox<String> statusCombo, 
+            JComboBox<String> designationCombo, 
+            JTextField salaryField) {
         try {
             formatSalaryField(salaryField);
 
@@ -249,7 +273,27 @@ public class AdminRole {
             }
             String lastName = lastNameField.getText().trim();
             String firstName = firstNameField.getText().trim();
-            String birthdayStr = birthDayField.getText().trim();
+            
+            // Validation for birth date
+            Date selectedBirthDate = birthDayChooser.getDate();
+            if (selectedBirthDate == null) {
+                showMessage("Please select a birth date.", "Validation Error", true);
+                return;
+            }
+
+            // Check if date is reasonable
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR, -120);
+            Date minReasonableDate = cal.getTime();
+            if (selectedBirthDate.before(minReasonableDate)) {
+                showMessage("Please select a valid birth date.", "Validation Error", true);
+                return;
+            }
+
+            // Format the date properly for database
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String birthdayStr = sdf.format(selectedBirthDate);
+                        
             String address = addressField.getText().trim();
             String phoneNumber = phoneField.getText().trim();
             String sssNum = sssField.getText().trim();
@@ -295,11 +339,9 @@ public class AdminRole {
                 }
             } catch (SQLException ex) {
                 showMessage("Error: " + ex.getMessage(), "Error", true);
-                ex.printStackTrace();
             }
         } catch (NumberFormatException ex) {
             showMessage("Error: " + ex.getMessage(), "Error", true);
-            ex.printStackTrace();
         }
     }
 

@@ -12,6 +12,7 @@ package View;
 import ViewModel.OneTimePin;
 import ViewModel.RestrictedInput;
 import ViewModel.RoleAuthenticator;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JFrame;
@@ -113,10 +114,18 @@ public class ForgotPassword extends javax.swing.JFrame {
             }
         });
 
-        submitButton.setBackground(new java.awt.Color(37, 61, 144));
+        submitButton.setBackground(new java.awt.Color(94, 158, 217));
         submitButton.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         submitButton.setForeground(new java.awt.Color(255, 255, 255));
         submitButton.setText("Submit");
+        submitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                submitButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                submitButtonMouseExited(evt);
+            }
+        });
         submitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitButtonActionPerformed(evt);
@@ -152,20 +161,36 @@ public class ForgotPassword extends javax.swing.JFrame {
             }
         });
 
-        oneTimePinBtn.setBackground(new java.awt.Color(0, 35, 102));
+        oneTimePinBtn.setBackground(new java.awt.Color(94, 158, 217));
         oneTimePinBtn.setFont(new java.awt.Font("Cambria", 1, 10)); // NOI18N
         oneTimePinBtn.setForeground(new java.awt.Color(255, 255, 255));
         oneTimePinBtn.setText("Request OTP");
+        oneTimePinBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                oneTimePinBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                oneTimePinBtnMouseExited(evt);
+            }
+        });
         oneTimePinBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 oneTimePinBtnActionPerformed(evt);
             }
         });
 
-        verifyOtpButton.setBackground(new java.awt.Color(0, 35, 102));
+        verifyOtpButton.setBackground(new java.awt.Color(94, 158, 217));
         verifyOtpButton.setFont(new java.awt.Font("Cambria", 1, 10)); // NOI18N
         verifyOtpButton.setForeground(new java.awt.Color(255, 255, 255));
         verifyOtpButton.setText("Verify");
+        verifyOtpButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                verifyOtpButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                verifyOtpButtonMouseExited(evt);
+            }
+        });
         verifyOtpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 verifyOtpButtonActionPerformed(evt);
@@ -395,6 +420,30 @@ public class ForgotPassword extends javax.swing.JFrame {
             oneTimePinBtn.setEnabled(false);            
         }
     }//GEN-LAST:event_verifyOtpButtonActionPerformed
+
+    private void oneTimePinBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_oneTimePinBtnMouseEntered
+        oneTimePinBtn.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_oneTimePinBtnMouseEntered
+
+    private void oneTimePinBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_oneTimePinBtnMouseExited
+        oneTimePinBtn.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_oneTimePinBtnMouseExited
+
+    private void verifyOtpButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_verifyOtpButtonMouseEntered
+        verifyOtpButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_verifyOtpButtonMouseEntered
+
+    private void verifyOtpButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_verifyOtpButtonMouseExited
+        verifyOtpButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_verifyOtpButtonMouseExited
+
+    private void submitButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseEntered
+        submitButton.setBackground(new Color(0,35,102));
+    }//GEN-LAST:event_submitButtonMouseEntered
+
+    private void submitButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitButtonMouseExited
+        submitButton.setBackground(new Color(94,158,217));
+    }//GEN-LAST:event_submitButtonMouseExited
 
     /**
      * @param args the command line arguments
