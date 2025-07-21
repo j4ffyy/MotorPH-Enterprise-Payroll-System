@@ -242,7 +242,6 @@ public class ViewProfile extends javax.swing.JFrame {
         addressField = new javax.swing.JLabel();
         birthdayField = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -664,10 +663,6 @@ public class ViewProfile extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MotorPHLogo small.png"))); // NOI18N
 
-        jLabel17.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(37, 61, 144));
-        jLabel17.setText("----");
-
         javax.swing.GroupLayout NavigationPanelLayout = new javax.swing.GroupLayout(NavigationPanel);
         NavigationPanel.setLayout(NavigationPanelLayout);
         NavigationPanelLayout.setHorizontalGroup(
@@ -675,17 +670,12 @@ public class ViewProfile extends javax.swing.JFrame {
             .addGroup(NavigationPanelLayout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addComponent(jLabel2)
-                .addGroup(NavigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(NavigationPanelLayout.createSequentialGroup()
-                        .addGap(182, 182, 182)
-                        .addComponent(dashboardLabel)
-                        .addGap(75, 75, 75)
-                        .addComponent(payrollLabel)
-                        .addGap(78, 78, 78)
-                        .addComponent(settingsLabel))
-                    .addGroup(NavigationPanelLayout.createSequentialGroup()
-                        .addGap(496, 496, 496)
-                        .addComponent(jLabel17)))
+                .addGap(182, 182, 182)
+                .addComponent(dashboardLabel)
+                .addGap(75, 75, 75)
+                .addComponent(payrollLabel)
+                .addGap(78, 78, 78)
+                .addComponent(settingsLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(dashboardPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -703,8 +693,6 @@ public class ViewProfile extends javax.swing.JFrame {
                     .addComponent(dashboardLabel)
                     .addComponent(payrollLabel)
                     .addComponent(settingsLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel17)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1044,7 +1032,6 @@ public class ViewProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;

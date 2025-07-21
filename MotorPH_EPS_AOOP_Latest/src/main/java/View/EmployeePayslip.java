@@ -175,9 +175,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
         float clothingAllowance,
         
         // Deductions Values
-        float pagIbigContribution,
-        float philHealthContribution,
-        float sssContribution,
+        float sssContribution, 
+        float philHealthContribution, 
+        float pagIbigContribution, 
         float withholdingTax,
         
         // Payroll Summary
@@ -244,49 +244,49 @@ public class EmployeePayslip extends javax.swing.JFrame {
      * @param netPay Employee's net pay
      */
     private void updateFinancialUI(
-            float basicSalary, 
-            float overTimePay, 
-            float holidayPay, 
-            float performanceBonus, 
-            float riceAllowance, 
-            float phoneAllowance, 
-            float clothingAllowance, 
-            float sssContribution, 
-            float philHealthContribution, 
-            float pagIbigContribution, 
-            float withholdingTax, 
-            float grossPay, 
-            float overTime, 
-            float totalAllowances, 
-            float totalIncentives, 
-            float totalDeductions) {
+            float basicSalary,
+            float overTimePay,
+            float holidayPay,
+            float performanceBonus,
+            float riceAllowance,
+            float phoneAllowance,
+            float clothingAllowance,
+            float sssContribution,
+            float philHealthContribution,
+            float pagIbigContribution,
+            float withholdingTax,
+            float grossPay,
+            float totalAllowancesParam,
+            float totalIncentivesParam,
+            float totalDeductionsParam,
+            float netPayParam) {
 
         /// Assigned jLabels + formatted values
-        
+
         // Gross Pay Section
-        this.grossSalary1.setText(formatCurrency(salaryCalculator.getGrossPay()));
-        this.overTimePay.setText(formatCurrency(salaryCalculator.getOverTimePay()));
-        this.holidayPayAmount1.setText(formatCurrency(salaryCalculator.getHolidayPay()));
-        this.performancePayAmount1.setText(formatCurrency(salaryCalculator.getPerformanceBonus()));        
-        
+        this.grossSalary1.setText(formatCurrency(basicSalary));
+        this.overTimePay.setText(formatCurrency(overTimePay));
+        this.holidayPayAmount1.setText(formatCurrency(holidayPay));
+        this.performancePayAmount1.setText(formatCurrency(performanceBonus));
+
         // Allowances Section
         this.riceAllowance.setText(formatCurrency(riceAllowance));
         this.phoneAllowance.setText(formatCurrency(phoneAllowance));
         this.clothingAllowance.setText(formatCurrency(clothingAllowance));
-        
+
         // Deductions Section
-        this.sssContribution.setText(formatCurrency(salaryCalculator.getDeduction("SSS")));
-        this.philHealthContribution.setText(formatCurrency(salaryCalculator.getDeduction("PhilHealth")));
-        this.pagIbigContribution.setText(formatCurrency(salaryCalculator.getDeduction("PagIBIG")));
-        this.withholdingTax.setText(formatCurrency(salaryCalculator.getDeduction("WithholdingTax")));
-        
+        this.sssContribution.setText(formatCurrency(sssContribution));
+        this.philHealthContribution.setText(formatCurrency(philHealthContribution));
+        this.pagIbigContribution.setText(formatCurrency(pagIbigContribution));
+        this.withholdingTax.setText(formatCurrency(withholdingTax));
+
         // Payroll Summary
-        this.grossSalary.setText(formatCurrency(salaryCalculator.getGrossPay()));
-        this.totalAllowances.setText(formatCurrency(totalAllowances));
-        this.totalIncentives1.setText(formatCurrency(totalIncentives));
-        this.totalDeductionsLabel.setText(formatCurrency(totalDeductions));
-        
-        this.netPayAmount.setText(formatCurrency(salaryCalculator.getNetPay()));
+        this.grossSalary.setText(formatCurrency(grossPay));
+        this.totalAllowances.setText(formatCurrency(totalAllowancesParam));
+        this.totalIncentives1.setText(formatCurrency(totalIncentivesParam));
+        this.totalDeductionsLabel.setText(formatCurrency(totalDeductionsParam));
+
+        this.netPayAmount.setText(formatCurrency(netPayParam));
     }
     
      /**
@@ -341,7 +341,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 incentives = new Incentives(employeeDetails.getEid());
                 incentives.setOverTimePay(salaryCalculator.getOverTimePay()); 
             	incentives.setHolidayPay(salaryCalculator.getHolidayPay());
-            	incentives.setPerformanceBonus(salaryCalculator.getIncentive("Performance Bonus"));
+            	incentives.setPerformanceBonus(salaryCalculator.getPerformanceBonus());
                 incentives.setTotalIncentives(salaryCalculator.getTotalIncentives());
                 
                 // Initializes dashboard components
@@ -350,6 +350,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 dashboardData.processAllowanceData(employeeDetails);
                 dashboardData.processDeductionData(employeeDetails, salaryCalculator);
                 dashboardData.processSalaryData(employeeDetails, salaryCalculator);
+                
+                // Calculate net pay
+                salaryCalculator.calculateNetPay();
                 
                 // Update UI with employee data
                 updateUI();
@@ -417,7 +420,7 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 incentives = new Incentives(employeeDetails.getEid());
                 incentives.setOverTimePay(salaryCalculator.getOverTimePay()); 
             	incentives.setHolidayPay(salaryCalculator.getHolidayPay());
-            	incentives.setPerformanceBonus(salaryCalculator.getIncentive("Performance Bonus"));
+            	incentives.setPerformanceBonus(salaryCalculator.getPerformanceBonus());
                 incentives.setTotalIncentives(salaryCalculator.getTotalIncentives());
                 
                 // Initializes dashboard components
@@ -426,6 +429,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 dashboardData.processAllowanceData(employeeDetails);
                 dashboardData.processDeductionData(employeeDetails, salaryCalculator);
                 dashboardData.processSalaryData(employeeDetails, salaryCalculator);
+                
+                // Calculate net pay
+                salaryCalculator.calculateNetPay();
                 
                 // Update UI with employee data
                 updateUI();
@@ -463,18 +469,18 @@ public class EmployeePayslip extends javax.swing.JFrame {
 
             // Calculate values (ensure these are float variables, not JLabels)
             float basicSalary = employeeDetails.getBasicSalary();
-            float overTimePay = salaryCalculator.getIncentive("overtimepay"); 
-            float holidayPay = salaryCalculator.getIncentive("holidaypay");  
-            float performanceBonus = salaryCalculator.getIncentive("performancebonus"); 
+            float overTimePay = salaryCalculator.getOverTimePay(); 
+            float holidayPay = salaryCalculator.getHolidayPay();  
+            float performanceBonus = salaryCalculator.getPerformanceBonus(); 
 
             float riceAllowance = employeeDetails.getRiceSubsidy();  
             float phoneAllowance = allowances.getPhoneAllowance();
             float clothingAllowance = allowances.getClothingAllowance();
 
-            float sssContribution = salaryCalculator.getDeduction("sss");
-            float philHealthContribution = salaryCalculator.getDeduction("philhealth");
+            float sssContribution = salaryCalculator.getDeduction("SSS");
+            float philHealthContribution = salaryCalculator.getDeduction("PhilHealth");
             float pagIbigContribution = salaryCalculator.getDeduction("PagIBIG");
-            float withholdingTax = salaryCalculator.getDeduction("tax");
+            float withholdingTax = salaryCalculator.getDeduction("WithholdingTax");
 
             float grossPay = salaryCalculator.getGrossPay(); 
             float totalAllowances = salaryCalculator.getTotalAllowances();
@@ -498,9 +504,9 @@ public class EmployeePayslip extends javax.swing.JFrame {
                 grossPay, 
                 totalAllowances,
                 totalIncentives,
-                totalDeductions,  
-                netPay            
-                );
+                totalDeductions,
+                netPay
+            );
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, 
                     "Error updating UI: " + ex.getMessage(), 

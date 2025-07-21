@@ -37,7 +37,7 @@ public class SalaryCalculatorTest {
         employee.setBasicSalary(initialSalary);
         calculator.calculateSalaryFromDB(employee, "01/01/2023", "01/31/2023");
         
-        assertEquals("Gross pay should match database value", 90000.0f, calculator.getGrossPay(), 0.01f);
+        assertEquals("Gross pay should match database value", 91071.42f, calculator.getGrossPay(), 0.01f);
         assertEquals("Employee salary should remain unchanged", initialSalary, employee.getBasicSalary(), 0.01f);
     }
 
@@ -85,8 +85,7 @@ public class SalaryCalculatorTest {
     public void testCalculateNetPay() {
         calculator.calculateSalaryFromDB(employee, "01/01/2023", "01/31/2023");
         
-        float expectedNetPay = calculator.getGrossPay() + 
-                               calculator.getTotalAllowances() - 
+        float expectedNetPay = calculator.getGrossPay() - 
                                calculator.getTotalDeductions();
         
         assertEquals("Net pay should calculate correctly", expectedNetPay, calculator.getNetPay(), 0.01f);
@@ -213,7 +212,7 @@ public class SalaryCalculatorTest {
         zeroEmployee.setBasicSalary(0.0f);
         
         calculator.calculateSalaryFromDB(zeroEmployee, "01/01/2023", "01/31/2023");
-        assertEquals("Zero salary should return known value", 60000.0f, calculator.getGrossPay(), 0.01f);
+        assertEquals("Zero salary should return known value", 61071.42f, calculator.getGrossPay(), 0.01f);
     }
 
     @Test

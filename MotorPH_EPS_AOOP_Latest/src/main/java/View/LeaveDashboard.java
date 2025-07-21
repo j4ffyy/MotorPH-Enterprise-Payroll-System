@@ -204,7 +204,6 @@ public class LeaveDashboard extends javax.swing.JFrame {
         updateButton = new javax.swing.JButton();
         sortButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -239,7 +238,7 @@ public class LeaveDashboard extends javax.swing.JFrame {
         });
 
         viewSettingsButton.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        viewSettingsButton.setForeground(new java.awt.Color(51, 51, 51));
+        viewSettingsButton.setForeground(new java.awt.Color(0, 35, 102));
         viewSettingsButton.setText("Settings");
         viewSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -498,10 +497,6 @@ public class LeaveDashboard extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MotorPHLogo small.png"))); // NOI18N
 
-        jLabel17.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(37, 61, 144));
-        jLabel17.setText("----");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -509,19 +504,13 @@ public class LeaveDashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(jLabel2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(176, 176, 176)
-                        .addComponent(dashboardLabel)
-                        .addGap(75, 75, 75)
-                        .addComponent(payrollLabel)
-                        .addGap(68, 68, 68)
-                        .addComponent(viewSettingsButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel17)
-                        .addGap(311, 311, 311))))
+                .addGap(176, 176, 176)
+                .addComponent(dashboardLabel)
+                .addGap(75, 75, 75)
+                .addComponent(payrollLabel)
+                .addGap(68, 68, 68)
+                .addComponent(viewSettingsButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(dashboardPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -535,9 +524,7 @@ public class LeaveDashboard extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dashboardLabel)
                             .addComponent(payrollLabel)
-                            .addComponent(viewSettingsButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel17)))
+                            .addComponent(viewSettingsButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -843,7 +830,6 @@ public class LeaveDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel designationWithEid;
     private javax.swing.JLabel fullName;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel55;

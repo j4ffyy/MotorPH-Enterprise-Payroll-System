@@ -12,6 +12,7 @@ package ViewModel;
 
 import Model.EmployeeDetails;
 import Repository.DataSource;
+import View.ViewSettings;
 import View.ViewTimesheet;
 import com.toedter.calendar.JDateChooser;
 import java.awt.GridLayout;
@@ -281,7 +282,7 @@ public class TimesheetController {
         boolean deleted = deleteTimeLog(attendanceId);
 
         if (deleted) {
-            JOptionPane.showMessageDialog(null, "Timesheet entry deleted successfully.");
+            ViewSettings.showNotification(null, "Timesheet entry deleted successfully.", ViewSettings.NotificationType.SUCCESS);
             loadTimesheetData(tableModel);
         } else {
             JOptionPane.showMessageDialog(null, "Failed to delete timesheet entry. Please check logs for details.", "Deletion Error", JOptionPane.ERROR_MESSAGE);

@@ -425,7 +425,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                             timeOutButton.setEnabled(true);
                         }
 
-                        JOptionPane.showMessageDialog(this, recordType + " recorded successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        ViewSettings.showNotification(this, recordType + " recorded successfully.", ViewSettings.NotificationType.SUCCESS);
                     } else {
                         JOptionPane.showMessageDialog(this, "You have already recorded your " + recordType.toLowerCase() + " for today.", "Already Recorded", JOptionPane.WARNING_MESSAGE);
                     }
@@ -544,7 +544,6 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MotorPH Employee Dashboard");
@@ -552,7 +551,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         NavigationPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         dashboardLabel.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        dashboardLabel.setForeground(new java.awt.Color(51, 51, 51));
+        dashboardLabel.setForeground(new java.awt.Color(0, 35, 102));
         dashboardLabel.setText("Dashboard");
         dashboardLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -887,8 +886,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(netPayLabel)
                                                     .addComponent(totalDeductionsLabel)
-                                                    .addComponent(totalIncentivesLabel))))
-                                        .addGap(104, 104, 104))))
+                                                    .addComponent(totalIncentivesLabel))))))
+                                .addGap(92, 92, 92))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -1184,8 +1183,8 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(322, 322, 322)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1201,25 +1200,20 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                                         .addGap(61, 61, 61)
                                         .addComponent(jLabel9)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(306, 306, 306))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 12, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        jLabel17.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(37, 61, 144));
-        jLabel17.setText("----");
 
         javax.swing.GroupLayout NavigationPanelLayout = new javax.swing.GroupLayout(NavigationPanel);
         NavigationPanel.setLayout(NavigationPanelLayout);
@@ -1228,17 +1222,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
             .addGroup(NavigationPanelLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jLabel2)
-                .addGroup(NavigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(NavigationPanelLayout.createSequentialGroup()
-                        .addGap(180, 180, 180)
-                        .addComponent(dashboardLabel)
-                        .addGap(75, 75, 75)
-                        .addComponent(payrollLabel)
-                        .addGap(78, 78, 78)
-                        .addComponent(settingsLabel))
-                    .addGroup(NavigationPanelLayout.createSequentialGroup()
-                        .addGap(214, 214, 214)
-                        .addComponent(jLabel17)))
+                .addGap(180, 180, 180)
+                .addComponent(dashboardLabel)
+                .addGap(75, 75, 75)
+                .addComponent(payrollLabel)
+                .addGap(78, 78, 78)
+                .addComponent(settingsLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(NavigationPanelLayout.createSequentialGroup()
@@ -1255,11 +1244,9 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                             .addComponent(dashboardLabel)
                             .addComponent(payrollLabel)
                             .addComponent(settingsLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel17)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NavigationPanelLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(10, Short.MAX_VALUE)
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1554,7 +1541,6 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;

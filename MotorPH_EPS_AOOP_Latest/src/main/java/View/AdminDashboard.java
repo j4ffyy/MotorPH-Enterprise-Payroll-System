@@ -391,7 +391,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         dateTodayLabel = new javax.swing.JLabel();
         timeNowLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MotorPH Admin Dashboard");
@@ -900,10 +899,6 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MotorPHLogo small.png"))); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(37, 61, 144));
-        jLabel3.setText("----");
-
         javax.swing.GroupLayout NavigationPanelLayout = new javax.swing.GroupLayout(NavigationPanel);
         NavigationPanel.setLayout(NavigationPanelLayout);
         NavigationPanelLayout.setHorizontalGroup(
@@ -912,11 +907,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addGap(59, 59, 59)
                 .addComponent(jLabel2)
                 .addGap(163, 163, 163)
-                .addGroup(NavigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dashboardLabel)
-                    .addGroup(NavigationPanelLayout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel3)))
+                .addComponent(dashboardLabel)
                 .addGap(75, 75, 75)
                 .addComponent(payrollLabel)
                 .addGap(68, 68, 68)
@@ -935,9 +926,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                         .addGroup(NavigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dashboardLabel)
                             .addComponent(payrollLabel)
-                            .addComponent(viewSettingsButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
+                            .addComponent(viewSettingsButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1433,7 +1422,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel fullName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;

@@ -103,7 +103,6 @@ public class SalaryCalculator {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     // Populate fields from ResultSet
-                    this.grossPay = rs.getFloat("Monthly_Rate");
                     this.basicSalary = rs.getFloat("Monthly_Rate");
                     this.riceSubsidy = rs.getFloat("Rice_Subsidy");
                     this.phoneAllowance = rs.getFloat("Phone_Allowance");
@@ -111,11 +110,20 @@ public class SalaryCalculator {
                     this.overTimePay = rs.getFloat("Overtime_Pay");
 		    this.holidayPay = rs.getFloat("Holiday_Pay");
             	    this.performanceBonus = rs.getFloat("Performance_Bonus");
+                    
+                    // Populate incentives map
+                    incentives.put("overtimepay", this.overTimePay);
+                    incentives.put("holidaypay", this.holidayPay);
+                    incentives.put("performancebonus", this.performanceBonus);
                      
                     
                     // Calculate totals
                     this.totalAllowances = this.riceSubsidy + this.phoneAllowance + this.clothingAllowance;
-                    this.totalIncentives = this.overTimePay + this.holidayPay + this.performanceBonus; 
+                    // totalIncentives now only includes Holiday Pay and Performance Bonus, as Overtime Pay is part of Gross_Income from DB
+                    this.totalIncentives = this.holidayPay + this.performanceBonus; 
+                    
+                    // Gross Pay is directly from the database's pre-calculated Gross_Income
+                    this.grossPay = rs.getFloat("Gross_Income");
                     
                     // Populate deductions map
                     deductions.put("SSS", rs.getFloat("SSS_Contribution"));
@@ -125,9 +133,8 @@ public class SalaryCalculator {
                     
                     this.totalDeductions = deductions.get("SSS") + deductions.get("PhilHealth") + deductions.get("PagIBIG") + deductions.get("WithholdingTax");
                     
-                    this.netPay = this.grossPay + 
-                                  this.totalAllowances - 
-                                  this.totalDeductions;
+                    // Calculate Net Pay based on SRS: Gross Pay - Total Deductions
+                    this.netPay = this.grossPay - this.totalDeductions;
                     }
                 }
             }
@@ -143,7 +150,7 @@ public class SalaryCalculator {
      * This method is called internally after fetching data from the DB.
      */
     public void calculateNetPay() {
-        this.netPay = this.grossPay + this.totalIncentives - this.totalDeductions;
+        this.netPay = this.grossPay - this.totalDeductions;
     }
     
     

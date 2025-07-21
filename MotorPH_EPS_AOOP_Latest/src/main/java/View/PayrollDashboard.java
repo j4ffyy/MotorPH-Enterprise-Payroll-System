@@ -24,7 +24,6 @@ import ViewModel.Reports.EmployeeReportGenerator;
 import ViewModel.Reports.PayrollReportsGenerator;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -45,6 +44,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileSystemView;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -60,6 +60,8 @@ import Repository.PayslipRepository;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
 
     public class PayrollDashboard extends javax.swing.JFrame {
@@ -478,12 +480,13 @@ import java.util.List;
                 List<PayslipData> payslipData = payslipRepo.getEmployeePayslipData(employeeDetails.getEid(), startDate, endDate);
                 JRDataSource dataSource = new JRBeanCollectionDataSource(payslipData);
 
+                Map<String, Object> params = new HashMap<>();
+                params.put("EID", employeeDetails.getEid());
+                params.put("Period_Start", startDate);
+                params.put("Period_End", endDate);
+
                 generateReport("EmpPayslipMotorPH.jrxml", 
-                        Map.of(
-                                "EID", employeeDetails.getEid(),
-                                "Period_Start", startDate,
-                                "Period_End", endDate
-                        ),
+                        params,
                         dataSource
                         );
                 } catch (SQLException ex) {
@@ -493,7 +496,7 @@ import java.util.List;
         }
     }
    
-    private void generateReport(String reportName, Map<String, Object> params, JRDataSource dataSource) {
+    private String generateReport(String reportName, Map<String, Object> params, JRDataSource dataSource) {
         try {
             // Show target file in Terminal
             System.out.println("Attempting to load report: /resources/JasperReports/MotorphReports/" + reportName); 
@@ -528,10 +531,10 @@ import java.util.List;
             }
             String fileName = "Report_" + System.currentTimeMillis() + ".pdf";
             JasperExportManager.exportReportToPdfFile(print, desktopPath + "/" + fileName);
-
-            JOptionPane.showMessageDialog(this, "Report saved to:\n" + desktopPath + "/" + fileName);
+            return desktopPath + "/" + fileName;
         } catch (JRException | FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, "Report generation failed: " + e.getMessage());
+            return null;
         }
     }
     
@@ -573,21 +576,48 @@ import java.util.List;
                     Date startDate = startField.getDate();
                     Date endDate = endField.getDate();
 
-                // Generate report
-                Map<String, Object> params = new HashMap<>();
-                params.put("EID", targetEid);
-                params.put("Period_Start", startDate);
-                params.put("Period_End", endDate);
+                    // Show loading animation instantly
+                    ViewSettings.showLoadingAnimation(this, 4); // Show for 4 seconds
 
-                DBQueries dbQueries = new DBQueries();
-                PayslipRepository payslipRepo = new PayslipRepository();
+                    // Run report generation in a separate thread to keep UI responsive
+                    new Thread(() -> {
+                        String filePath = null;
+                        try {
+                            PayslipRepository payslipRepo = new PayslipRepository();
+                            List<PayslipData> payslipData = payslipRepo.getEmployeePayslipData(employeeDetails.getEid(), startDate, endDate);
+                            JRDataSource dataSource = new JRBeanCollectionDataSource(payslipData);
 
-                List<PayslipData> payslipData = payslipRepo.getEmployeePayslipData(targetEid, startDate, endDate);
-                JRDataSource dataSource = new JRBeanCollectionDataSource(payslipData);
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("EID", employeeDetails.getEid());
+                            params.put("Period_Start", startDate);
+                            params.put("Period_End", endDate);
+                            filePath = generateReport("EmpPayslipMotorPH.jrxml", 
+                                    params,
+                                    dataSource
+                            );
 
-                generateReport("EmpPayslipMotorPH.jrxml", params, dataSource);
-                JOptionPane.showMessageDialog(this, "Employee Report generated successfully!");
-            }
+                            String finalFilePath = filePath;
+                            SwingUtilities.invokeLater(() -> {
+                                ViewSettings.showNotification(this, "Employee Report generated successfully!", ViewSettings.NotificationType.SUCCESS);
+
+                                // Introduce a delay before showing the second notification
+                                Timer timer = new Timer(2000, (e) -> {
+                                    if (finalFilePath != null) {
+                                        ViewSettings.showNotification(this, "Report saved to:\n" + finalFilePath, ViewSettings.NotificationType.INFO);
+                                    }
+                                });
+                                timer.setRepeats(false);
+                                timer.start();
+                            });
+                        } catch (SQLException  ex) {
+                            Logger.getLogger(PayrollDashboard.class.getName()).log(Level.SEVERE, null, ex);
+                            String errorMessage = "Error fetching payslip data: " + ex.getMessage();
+                            SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                            });
+                        }
+                    }).start();
+                }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid EID format", "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -712,12 +742,12 @@ import java.util.List;
                                         .addGap(61, 61, 61)
                                         .addComponent(jLabel9)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(326, 326, 326))
+                .addGap(336, 336, 336))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
@@ -725,7 +755,7 @@ import java.util.List;
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         NavigationPanel.setBackground(new java.awt.Color(255, 255, 255));

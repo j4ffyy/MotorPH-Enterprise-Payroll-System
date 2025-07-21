@@ -78,10 +78,7 @@ import javax.swing.SortOrder;
         String reason = (String) reasonCombo.getSelectedItem();
         String status = "Pending"; // Initial status for a new leave application
 
-        // --- Retrieve Employee ID (Crucial for the APPLY_LEAVE query) ---
-        // You MUST replace '0' with the actual EID of the logged-in employee.
-        // This EID would typically come from a user session, a global EmployeeDetails object,
-        // or passed to the LeaveController's constructor.
+       
         int employeeId = this.loggedInEid; // Use the logged-in employee's ID
 
         // Generate Leave_ID
@@ -342,7 +339,7 @@ import javax.swing.SortOrder;
     private void handleDatabaseError(SQLException e) {
      System.err.println("Database Error: " + e.getMessage());
      e.printStackTrace(); 
-     JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+     JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
     }   
 
     /**

@@ -169,12 +169,11 @@ public class LeaveApplication extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         dashboardLabel = new javax.swing.JLabel();
         payrollLabel = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         viewSettingsButton.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        viewSettingsButton.setForeground(new java.awt.Color(51, 51, 51));
+        viewSettingsButton.setForeground(new java.awt.Color(0, 35, 102));
         viewSettingsButton.setText("Settings");
         viewSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -535,10 +534,6 @@ public class LeaveApplication extends javax.swing.JFrame {
             }
         });
 
-        jLabel17.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(37, 61, 144));
-        jLabel17.setText("----");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -554,10 +549,6 @@ public class LeaveApplication extends javax.swing.JFrame {
                 .addComponent(viewSettingsButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(dashboardPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel17)
-                .addGap(441, 441, 441))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,9 +562,7 @@ public class LeaveApplication extends javax.swing.JFrame {
                             .addComponent(dashboardLabel)
                             .addComponent(payrollLabel)
                             .addComponent(viewSettingsButton))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(dashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -762,7 +751,7 @@ public class LeaveApplication extends javax.swing.JFrame {
         boolean success = leaveController.addLeave(dateFrom, dateTo, reasonCombo);
         
         if (success) {
-            JOptionPane.showMessageDialog(this, "Leave application submitted successfully!");
+            ViewSettings.showNotification(this, "Leave application submitted successfully!", ViewSettings.NotificationType.SUCCESS);
             clearButtonActionPerformed(evt); // Clear the form
             loadEmployeeLeaves(); // Refresh the table
         } else {
@@ -892,7 +881,6 @@ public class LeaveApplication extends javax.swing.JFrame {
     private javax.swing.JButton homeButton;
     private javax.swing.JPanel informationPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

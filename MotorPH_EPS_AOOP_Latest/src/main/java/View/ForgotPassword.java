@@ -365,10 +365,7 @@ public class ForgotPassword extends javax.swing.JFrame {
                 if (username != null) {
 
 
-                JOptionPane.showMessageDialog(this,
-                    "Password successfully changed!",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+                ViewSettings.showNotification(this, "Password successfully changed!", ViewSettings.NotificationType.SUCCESS);
                     new LoginPage().setVisible(true);            
                 }
                 this.dispose();

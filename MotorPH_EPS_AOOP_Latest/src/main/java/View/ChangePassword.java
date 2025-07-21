@@ -282,11 +282,8 @@ public class ChangePassword extends javax.swing.JFrame {
             boolean passwordChanged = authenticator.updatePassword(this.loggedInUsername, newPassword);
 
             if (passwordChanged) {
-                // Show success message
-                JOptionPane.showMessageDialog(this, 
-                    "Password successfully changed. Please log in again.", 
-                    "Password Updated", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                // Show success notification
+                ViewSettings.showNotification(this, "Password successfully changed. Please log in again.", ViewSettings.NotificationType.SUCCESS);
 
                 // Close current window
                 dispose();

@@ -30,6 +30,7 @@ ViewModel\UserSession.class
 ViewModel\RoleAuthenticator.class
 View\ViewProfile$1.class
 View\PayrollDashboard.class
+View\ViewSettings$13.class
 View\EmployeeDashboard$1.class
 ViewModel\AdminRole$DateDocument.class
 View\LeaveDashboard$2.class
@@ -61,6 +62,7 @@ View\AdminDashboard$2.class
 View\ViewTimesheet$2.class
 View\ViewSettings.class
 View\LeaveApplication$12.class
+View\ViewSettings$12.class
 View\ChangePassword$6.class
 View\AdminDashboard$19.class
 Model\PayslipData.class
@@ -69,12 +71,14 @@ ViewModel\OneTimePin.class
 Repository\EmployeeRepository.class
 View\ViewSettings$11.class
 View\ViewTimesheet$12.class
+View\ViewSettings$LoadingCirclePanel.class
 View\LeaveApplication$14.class
 Model\Allowances.class
 ViewModel\TimesheetController.class
 View\EmployeeDashboard$10.class
 View\ViewSettings$2.class
 Repository\PayslipRepository.class
+View\ViewSettings$LoadingCirclePanel$1.class
 View\ViewTimesheet$1.class
 View\ViewTimesheet$15.class
 View\ViewProfile$5.class
@@ -143,6 +147,7 @@ Model\Leave.class
 View\EmployeeProfile$6.class
 Model\EmployeeReports.class
 View\ViewProfile$4.class
+View\ViewSettings$NotificationType.class
 View\EmployeeDashboard$9.class
 ViewModel\AdminRole$SalaryDocument.class
 View\EmployeeDashboard$8.class
@@ -183,9 +188,11 @@ View\LeaveApplication$11.class
 View\LeaveDashboard$8.class
 View\ViewTimesheet$18.class
 View\ViewTimesheet$7.class
+View\ViewSettings$14.class
 View\AdminDashboard$1.class
 View\ChangePassword$3.class
 View\LeaveDashboard$5.class
+View\ViewSettings$3$1.class
 View\PayrollDashboard$6.class
 View\AdminDashboard$11.class
 View\LeaveApplication$9.class

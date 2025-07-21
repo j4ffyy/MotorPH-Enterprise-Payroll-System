@@ -16,22 +16,279 @@ import ViewModel.RoleAuthenticator;
 import ViewModel.TimeManager;
 import ViewModel.UserSession;
 import Repository.DataSource;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
 
 public class ViewSettings extends JFrame {
+
+    // Custom JPanel for the loading animation
+    private static class LoadingCirclePanel extends JPanel {
+        private int angle = 0;
+        private Timer timer;
+
+        public LoadingCirclePanel() {
+            setOpaque(false); // Make the panel transparent
+            setPreferredSize(new java.awt.Dimension(100, 100)); // Set preferred size for the circle
+            timer = new Timer(15, new ActionListener() { // Adjust delay for speed
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    angle = (angle + 5) % 360; // Increment angle for animation
+                    repaint();
+                }
+            });
+        }
+
+        public void startAnimation() {
+            timer.start();
+        }
+
+        public void stopAnimation() {
+            timer.stop();
+        }
+
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int width = getWidth();
+            int height = getHeight();
+            int size = Math.min(width, height) - 10; // Leave some padding
+            int x = (width - size) / 2;
+            int y = (height - size) / 2;
+
+            g2d.setColor(new Color(0, 35, 102)); // MotorPH Navy Blue
+            g2d.setStroke(new BasicStroke(5)); // Line thickness
+
+            // Draw the animated arc
+            g2d.drawArc(x, y, size, size, angle, 270); // Draws 3/4 of a circle
+            
+            g2d.dispose();
+        }
+    }
+
+    public static JDialog showLoadingAnimation(JFrame owner, int durationSeconds) {
+        JDialog loadingDialog = new JDialog(owner, false); // Non-modal dialog
+        loadingDialog.setUndecorated(true);
+        loadingDialog.setBackground(new Color(0, 0, 0, 0)); // Fully transparent background
+
+        LoadingCirclePanel loadingPanel = new LoadingCirclePanel();
+        loadingDialog.add(loadingPanel);
+        loadingDialog.pack();
+
+        // Center the dialog on the owner frame
+        loadingDialog.setLocationRelativeTo(owner);
+        
+        loadingPanel.startAnimation();
+        loadingDialog.setVisible(true);
+
+        // Timer to stop animation and dispose dialog after duration
+        Timer disposeTimer = new Timer(durationSeconds * 1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadingPanel.stopAnimation();
+                loadingDialog.dispose();
+            }
+        });
+        disposeTimer.setRepeats(false); // Run only once
+        disposeTimer.start();
+        
+        return loadingDialog;
+    }
+
     private TimeManager timeManager;
     private String loggedInUsername;
     private RoleAuthenticator roleAuthenticator;
+    
+    
+     public enum NotificationType {
+        SUCCESS,
+        ERROR,
+        INFO
+    }
+    
+    
+    private static Icon scaleIcon(Icon icon, int size) {
+        if (icon instanceof ImageIcon) {
+            Image img = ((ImageIcon) icon).getImage();
+            Image scaledImg = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        }
+        return icon;
+    }
+
+    private static Icon createSuccessIcon() {
+        int size = 24;
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+
+        // Enable anti-aliasing for smooth lines
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Draw a green circle
+        g2d.setColor(new Color(34, 139, 34)); // ForestGreen
+        g2d.fillOval(0, 0, size, size);
+
+        // Draw the white checkmark
+        g2d.setColor(Color.WHITE);
+        g2d.setStroke(new BasicStroke(3)); // Set line thickness
+        g2d.drawLine(6, 12, 11, 17);
+        g2d.drawLine(11, 17, 18, 8);
+
+        g2d.dispose();
+        return new ImageIcon(image);
+    }
+
+    public static void showNotification(final JFrame owner, final String message, final NotificationType type) {
+        SwingUtilities.invokeLater(() -> {
+            JDialog dialog = new JDialog(owner);
+            dialog.setUndecorated(true);
+            dialog.setAlwaysOnTop(true);
+            dialog.setFocusableWindowState(false);
+
+            // Determine background color based on the owner frame
+            Color backgroundColor;
+            if (owner instanceof ChangePassword || owner instanceof LoginPage || owner instanceof ForgotPassword) {
+                backgroundColor = new Color(255, 255, 255, 230); // White with 230 opacity
+            } else {
+                backgroundColor = new Color(0, 35, 102, 230); // Signature Navy Blue with 230 opacity
+            }
+            dialog.setBackground(backgroundColor);
+
+            JPanel panel = new JPanel(new BorderLayout(10, 0)); 
+            panel.setOpaque(false);
+
+            JLabel label = new JLabel(message);
+            label.setOpaque(false);
+            label.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); 
+            label.setIconTextGap(10); 
+
+            // Set text color based on background color
+            if (backgroundColor.equals(new Color(0, 35, 102, 230))) { // If navy blue background
+                label.setForeground(Color.WHITE);
+            } else { // If white background
+                label.setForeground(new Color(0, 35, 102)); // Navy blue text
+            } 
+
+            Icon icon;
+            int iconSize = 24;
+
+            switch (type) {
+                case SUCCESS:
+                    icon = createSuccessIcon();
+                    break;
+                case ERROR:
+                    icon = scaleIcon(UIManager.getIcon("OptionPane.errorIcon"), iconSize);
+                    break;
+                case INFO:
+                default:
+                    icon = scaleIcon(UIManager.getIcon("OptionPane.informationIcon"), iconSize);
+                    break;
+            }
+            label.setIcon(icon);
+
+            panel.add(label, BorderLayout.CENTER);
+            dialog.setContentPane(panel);
+
+            dialog.pack();
+
+            // --- Slide-in Animation Logic ---
+            final int targetX = owner.getX() + owner.getWidth() - dialog.getWidth() - 27; 
+            final int startX = targetX + 40; 
+            final int fixedY = owner.getY() + 50; 
+
+            dialog.setLocation(startX, fixedY); // Set initial off-screen position
+            dialog.setVisible(true);
+
+            final int SLIDE_DURATION_MS = 200; // 0.2 seconds for slide-in
+            final int SLIDE_STEP_MS = 10;      // Update position every 10ms
+            final int slideSteps = SLIDE_DURATION_MS / SLIDE_STEP_MS;
+            final int xStep = (startX - targetX) / slideSteps;
+
+            Timer slideTimer = new Timer(SLIDE_STEP_MS, new ActionListener() {
+                private int currentStep = 0;
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (currentStep < slideSteps) {
+                        dialog.setLocation(startX - (currentStep * xStep), fixedY);
+                        currentStep++;
+                    } else {
+                        dialog.setLocation(targetX, fixedY); // Ensure it ends at the exact target
+                        ((Timer) e.getSource()).stop(); // Stop slide timer
+                        // Start the display and fade-out timers after slide-in completes
+                        startDisplayAndFadeOutTimers(dialog);
+                    }
+                }
+            });
+            slideTimer.start();
+        });
+    }
+
+    private static void startDisplayAndFadeOutTimers(final JDialog dialog) {
+        final int DISPLAY_DURATION_MS = 1000; // 1 second before fade starts
+        final int FADE_DURATION_MS = 3000;  // 3 seconds for fade out
+        final int FADE_STEP_MS = 50;        // Update opacity every 50ms
+        final float INITIAL_OPACITY = dialog.getOpacity();
+        final float OPACITY_DECREMENT = INITIAL_OPACITY / (FADE_DURATION_MS / FADE_STEP_MS);
+
+        Timer displayTimer = new Timer(DISPLAY_DURATION_MS, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // This timer fires once after DISPLAY_DURATION_MS
+                // Now start the fade-out timer
+                Timer fadeTimer = new Timer(FADE_STEP_MS, new ActionListener() {
+                    float currentOpacity = INITIAL_OPACITY;
+
+                    @Override
+                    public void actionPerformed(ActionEvent e2) {
+                        currentOpacity -= OPACITY_DECREMENT;
+                        if (currentOpacity <= 0) {
+                            dialog.setOpacity(0);
+                            dialog.dispose();
+                            ((Timer) e2.getSource()).stop(); // Stop fade timer
+                        } else {
+                            dialog.setOpacity(currentOpacity);
+                        }
+                    }
+                });
+                fadeTimer.setRepeats(true);
+                fadeTimer.start();
+
+                ((Timer) e.getSource()).stop(); // Stop display timer
+            }
+        });
+        displayTimer.setRepeats(false); // Only fire once
+        displayTimer.start();
+    }
     
     
     public ViewSettings(String username) throws SQLException {
