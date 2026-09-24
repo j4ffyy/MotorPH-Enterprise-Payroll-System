@@ -1,0 +1,158 @@
+// Prisma Schema for MotorPH Web Migration
+// Aligned with MO-IT153 Security Implementation Plan (TEAM CTRL+ALT+ELITE)
+// Eliminates SQL injection (Control 3) & externalizes configuration (Control 1)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id           Int           @id @map("Department_ID")
+  name         String        @map("Department_Name")
+  designations Designation[]
+
+  @@map("departments")
+}
+
+model Designation {
+  id           Int        @id @default(autoincrement()) @map("Designation_ID")
+  name         String     @map("Designation_Name")
+  departmentId Int        @map("Department_ID")
+  department   Department @relation(fields: [departmentId], references: [id])
+  employees    Employee[]
+
+  @@map("designations")
+}
+
+model Supervisor {
+  id        Int        @id @default(autoincrement()) @map("Supervisor_ID")
+  name      String     @map("Supervisor_Name")
+  employees Employee[]
+
+  @@map("supervisors")
+}
+
+model DeductionType {
+  id                 Int                 @id @map("Deduction_ID")
+  name               String              @map("Deduction_Name")
+  employeeDeductions EmployeeDeduction[]
+
+  @@map("deduction_types")
+}
+
+model Employee {
+  eid           Int                        @id @map("EID")
+  lastName      String                     @map("Last_Name")
+  firstName     String                     @map("First_Name")
+  birthday      String?                    @map("Birthday")
+  address       String?                    @map("Address")
+  phoneNumber   String?                    @map("Phone_Number")
+  username      String?                    @unique @map("Username")
+  password      String                     @map("Password") // BCrypt Hashed Password
+  status        String?                    @default("Regular") @map("Status")
+  designationId Int?                       @map("Designation_ID")
+  supervisorId  Int?                       @map("Supervisor_ID")
+  isActive      Boolean                    @default(true) @map("is_active")
+  role          String                     @default("EMPLOYEE") @map("Role") // ADMIN, HR, PAYROLL, EMPLOYEE
+
+  designation   Designation?               @relation(fields: [designationId], references: [id])
+  supervisor    Supervisor?                @relation(fields: [supervisorId], references: [id])
+  deductions    EmployeeDeduction[]
+  govIds        EmployeeGovernmentIds?
+  components    EmployeePayrollComponents?
+  variables     EmployeePayrollVariables?
+  leaves        Leave[]
+  timesheets    Timesheet[]
+  payrolls      PayrollRecord[]
+
+  @@map("employee")
+}
+
+model EmployeeDeduction {
+  eid           Int           @map("EID")
+  deductionId   Int           @map("Deduction_ID")
+  amount        Float         @map("Amount")
+  employee      Employee      @relation(fields: [eid], references: [eid], onDelete: Cascade)
+  deductionType DeductionType @relation(fields: [deductionId], references: [id])
+
+  @@id([eid, deductionId])
+  @@map("employee_deductions")
+}
+
+model EmployeeGovernmentIds {
+  eid            Int      @id @map("EID")
+  sssNum         String?  @map("SSS_Num")
+  philhealthNum  String?  @map("Philhealth_Num")
+  tinNum         String?  @map("TIN_Num")
+  pagibigNum     String?  @map("Pagibig_Num")
+  employee       Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("employee_government_ids")
+}
+
+model EmployeePayrollComponents {
+  eid               Int      @id @map("EID")
+  basicSalary       Float    @map("Basic_Salary")
+  riceSubsidy       Float    @default(1500.00) @map("Rice_Subsidy")
+  phoneAllowance    Float    @default(0.00) @map("Phone_Allowance")
+  clothingAllowance Float    @default(0.00) @map("Clothing_Allowance")
+  halfMonthRate     Float    @map("Half_Month_Rate")
+  hourlyRate        Float    @map("Hourly_Rate")
+  employee          Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("employee_payroll_components")
+}
+
+model EmployeePayrollVariables {
+  eid              Int      @id @map("EID")
+  overTime         Float    @default(0) @map("Over_Time")
+  performanceBonus Float    @default(0.00) @map("Performance_Bonus")
+  holidayPay       Float    @default(0.00) @map("Holiday_Pay")
+  employee         Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("employee_payroll_variables")
+}
+
+model Leave {
+  leaveId        String   @id @map("Leave_ID")
+  eid            Int      @map("EID")
+  dateFiled      String?  @map("Date_Filed")
+  dateFrom       String?  @map("Date_From")
+  dateTo         String?  @map("Date_To")
+  reasonForLeave String?  @map("Reason_For_Leave")
+  leaveStatus    String?  @default("Pending") @map("Leave_Status") // Pending, Approved, Rejected
+  employee       Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("leaves")
+}
+
+model Timesheet {
+  attendanceId Int      @id @default(autoincrement()) @map("Attendance_ID")
+  eid          Int      @map("EID")
+  logDate      String   @map("LogDate")
+  logTime      String   @map("LogTime")
+  logOutTime   String?  @map("LogOutTime")
+  attStatus    String   @default("Present") @map("AttStatus") // Present, Late, Absent
+  employee     Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("timesheet")
+}
+
+model PayrollRecord {
+  id              Int      @id @default(autoincrement()) @map("Payroll_ID")
+  eid             Int      @map("EID")
+  periodStart     String   @map("Period_Start")
+  periodEnd       String   @map("Period_End")
+  grossSalary     Float    @map("Gross_Salary")
+  totalDeductions Float    @map("Total_Deductions")
+  netSalary       Float    @map("Net_Salary")
+  generatedAt     DateTime @default(now()) @map("Generated_At")
+  employee        Employee @relation(fields: [eid], references: [eid], onDelete: Cascade)
+
+  @@map("payroll_records")
+}
