@@ -13,8 +13,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { periodStart = '2026-01-01', periodEnd = '2026-01-31', eid } = body;
 
-    // If regular employee requests calculation, only allow their own EID
-    const targetEid = session.role === 'EMPLOYEE' ? session.eid : (eid ? Number(eid) : null);
+    // Only ADMIN and PAYROLL roles can process workforce-wide payroll.
+    // Regular EMPLOYEE and HR accounts are strictly restricted to their own individual EID.
+    const isPayrollAdmin = session.role === 'ADMIN' || session.role === 'PAYROLL';
+    const targetEid = isPayrollAdmin ? (eid ? Number(eid) : null) : session.eid;
 
     const employees = await prisma.employee.findMany({
       where: {

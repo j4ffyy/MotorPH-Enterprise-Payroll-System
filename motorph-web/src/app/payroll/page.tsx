@@ -50,6 +50,12 @@ export default function PayrollPage() {
         router.push('/');
         return;
       }
+      // Separation of Duties: Only ADMIN and PAYROLL roles access the company Payroll Engine.
+      // HR and EMPLOYEE accounts are strictly redirected to their individual "My Payslip".
+      if (data.user.role === 'EMPLOYEE' || data.user.role === 'HR') {
+        router.push('/payslip');
+        return;
+      }
       setCurrentUser(data.user);
       loadPayroll(data.user);
     } catch {
@@ -60,14 +66,12 @@ export default function PayrollPage() {
   const loadPayroll = async (user?: any) => {
     setLoading(true);
     try {
-      const u = user || currentUser;
       const res = await fetch('/api/payroll/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           periodStart,
           periodEnd,
-          eid: u?.role === 'EMPLOYEE' ? u.eid : undefined,
         }),
       });
 

@@ -14,6 +14,7 @@ import {
   Shield,
   CreditCard,
   Building,
+  Lock,
 } from 'lucide-react';
 import { formatPHP } from '@/lib/payrollCalculator';
 
@@ -81,6 +82,30 @@ export default function EmployeesPage() {
     }
   };
 
+  const openAddModal = () => {
+    const maxEid = employees.length > 0 ? Math.max(...employees.map((e) => Number(e.eid) || 0)) : 10000;
+    const nextEid = maxEid + 1;
+    setNewForm({
+      eid: String(nextEid),
+      firstName: '',
+      lastName: '',
+      username: '',
+      password: 'Password123!',
+      status: 'Regular',
+      role: 'EMPLOYEE',
+      designationId: '15',
+      basicSalary: '25000',
+      riceSubsidy: '1500',
+      phoneAllowance: '500',
+      clothingAllowance: '500',
+      sssNum: '',
+      philhealthNum: '',
+      tinNum: '',
+      pagibigNum: '',
+    });
+    setShowAddModal(true);
+  };
+
   const handleCreateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -133,8 +158,8 @@ export default function EmployeesPage() {
           </div>
 
           <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F1E36] hover:bg-[#1A2E4E] text-white font-medium text-xs shadow-md shadow-[#0F1E36]/20 transition-all self-start sm:self-auto"
+            onClick={openAddModal}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F1E36] hover:bg-[#1A2E4E] text-white font-medium text-xs shadow-md shadow-[#0F1E36]/20 transition-all self-start sm:self-auto cursor-pointer"
           >
             <Plus size={16} />
             <span>Add New Employee</span>
@@ -405,14 +430,19 @@ export default function EmployeesPage() {
               <form onSubmit={handleCreateEmployee} className="mt-4 space-y-4 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-600 font-medium block mb-1">Employee ID *</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-slate-600 font-medium">Employee ID</label>
+                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                        <Lock size={10} /> Auto-assigned (+1)
+                      </span>
+                    </div>
                     <input
                       type="number"
-                      required
+                      readOnly
+                      disabled
                       value={newForm.eid}
-                      onChange={(e) => setNewForm({ ...newForm, eid: e.target.value })}
-                      placeholder="e.g. 10037"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#4166F5]"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 font-mono font-bold text-xs cursor-not-allowed select-none shadow-xs"
+                      title="Employee ID is locked and auto-incremented based on the latest workforce record."
                     />
                   </div>
                   <div>
