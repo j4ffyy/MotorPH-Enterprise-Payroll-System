@@ -43,25 +43,9 @@ export default function TimesheetPage() {
   const [todayRecord, setTodayRecord] = useState<any>(null);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    fetchSession();
-  }, []);
-
   const showToast = (msg: string, type: 'success' | 'error') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 4000);
-  };
-
-  const fetchSession = async () => {
-    try {
-      const res = await fetch('/api/auth/me');
-      const data = await res.json();
-      if (!data.authenticated) { router.push('/'); return; }
-      setCurrentUser(data.user);
-      loadTimesheets(data.user, false);
-    } catch {
-      router.push('/');
-    }
   };
 
   const loadTimesheets = async (user?: any, all: boolean = false) => {
@@ -89,6 +73,23 @@ export default function TimesheetPage() {
       setLoading(false);
     }
   };
+
+  const fetchSession = async () => {
+    try {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (!data.authenticated) { router.push('/'); return; }
+      setCurrentUser(data.user);
+      loadTimesheets(data.user, false);
+    } catch {
+      router.push('/');
+    }
+  };
+
+  useEffect(() => {
+    fetchSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClockIn = async () => {
     setActionLoading(true);

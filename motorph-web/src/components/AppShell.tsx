@@ -13,8 +13,8 @@ import {
   User,
   Menu,
   X,
-  Building2,
 } from 'lucide-react';
+import MotorPHLogo from './MotorPHLogo';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -51,10 +51,10 @@ export default function AppShell({ children, user }: AppShellProps) {
       visible: isAdminOrHR,
     },
     {
-      label: 'Payroll Engine',
+      label: isPayroll ? 'Payroll Engine' : 'My Payslip',
       href: '/payroll',
       icon: Calculator,
-      visible: isPayroll,
+      visible: true,
     },
     {
       label: 'Leave Requests',
@@ -108,8 +108,8 @@ export default function AppShell({ children, user }: AppShellProps) {
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             <Link href="/dashboard" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#4166F5] via-[#5c7fff] to-[#7ca1ff] flex items-center justify-center shadow-md">
-                <Building2 className="text-white" size={22} />
+              <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md flex items-center justify-center">
+                <MotorPHLogo size={36} />
               </div>
               <div>
                 <span className="font-bold tracking-tight text-lg text-white">

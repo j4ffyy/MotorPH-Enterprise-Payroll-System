@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Lock, UserCheck, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, UserCheck, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
+import MotorPHLogo from '@/components/MotorPHLogo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,8 +51,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#0F1E36] text-white shadow-xl shadow-[#0F1E36]/20 mb-4">
-            <Building2 className="text-[#7ca1ff]" size={32} />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl shadow-[#4166F5]/20 mb-4 overflow-hidden">
+            <MotorPHLogo size={80} />
           </div>
           <h1 className="text-3xl font-extrabold text-[#0F1E36] tracking-tight">
             Motor<span className="text-[#4166F5]">PH</span> Enterprise
@@ -59,10 +60,6 @@ export default function LoginPage() {
           <p className="text-sm text-slate-500 mt-1">
             Payroll Management & Employee Self-Service Portal
           </p>
-          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-xs text-xs text-slate-600">
-            <CheckCircle2 size={13} className="text-emerald-500" />
-            <span className="font-medium">MO-IT153 Security Baseline Compliant</span>
-          </div>
         </div>
 
         {/* Login Card - Crisp White */}
@@ -156,7 +153,7 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setDemoRole('ratienza@motorph.com', 'emp123')}
+                onClick={() => setDemoRole('ratienza@motorph.com', '123abc')}
                 className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-left hover:bg-slate-100 hover:border-slate-300 transition"
               >
                 <div className="font-semibold text-emerald-700">Employee (ESS)</div>
