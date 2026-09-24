@@ -89,7 +89,16 @@ export async function POST(request: Request) {
       role,
     } = body;
 
-    if (!eid || !firstName || !lastName || !username || !password) {
+    let finalEid = eid ? Number(eid) : null;
+    if (!finalEid) {
+      const maxRecord = await prisma.employee.findFirst({
+        orderBy: { eid: 'desc' },
+        select: { eid: true },
+      });
+      finalEid = maxRecord ? maxRecord.eid + 1 : 10001;
+    }
+
+    if (!firstName || !lastName || !username || !password) {
       return NextResponse.json(
         { error: 'Missing required employee details' },
         { status: 400 }
@@ -97,12 +106,12 @@ export async function POST(request: Request) {
     }
 
     const existing = await prisma.employee.findUnique({
-      where: { eid: Number(eid) },
+      where: { eid: finalEid },
     });
 
     if (existing) {
       return NextResponse.json(
-        { error: `Employee ID ${eid} already exists` },
+        { error: `Employee ID ${finalEid} already exists` },
         { status: 400 }
       );
     }
@@ -114,7 +123,7 @@ export async function POST(request: Request) {
 
     const newEmployee = await prisma.employee.create({
       data: {
-        eid: Number(eid),
+        eid: finalEid,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         birthday: birthday || null,

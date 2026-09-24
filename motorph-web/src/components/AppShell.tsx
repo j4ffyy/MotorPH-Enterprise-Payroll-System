@@ -13,6 +13,7 @@ import {
   User,
   Menu,
   X,
+  FileText,
 } from 'lucide-react';
 import MotorPHLogo from './MotorPHLogo';
 
@@ -35,7 +36,7 @@ export default function AppShell({ children, user }: AppShellProps) {
   const [loggingOut, setLoggingOut] = useState(false);
 
   const isAdminOrHR = user.role === 'ADMIN' || user.role === 'HR';
-  const isPayroll = user.role === 'ADMIN' || user.role === 'PAYROLL';
+  const isPayrollAdmin = user.role === 'ADMIN' || user.role === 'PAYROLL';
 
   const navItems = [
     {
@@ -51,9 +52,15 @@ export default function AppShell({ children, user }: AppShellProps) {
       visible: isAdminOrHR,
     },
     {
-      label: isPayroll ? 'Payroll Engine' : 'My Payslip',
+      label: 'Payroll Engine',
       href: '/payroll',
       icon: Calculator,
+      visible: isPayrollAdmin,
+    },
+    {
+      label: 'My Payslip',
+      href: '/payslip',
+      icon: FileText,
       visible: true,
     },
     {
