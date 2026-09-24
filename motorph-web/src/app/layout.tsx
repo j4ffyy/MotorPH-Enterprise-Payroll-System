@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "MotorPH Enterprise Payroll System | TEAM CTRL+ALT+ELITE",
-  description: "Secure, Web-Based Enterprise Payroll System & Employee Self-Service Portal aligned with MO-IT153 Security Implementation Plan.",
+  description: "Secure, Web-Based Enterprise Payroll System & Employee Self-Service Portal.",
 };
 
 export default function RootLayout({

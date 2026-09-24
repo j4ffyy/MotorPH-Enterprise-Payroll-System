@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="120" fill="#6c8ef5" />
+  
+  <!-- Motorcycle Icon -->
+  <g fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Front Wheel -->
+    <circle cx="380" cy="340" r="60" />
+    <!-- Rear Wheel -->
+    <circle cx="132" cy="340" r="60" />
+    
+    <!-- Body / Frame & Handlebars -->
+    <path d="M132 340 L210 240 L310 240 L360 300" />
+    <path d="M260 240 L240 160 L280 150" />
+    <path d="M340 260 L390 220" />
+    
+    <!-- Engine / Core Details -->
+    <path d="M190 340 L230 280 L290 340" />
+  </g>
+</svg>
