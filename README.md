@@ -181,7 +181,7 @@ npm test
 **CTRL+ALT+ELITE** — Group 8
 
 > MO-IT101 / Advanced Object-Oriented Programming (AOOP)
-> Mapúa Malayan Digital College of Laguna
+> Mapúa Malayan Digital College
 
 ---
 
