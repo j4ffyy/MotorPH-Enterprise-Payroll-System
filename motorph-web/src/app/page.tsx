@@ -231,6 +231,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // 🔥 Pre-warm Neon DB the moment the login page loads.
+  // By the time the user types credentials and clicks Sign In,
+  // the serverless compute is already awake — no cold-start delay.
+  useEffect(() => {
+    fetch('/api/cron/keep-alive').catch(() => {/* silent — non-critical */});
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
