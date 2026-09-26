@@ -51,7 +51,11 @@ export async function GET(request: Request) {
       orderBy: { eid: 'asc' },
     });
 
-    return NextResponse.json({ employees });
+    const response = NextResponse.json({ employees });
+    // Cache for 30s, serve stale while revalidating in background
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
+    return response;
+
   } catch (error) {
     console.error('Fetch employees error:', error);
     return NextResponse.json({ error: 'Failed to retrieve employees' }, { status: 500 });
