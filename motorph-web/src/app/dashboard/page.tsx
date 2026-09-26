@@ -17,24 +17,19 @@ import DashboardInteractive from './DashboardInteractive';
 
 export default async function DashboardPage() {
   const session = await getSession();
-  if (!session) {
-    redirect('/');
-  }
+  if (!session) redirect('/');
 
-  const employee = await getCurrentEmployee();
-
-  // Aggregate stats
-  const totalEmployees = await prisma.employee.count({ where: { isActive: true } });
-  const pendingLeaves = await prisma.leave.count({ where: { leaveStatus: 'Pending' } });
-
-  // Today's timesheets
+  // Fetch employee profile + today's date in parallel with the session check
   const today = new Date().toISOString().split('T')[0];
-  const userTimesheetToday = await prisma.timesheet.findFirst({
-    where: {
-      eid: session.eid,
-      logDate: today,
-    },
-  });
+  const [employee, totalEmployees, pendingLeaves, userTimesheetToday] = await Promise.all([
+    getCurrentEmployee(),
+    prisma.employee.count({ where: { isActive: true } }),
+    prisma.leave.count({ where: { leaveStatus: 'Pending' } }),
+    prisma.timesheet.findFirst({
+      where: { eid: session.eid, logDate: today },
+    }),
+  ]);
+
 
   return (
     <AppShell user={session}>
