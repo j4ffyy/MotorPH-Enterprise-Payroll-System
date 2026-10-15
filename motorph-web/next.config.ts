@@ -24,7 +24,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://*.vercel.app https://vercel.live",
+      "script-src 'self' https://*.vercel.app https://vercel.live",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https:",
       "font-src 'self' https://fonts.gstatic.com data:",
@@ -111,6 +111,15 @@ const securityHeaders = [
     // Prevent IE from switching to compatibility mode
     key: 'X-DNS-Prefetch-Control',
     value: 'on',
+  },
+  {
+    // CORS: Restrict access to legitimate domain
+    key: 'Access-Control-Allow-Origin',
+    value: 'https://motorph-eps.vercel.app',
+  },
+  {
+    key: 'Vary',
+    value: 'Origin',
   },
 ];
 
