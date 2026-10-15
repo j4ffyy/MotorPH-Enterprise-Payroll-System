@@ -1,8 +1,19 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { requirePermission, isManager } from '@/lib/rbac';
+import { validate, ApplyLeaveSchema, UpdateLeaveStatusSchema } from '@/lib/validators';
+import { parseBody } from '@/lib/parseBody';
+import { createAuditLogger } from '@/lib/auditLog';
+import { getClientIp } from '@/lib/rateLimit';
 
-export async function GET(request: Request) {
+/**
+ * GET /api/leaves
+ *
+ * Security Controls Applied:
+ *   R3 — RBAC: isManager() from centralized rbac.ts
+ */
+export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
@@ -12,10 +23,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const all = searchParams.get('all') === 'true';
 
-    const isManager = session.role === 'ADMIN' || session.role === 'HR';
+    // R3: isManager() from centralized RBAC — replaces inline pattern
+    const canViewAll = isManager(session) && all;
 
     const leaves = await prisma.leave.findMany({
-      where: isManager && all ? {} : { eid: session.eid },
+      where: canViewAll ? {} : { eid: session.eid },
       include: {
         employee: {
           select: {
@@ -35,22 +47,31 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * POST /api/leaves
+ *
+ * Security Controls Applied:
+ *   R2 — Input Validation: ApplyLeaveSchema (date format, reason length, date ordering)
+ *   R1 — Audit Logging: LEAVE_APPLIED with actor
+ *   R7 — Body Size: parseBody()
+ */
+export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { dateFrom, dateTo, reasonForLeave } = body;
+    // R7: Body size limit
+    const [rawBody, sizeErr] = await parseBody(request);
+    if (sizeErr) return sizeErr;
 
-    if (!dateFrom || !dateTo || !reasonForLeave) {
-      return NextResponse.json(
-        { error: 'Date from, date to, and reason are required' },
-        { status: 400 }
-      );
-    }
+    // R2: Input validation — enforces date format, min/max reason length,
+    //     and date ordering (dateTo >= dateFrom)
+    const [data, valErr] = validate(rawBody, ApplyLeaveSchema);
+    if (valErr) return valErr;
+
+    const { dateFrom, dateTo, reasonForLeave } = data;
 
     const leaveCount = await prisma.leave.count();
     const leaveId = `L${1000 + leaveCount + 1}`;
@@ -68,6 +89,10 @@ export async function POST(request: Request) {
       },
     });
 
+    // R1: Audit log leave application
+    const audit = createAuditLogger(session, getClientIp(request));
+    await audit('LEAVE_APPLIED', 'LEAVE', leaveId, null, { dateFrom, dateTo, reasonForLeave });
+
     return NextResponse.json({ success: true, leave: newLeave });
   } catch (error) {
     console.error('Apply leave error:', error);
@@ -75,24 +100,54 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+/**
+ * PUT /api/leaves
+ *
+ * Security Controls Applied:
+ *   R3 — RBAC: requirePermission(session, 'approve:leave')
+ *   R2 — Input Validation: UpdateLeaveStatusSchema
+ *   R1 — Audit Logging: LEAVE_APPROVED / LEAVE_REJECTED
+ *   R7 — Body Size: parseBody()
+ */
+export async function PUT(request: NextRequest) {
   try {
     const session = await getSession();
-    if (!session || (session.role !== 'ADMIN' && session.role !== 'HR')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { leaveId, leaveStatus } = body;
+    // R3: Centralized RBAC — replaces inline `session.role === 'ADMIN' || session.role === 'HR'`
+    const deny = requirePermission(session, 'approve:leave');
+    if (deny) return deny;
 
-    if (!leaveId || !['Approved', 'Rejected'].includes(leaveStatus)) {
-      return NextResponse.json({ error: 'Invalid leave status update' }, { status: 400 });
+    // R7: Body size limit
+    const [rawBody, sizeErr] = await parseBody(request);
+    if (sizeErr) return sizeErr;
+
+    // R2: Input validation — enum constraint on leaveStatus
+    const [data, valErr] = validate(rawBody, UpdateLeaveStatusSchema);
+    if (valErr) return valErr;
+
+    const { leaveId, leaveStatus } = data;
+
+    // R1: Capture before state
+    const before = await prisma.leave.findUnique({ where: { leaveId } });
+    if (!before) {
+      return NextResponse.json({ error: 'Leave record not found' }, { status: 404 });
     }
 
     const updated = await prisma.leave.update({
       where: { leaveId },
       data: { leaveStatus },
     });
+
+    // R1: Audit log approval/rejection
+    const audit = createAuditLogger(session, getClientIp(request));
+    const action = leaveStatus === 'Approved' ? 'LEAVE_APPROVED' : 'LEAVE_REJECTED';
+    await audit(action, 'LEAVE', leaveId,
+      { leaveStatus: before.leaveStatus },
+      { leaveStatus }
+    );
 
     return NextResponse.json({ success: true, leave: updated });
   } catch (error) {

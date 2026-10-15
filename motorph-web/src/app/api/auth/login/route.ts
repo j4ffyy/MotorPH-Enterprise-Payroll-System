@@ -1,20 +1,62 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { comparePassword, signToken, AUTH_COOKIE_NAME } from '@/lib/auth';
+import { checkRateLimit, resetRateLimit, getClientIp } from '@/lib/rateLimit';
+import { generateCsrfToken, setCsrfCookie } from '@/lib/csrf';
+import { validate, LoginSchema } from '@/lib/validators';
+import { parseBody } from '@/lib/parseBody';
+import { logAudit } from '@/lib/auditLog';
 
-export async function POST(request: Request) {
+/**
+ * POST /api/auth/login
+ *
+ * IAS2 MS2 Security Controls Integrated:
+ *   C7 — Rate Limiting: 5 attempts / 15-min window per IP
+ *   C6 — CSRF Token Issuance: Fresh token set on successful login
+ *   C1 — Externalized Secrets: JWT_SECRET from env (not hardcoded)
+ *   C3 — Parameterized Queries: Prisma ORM (no raw SQL)
+ *   R1 — Audit Logging: LOGIN_SUCCESS / LOGIN_FAILED events
+ *   R2 — Input Validation: LoginSchema (length bounds, trim)
+ *   R7 — Body Size: parseBody() enforces 64KB limit
+ *
+ * Authentication flow:
+ *   1. Validate input presence
+ *   2. Check IP-based rate limit
+ *   3. Look up employee via Prisma (parameterized)
+ *   4. Verify bcrypt password hash
+ *   5. Issue JWT in HttpOnly+Secure+SameSite=Lax cookie
+ *   6. Issue CSRF token in readable SameSite=Strict cookie
+ *   7. Reset rate limit counter on success
+ */
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { username, password } = body;
+    // R7: Body size limit
+    const [rawBody, sizeErr] = await parseBody(request);
+    if (sizeErr) return sizeErr;
 
-    if (!username || !password) {
+    // R2: Input validation — sanitizes and length-bounds username/password
+    const [data, valErr] = validate(rawBody, LoginSchema);
+    if (valErr) return valErr;
+    const { username, password } = data;
+
+    const clientIp = getClientIp(request);
+    const rateCheck = checkRateLimit(clientIp);
+    if (!rateCheck.allowed) {
       return NextResponse.json(
-        { error: 'Username/Email and password are required' },
-        { status: 400 }
+        {
+          error: `Too many failed attempts. Please try again in ${rateCheck.retryAfterSeconds} seconds.`,
+          retryAfterSeconds: rateCheck.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateCheck.retryAfterSeconds),
+          },
+        }
       );
     }
 
-    // Find employee by username or email
+    // ── C3: Parameterized DB Lookup (via Prisma ORM) ────────────────
     const employee = await prisma.employee.findFirst({
       where: {
         OR: [
@@ -30,6 +72,7 @@ export async function POST(request: Request) {
     });
 
     if (!employee) {
+      // Do NOT reveal whether the username exists (prevents user enumeration)
       return NextResponse.json(
         { error: 'Invalid username or password' },
         { status: 401 }
@@ -43,19 +86,27 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verify bcrypt password hash
-    let isValid = await comparePassword(password, employee.password);
-    if (!isValid && (password === '123abc' || password === 'emp123')) {
-      isValid = true;
-    }
+    // ── Password Verification ───────────────────────────────────────
+    const isValid = await comparePassword(password, employee.password);
     if (!isValid) {
+      // R1: Audit log failed login attempt (non-repudiation for security events)
+      await logAudit({
+        session: { eid: employee.eid, username: employee.username || '', name: '', role: employee.role },
+        action: 'LOGIN_FAILED',
+        resourceType: 'AUTH',
+        resourceId: employee.eid,
+        ipAddress: clientIp,
+      });
       return NextResponse.json(
         { error: 'Invalid username or password' },
         { status: 401 }
       );
     }
 
-    // Sign session JWT
+    // ── Successful Login ────────────────────────────────────────────
+    // C7: Reset rate limit on successful authentication
+    resetRateLimit(clientIp);
+
     const payload = {
       eid: employee.eid,
       username: employee.username || '',
@@ -72,7 +123,7 @@ export async function POST(request: Request) {
       user: payload,
     });
 
-    // Set secure HTTP-only cookie
+    // ── C1: Secure JWT Cookie (HttpOnly + SameSite=Lax) ─────────────
     response.cookies.set({
       name: AUTH_COOKIE_NAME,
       value: token,
@@ -80,7 +131,20 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 8 * 60 * 60, // 8 hours
+      maxAge: 8 * 60 * 60, // 8 hours — matches JWT expiry
+    });
+
+    // ── C6: CSRF Token Cookie (readable by JS, SameSite=Strict) ─────
+    const csrfToken = generateCsrfToken();
+    setCsrfCookie(response, csrfToken);
+
+    // R1: Audit log successful login (accountability)
+    await logAudit({
+      session: { eid: employee.eid, username: employee.username || '', name: payload.name, role: employee.role },
+      action: 'LOGIN_SUCCESS',
+      resourceType: 'AUTH',
+      resourceId: employee.eid,
+      ipAddress: clientIp,
     });
 
     return response;

@@ -1,0 +1,19 @@
+# robots.txt — MotorPH Employee Self-Service Portal
+# Fixes: WebSec0 "robots.txt: not assessed — HTTP 404" (Informational)
+# Block all search engine indexing of the authenticated payroll portal.
+# Employee payroll data must never be indexed by search engines.
+
+User-agent: *
+Disallow: /
+Disallow: /dashboard/
+Disallow: /employees/
+Disallow: /payroll/
+Disallow: /payslip/
+Disallow: /timesheet/
+Disallow: /leaves/
+Disallow: /api/
+
+# Allow only the login page to be indexed (optional branding)
+Allow: /$
+
+Sitemap: https://motorph-eps.vercel.app/sitemap.xml

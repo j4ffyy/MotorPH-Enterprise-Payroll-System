@@ -1,0 +1,9 @@
+# Security contact information for the MotorPH ESS Portal
+# Per RFC 9116 — https://www.rfc-editor.org/rfc/rfc9116
+# WebSec0 Finding: security.txt missing or unreachable (Informational)
+
+Contact: mailto:security@motorph.example.com
+Expires: 2027-10-15T00:00:00.000Z
+Preferred-Languages: en, fil
+Canonical: https://motorph-eps.vercel.app/.well-known/security.txt
+Policy: https://motorph-eps.vercel.app/.well-known/security.txt
