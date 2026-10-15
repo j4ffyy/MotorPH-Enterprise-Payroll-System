@@ -14,6 +14,7 @@ Built for **AOOP** & **IAS2** (Information Assurance & Security 2) — Team **CT
 [![Tests](https://img.shields.io/badge/Tests-163%20Passing%20(100%25)-22c55e?logo=node.js&logoColor=white)](#-testing--quality-assurance)
 [![Security Headers](https://img.shields.io/badge/Security%20Headers-A%2B%20Hardened-brightgreen?logo=shield)](https://securityheaders.com)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?logo=vercel)](https://motorph-eps.vercel.app)
+[![AmIHackable](https://amihackable.dev/api/badge/ec901602-22a9-4920-8ce5-ec56be5d1d13)](https://amihackable.dev/scan/ec901602-22a9-4920-8ce5-ec56be5d1d13)
 
 </div>
 
