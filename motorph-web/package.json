@@ -11,7 +11,7 @@
     "test:security": "node --experimental-strip-types --test tests/securityControls.test.ts tests/r1r8Controls.test.ts",
     "test:r1r8": "node --experimental-strip-types --test tests/r1r8Controls.test.ts",
     "test:audit": "node --experimental-strip-types --test tests/npmAudit.test.ts",
-    "test:all": "node --experimental-strip-types --test tests/payrollCalculator.test.ts tests/securityControls.test.ts tests/r1r8Controls.test.ts tests/npmAudit.test.ts",
+    "test:all": "node --experimental-strip-types --test tests/payrollCalculator.test.ts tests/securityControls.test.ts tests/r1r8Controls.test.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
