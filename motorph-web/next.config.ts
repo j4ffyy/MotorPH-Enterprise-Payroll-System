@@ -24,11 +24,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app vercel.live",
-      "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
-      "img-src 'self' data: blob:",
-      "font-src 'self' fonts.gstatic.com",
-      "connect-src 'self' *.neon.tech *.vercel-insights.com vitals.vercel-insights.com vercel.live",
+      "script-src 'self' 'unsafe-inline' https://*.vercel.app https://vercel.live",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "connect-src 'self' https://*.neon.tech https://*.vercel-insights.com https://vitals.vercel-insights.com https://vercel.live wss://ws-us3.pusher.com",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "base-uri 'self'",
@@ -75,6 +75,7 @@ const securityHeaders = [
       'magnetometer=()',
       'gyroscope=()',
       'accelerometer=()',
+      'browsing-topics=()',
     ].join(', '),
   },
   {
@@ -97,9 +98,14 @@ const securityHeaders = [
     value: 'require-corp',
   },
   {
-    // Already present as HSTS via Vercel; explicit here too.
+    // HSTS (2-year preload standard for 100/100 score)
     key: 'Strict-Transport-Security',
-    value: 'max-age=31536000; includeSubDomains; preload',
+    value: 'max-age=63072000; includeSubDomains; preload',
+  },
+  {
+    // X-Permitted-Cross-Domain-Policies: Restricts Flash/PDF cross-domain leaks
+    key: 'X-Permitted-Cross-Domain-Policies',
+    value: 'none',
   },
   {
     // Prevent IE from switching to compatibility mode
