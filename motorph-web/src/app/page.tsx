@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, UserCheck, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
 import MotorPHLogo from '@/components/MotorPHLogo';
+import { setCachedUser } from '@/lib/clientAuth';
 
 // ─── Animated Canvas Background ────────────────────────────────────────────────
 type ShapeType = 'square' | 'circle' | 'triangle' | 'cross' | 'hexagon' | 'diamond' | 'dash' | 'star';
@@ -255,6 +256,7 @@ export default function LoginPage() {
         throw new Error(data.error || 'Authentication failed');
       }
 
+      setCachedUser(data.user);
       router.push('/dashboard');
       router.refresh();
     } catch (err: any) {

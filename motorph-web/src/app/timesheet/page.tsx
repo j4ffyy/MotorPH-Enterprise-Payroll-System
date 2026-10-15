@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
+import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
+import { TimesheetLoading } from '@/components/RouteSkeletons';
 import { Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from 'lucide-react';
 
 // Format YYYY-MM-DD → MM/DD/YYYY
@@ -35,7 +37,7 @@ function calcHoursWorked(inTime: string, outTime: string): string {
 
 export default function TimesheetPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => getCachedUser());
   const [timesheets, setTimesheets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -78,8 +80,13 @@ export default function TimesheetPage() {
     try {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
-      if (!data.authenticated) { router.push('/'); return; }
+      if (!data.authenticated) {
+        clearCachedUser();
+        router.push('/');
+        return;
+      }
       setCurrentUser(data.user);
+      setCachedUser(data.user);
       loadTimesheets(data.user, false);
     } catch {
       router.push('/');
@@ -87,6 +94,10 @@ export default function TimesheetPage() {
   };
 
   useEffect(() => {
+    const cached = getCachedUser();
+    if (cached) {
+      loadTimesheets(cached, false);
+    }
     fetchSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -121,7 +132,7 @@ export default function TimesheetPage() {
     }
   };
 
-  if (!currentUser) return null;
+  if (!currentUser) return <TimesheetLoading />;
 
   const isManager = currentUser.role === 'ADMIN' || currentUser.role === 'HR';
   const hasClockedIn  = !!todayRecord;

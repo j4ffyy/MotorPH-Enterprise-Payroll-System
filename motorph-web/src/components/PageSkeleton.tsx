@@ -1,5 +1,4 @@
 // Shared skeleton loading UI — shown instantly while server pages fetch data.
-// Mirrors the AppShell layout (sidebar + header + content area) so there's no flash.
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
