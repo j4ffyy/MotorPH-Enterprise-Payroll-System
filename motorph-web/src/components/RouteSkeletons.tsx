@@ -26,6 +26,20 @@ function TopNavSkeleton() {
   );
 }
 
+export function EmployeesLoading() {
+  return (
+    <div className="flex min-h-screen bg-slate-50">
+      <SidebarSkeleton />
+      <div className="flex-1 flex flex-col">
+        <TopNavSkeleton />
+        <div className="flex-1 p-6">
+          <PageSkeleton title="Employee Directory" subtitle="Loading workforce records..." showTable rows={10} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PayrollLoading() {
   return (
     <div className="flex min-h-screen bg-slate-50">

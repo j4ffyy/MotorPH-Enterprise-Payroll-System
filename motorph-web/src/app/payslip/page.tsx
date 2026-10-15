@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
 import MotorPHLogo from '@/components/MotorPHLogo';
+import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
+import { PayslipLoading } from '@/components/RouteSkeletons';
 import {
   FileText,
   Printer,
@@ -19,13 +21,17 @@ import { formatPHP } from '@/lib/payrollCalculator';
 
 export default function PayslipPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => getCachedUser());
   const [payslip, setPayslip] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [periodStart, setPeriodStart] = useState('2026-01-01');
   const [periodEnd, setPeriodEnd] = useState('2026-01-31');
 
   useEffect(() => {
+    const cached = getCachedUser();
+    if (cached) {
+      loadMyPayslip(cached);
+    }
     fetchSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -35,10 +41,12 @@ export default function PayslipPage() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
       if (!data.authenticated) {
+        clearCachedUser();
         router.push('/');
         return;
       }
       setCurrentUser(data.user);
+      setCachedUser(data.user);
       loadMyPayslip(data.user);
     } catch {
       router.push('/');
@@ -72,7 +80,7 @@ export default function PayslipPage() {
     }
   };
 
-  if (!currentUser) return null;
+  if (!currentUser) return <PayslipLoading />;
 
   return (
     <AppShell user={currentUser}>

@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
+import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
+import { PayrollLoading } from '@/components/RouteSkeletons';
 import {
   Calculator,
   Search,
@@ -26,7 +28,7 @@ import { formatPHP } from '@/lib/payrollCalculator';
 
 export default function PayrollPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => getCachedUser());
   const [payrolls, setPayrolls] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [periodStart, setPeriodStart] = useState('2026-01-01');
@@ -39,6 +41,14 @@ export default function PayrollPage() {
   const [sortBy, setSortBy] = useState<'eid' | 'name' | 'gross' | 'net'>('eid');
 
   useEffect(() => {
+    const cached = getCachedUser();
+    if (cached) {
+      if (cached.role === 'EMPLOYEE' || cached.role === 'HR') {
+        router.push('/payslip');
+        return;
+      }
+      loadPayroll(cached);
+    }
     fetchSession();
   }, []);
 
@@ -47,6 +57,7 @@ export default function PayrollPage() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
       if (!data.authenticated) {
+        clearCachedUser();
         router.push('/');
         return;
       }
@@ -57,6 +68,7 @@ export default function PayrollPage() {
         return;
       }
       setCurrentUser(data.user);
+      setCachedUser(data.user);
       loadPayroll(data.user);
     } catch {
       router.push('/');
@@ -160,7 +172,7 @@ export default function PayrollPage() {
     return name.slice(0, 2).toUpperCase();
   };
 
-  if (!currentUser) return null;
+  if (!currentUser) return <PayrollLoading />;
 
   return (
     <AppShell user={currentUser}>

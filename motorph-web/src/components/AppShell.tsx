@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { setCachedUser, clearCachedUser } from '@/lib/clientAuth';
 import {
   LayoutDashboard,
   Users,
@@ -34,6 +35,12 @@ export default function AppShell({ children, user }: AppShellProps) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setCachedUser(user);
+    }
+  }, [user]);
 
   const isAdminOrHR = user.role === 'ADMIN' || user.role === 'HR';
   const isPayrollAdmin = user.role === 'ADMIN' || user.role === 'PAYROLL';
@@ -80,6 +87,7 @@ export default function AppShell({ children, user }: AppShellProps) {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
+      clearCachedUser();
       await fetch('/api/auth/logout', { method: 'POST' });
       router.push('/');
       router.refresh();

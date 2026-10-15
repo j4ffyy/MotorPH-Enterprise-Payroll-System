@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
+import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
+import { LeavesLoading } from '@/components/RouteSkeletons';
 import {
   CalendarCheck,
   Plus,
@@ -14,7 +16,7 @@ import {
 
 export default function LeavesPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => getCachedUser());
   const [leaves, setLeaves] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showApplyModal, setShowApplyModal] = useState(false);
@@ -27,6 +29,10 @@ export default function LeavesPage() {
   });
 
   useEffect(() => {
+    const cached = getCachedUser();
+    if (cached) {
+      loadLeaves(cached);
+    }
     fetchSession();
   }, []);
 
@@ -35,10 +41,12 @@ export default function LeavesPage() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
       if (!data.authenticated) {
+        clearCachedUser();
         router.push('/');
         return;
       }
       setCurrentUser(data.user);
+      setCachedUser(data.user);
       loadLeaves(data.user);
     } catch {
       router.push('/');
@@ -98,7 +106,7 @@ export default function LeavesPage() {
     }
   };
 
-  if (!currentUser) return null;
+  if (!currentUser) return <LeavesLoading />;
 
   const isManager = currentUser.role === 'ADMIN' || currentUser.role === 'HR';
 

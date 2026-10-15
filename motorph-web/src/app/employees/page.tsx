@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
+import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
+import { EmployeesLoading } from '@/components/RouteSkeletons';
 import {
   Users,
   Search,
@@ -20,7 +22,7 @@ import { formatPHP } from '@/lib/payrollCalculator';
 
 export default function EmployeesPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => getCachedUser());
   const [employees, setEmployees] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('');
@@ -58,10 +60,12 @@ export default function EmployeesPage() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
       if (!data.authenticated) {
+        clearCachedUser();
         router.push('/');
         return;
       }
       setCurrentUser(data.user);
+      setCachedUser(data.user);
     } catch {
       router.push('/');
     }
@@ -140,7 +144,7 @@ export default function EmployeesPage() {
     return matchSearch && matchDept;
   });
 
-  if (!currentUser) return null;
+  if (!currentUser) return <EmployeesLoading />;
 
   return (
     <AppShell user={currentUser}>
@@ -217,11 +221,23 @@ export default function EmployeesPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {loading ? (
-                  <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-400">
-                      Loading workforce directory...
-                    </td>
-                  </tr>
+                  [...Array(8)].map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="py-3 px-4"><div className="h-4 w-12 bg-slate-200 rounded" /></td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-32 bg-slate-200 rounded mb-1" />
+                        <div className="h-3 w-20 bg-slate-100 rounded" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-28 bg-slate-200 rounded mb-1" />
+                        <div className="h-3 w-16 bg-slate-100 rounded" />
+                      </td>
+                      <td className="py-3 px-4"><div className="h-5 w-16 bg-slate-200 rounded-full" /></td>
+                      <td className="py-3 px-4"><div className="h-4 w-20 bg-slate-200 rounded" /></td>
+                      <td className="py-3 px-4"><div className="h-5 w-16 bg-slate-200 rounded-full" /></td>
+                      <td className="py-3 px-4 text-right"><div className="h-7 w-20 bg-slate-200 rounded-lg ml-auto" /></td>
+                    </tr>
+                  ))
                 ) : filteredEmployees.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-slate-400">
