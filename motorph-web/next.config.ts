@@ -15,27 +15,24 @@ import type { NextConfig } from "next";
 //   R8:   productionBrowserSourceMaps: false (Source Map Suppression)
 //   R8:   poweredByHeader: false (Technology Disclosure Prevention)
 // ============================================================
+// Content-Security-Policy for API endpoints (no inline scripts permitted in JSON responses)
+// Web pages use dynamic per-request nonce CSP generated in src/middleware.ts
+const apiCspHeader = {
+  key: 'Content-Security-Policy',
+  value: [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self'",
+    "img-src 'self'",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "upgrade-insecure-requests",
+  ].join('; '),
+};
+
 const securityHeaders = [
-  {
-    // C5-a: Content-Security-Policy
-    // Fixes: ZAP Medium/High, VibeWrench CRITICAL, WebSec0 FAIL
-    // Restricts script execution origins — prevents XSS attacks
-    // that could steal payroll/PII data from the ESS portal.
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://*.vercel.app https://vercel.live",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https:",
-      "font-src 'self' https://fonts.gstatic.com data:",
-      "connect-src 'self' https://*.neon.tech https://*.vercel-insights.com https://vitals.vercel-insights.com https://vercel.live wss://ws-us3.pusher.com",
-      "frame-ancestors 'none'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "upgrade-insecure-requests",
-    ].join('; '),
-  },
   {
     // C5-b: X-Frame-Options
     // Fixes: ZAP Medium, VibeWrench WARNING, WebSec0 FAIL
@@ -158,6 +155,10 @@ const nextConfig: NextConfig = {
       {
         source: '/:path*',
         headers: securityHeaders,
+      },
+      {
+        source: '/api/:path*',
+        headers: [apiCspHeader],
       },
     ];
   },
