@@ -1,18 +1,29 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession, hashPassword } from '@/lib/auth';
+import { requirePermission, requireSelfOrElevated, filterEmployeeResponse } from '@/lib/rbac';
+import { validate, CreateEmployeeSchema } from '@/lib/validators';
+import { parseBody } from '@/lib/parseBody';
+import { createAuditLogger } from '@/lib/auditLog';
+import { getClientIp } from '@/lib/rateLimit';
 
-export async function GET(request: Request) {
+/**
+ * GET /api/employees
+ *
+ * Security Controls Applied:
+ *   R3 — RBAC: requirePermission(session, 'read:all')
+ *   R5 — PII Minimization: filterEmployeeResponse() strips govIds for non-admin roles
+ */
+export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Role check: Only Admin, HR, and Payroll can view all employees
-    if (session.role === 'EMPLOYEE') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
+    // R3: Centralized RBAC — replaces inline `session.role === 'EMPLOYEE'` check
+    const deny = requirePermission(session, 'read:all');
+    if (deny) return deny;
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('q') || '';
@@ -46,13 +57,18 @@ export async function GET(request: Request) {
         },
         supervisor: true,
         components: true,
-        govIds: true,
+        govIds: true,    // R5: filtered per role by filterEmployeeResponse()
       },
       orderBy: { eid: 'asc' },
     });
 
-    const response = NextResponse.json({ employees });
-    // Cache for 30s, serve stale while revalidating in background
+    // R5 — PII Minimization: strip govIds + password hash for non-view:govids roles
+    const filtered = employees.map((emp) =>
+      filterEmployeeResponse(emp as unknown as Record<string, unknown>, session)
+    );
+
+    const response = NextResponse.json({ employees: filtered });
+    // Cache private — not for CDN/shared caches (contains PII)
     response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
     return response;
 
@@ -62,36 +78,40 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * POST /api/employees
+ *
+ * Security Controls Applied:
+ *   R2 — Input Validation: CreateEmployeeSchema via validate()
+ *   R3 — RBAC: requirePermission(session, 'write:employee')
+ *   R1 — Audit Logging: EMPLOYEE_CREATED with actor EID + IP
+ *   R7 — Body Size: parseBody() enforces 64KB limit
+ */
+export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session || (session.role !== 'ADMIN' && session.role !== 'HR')) {
       return NextResponse.json({ error: 'Unauthorized. HR/Admin access required.' }, { status: 403 });
     }
 
-    const body = await request.json();
+    // R3: Centralized permission check
+    const deny = requirePermission(session, 'write:employee');
+    if (deny) return deny;
+
+    // R7: Body size limit
+    const [rawBody, sizeErr] = await parseBody(request);
+    if (sizeErr) return sizeErr;
+
+    // R2: Input validation
+    const [data, valErr] = validate(rawBody, CreateEmployeeSchema);
+    if (valErr) return valErr;
+
     const {
-      eid,
-      firstName,
-      lastName,
-      birthday,
-      address,
-      phoneNumber,
-      username,
-      password,
-      designationId,
-      supervisorId,
-      status,
-      basicSalary,
-      riceSubsidy,
-      phoneAllowance,
-      clothingAllowance,
-      sssNum,
-      philhealthNum,
-      tinNum,
-      pagibigNum,
-      role,
-    } = body;
+      eid, firstName, lastName, birthday, address, phoneNumber,
+      username, password, designationId, supervisorId, status,
+      basicSalary, riceSubsidy, phoneAllowance, clothingAllowance,
+      sssNum, philhealthNum, tinNum, pagibigNum, role,
+    } = data;
 
     let finalEid = eid ? Number(eid) : null;
     if (!finalEid) {
@@ -102,17 +122,7 @@ export async function POST(request: Request) {
       finalEid = maxRecord ? maxRecord.eid + 1 : 10001;
     }
 
-    if (!firstName || !lastName || !username || !password) {
-      return NextResponse.json(
-        { error: 'Missing required employee details' },
-        { status: 400 }
-      );
-    }
-
-    const existing = await prisma.employee.findUnique({
-      where: { eid: finalEid },
-    });
-
+    const existing = await prisma.employee.findUnique({ where: { eid: finalEid } });
     if (existing) {
       return NextResponse.json(
         { error: `Employee ID ${finalEid} already exists` },
@@ -160,7 +170,20 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ success: true, employee: newEmployee });
+    // R1: Audit log — record who created the employee and when
+    const audit = createAuditLogger(session, getClientIp(request));
+    await audit('EMPLOYEE_CREATED', 'EMPLOYEE', finalEid, null, {
+      eid: finalEid,
+      firstName,
+      lastName,
+      username,
+      role: role || 'EMPLOYEE',
+    });
+
+    // R5: Strip password from response
+    const { password: _pw, ...safeEmployee } = newEmployee as typeof newEmployee & { password?: string };
+    return NextResponse.json({ success: true, employee: safeEmployee });
+
   } catch (error) {
     console.error('Create employee error:', error);
     return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 });

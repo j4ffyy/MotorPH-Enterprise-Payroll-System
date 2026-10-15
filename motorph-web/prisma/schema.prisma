@@ -157,3 +157,23 @@ model PayrollRecord {
 
   @@map("payroll_records")
 }
+
+// ── R1: Audit Log — Accountability & Non-Repudiation ─────────────────────────
+// IAS2 MS2 Control R1
+// Satisfies MS2 Rubric: Security Advanced — "tracing authorized user's actions"
+// and "proving that actions or events occurred (non-repudiation)."
+// Append-only: no update/delete methods are exposed in the application.
+model AuditLog {
+  id           Int      @id @default(autoincrement()) @map("Audit_ID")
+  actorEid     Int      @map("Actor_EID")
+  actorRole    String   @map("Actor_Role")
+  action       String   @map("Action")        // e.g., 'EMPLOYEE_UPDATED', 'PAYROLL_CALCULATED'
+  resourceType String   @map("Resource_Type") // e.g., 'EMPLOYEE', 'PAYROLL', 'LEAVE'
+  resourceId   String   @map("Resource_ID")   // The affected record's ID
+  before       String?  @map("Before_State")  // JSON snapshot of state before change
+  after        String?  @map("After_State")   // JSON snapshot of state after change
+  ipAddress    String?  @map("IP_Address")
+  timestamp    DateTime @default(now()) @map("Timestamp")
+
+  @@map("audit_logs")
+}
