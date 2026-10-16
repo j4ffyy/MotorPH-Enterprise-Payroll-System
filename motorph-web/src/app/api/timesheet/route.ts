@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { getPHDateString, getPHTTimeString } from '@/lib/timeUtils';
 
 export async function GET(request: Request) {
   try {
@@ -44,9 +45,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const now = new Date();
-    const logDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    const logTime = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const logDate = getPHDateString(); // YYYY-MM-DD in PH Time
+    const logTime = getPHTTimeString(); // HH:MM:SS in PH Time
 
     // Check if already clocked in today
     const existing = await prisma.timesheet.findFirst({
@@ -95,9 +95,8 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const now = new Date();
-    const logDate = now.toISOString().split('T')[0];
-    const logOutTime = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const logDate = getPHDateString();
+    const logOutTime = getPHTTimeString(); // HH:MM:SS in PH Time
 
     // Find today's clock-in record (or most recent unclosed shift)
     const existing = await prisma.timesheet.findFirst({

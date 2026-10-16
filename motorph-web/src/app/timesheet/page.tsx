@@ -7,11 +7,22 @@ import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth'
 import { TimesheetLoading } from '@/components/RouteSkeletons';
 import { Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from 'lucide-react';
 
-// Format YYYY-MM-DD → MM/DD/YYYY
+// Format YYYY-MM-DD → Month DD, YYYY
 function formatDate(dateStr: string): string {
   if (!dateStr) return '—';
-  const [year, month, day] = dateStr.split('-');
-  return `${month}/${day}/${year}`;
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    const [year, month, day] = parts.map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+  }
+  return dateStr;
 }
 
 // Format HH:MM:SS → H:MM AM/PM
