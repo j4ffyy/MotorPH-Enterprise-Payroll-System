@@ -25,6 +25,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { formatPHP } from '@/lib/payrollCalculator';
+import { formatHumanDate } from '@/lib/timeUtils';
 
 export default function PayrollPage() {
   const router = useRouter();
@@ -178,7 +179,7 @@ export default function PayrollPage() {
     <AppShell user={currentUser}>
       <div className="space-y-6 pb-12">
         {/* Header Bar */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 print:hidden">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#4166F5] px-2.5 py-0.5 rounded-full bg-[#EBF0FF] border border-[#C7D3FF]">
@@ -227,7 +228,7 @@ export default function PayrollPage() {
 
         {/* Aggregate KPI Summary Cards */}
         {currentUser.role !== 'EMPLOYEE' && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 print:hidden">
             {/* Net Disbursement */}
             <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition relative overflow-hidden group">
               <div className="flex items-center justify-between">
@@ -287,10 +288,18 @@ export default function PayrollPage() {
           </div>
         )}
 
+        {/* Print-Only Official Payroll Register Header */}
+        <div className="hidden print:block text-center mb-4">
+          <h2 className="text-xl font-black uppercase text-black">MotorPH Corporation</h2>
+          <p className="text-xs text-gray-700">7 Jupiter Avenue, Makati Commercial Center, Metro Manila</p>
+          <h3 className="text-sm font-bold uppercase mt-2 text-black">Official Company Payroll Register &amp; Compensation Breakdown</h3>
+          <p className="text-xs text-gray-600">Cutoff Period: {formatHumanDate(periodStart)} to {formatHumanDate(periodEnd)}</p>
+        </div>
+
         {/* Enhanced Compensation Breakdown & Deductions Table Container */}
-        <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm shadow-slate-200/50">
+        <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm shadow-slate-200/50 print:border-none print:shadow-none print:rounded-none">
           {/* Table Header & Controls Bar */}
-          <div className="p-5 sm:p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40 flex flex-col gap-4">
+          <div className="p-5 sm:p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40 flex flex-col gap-4 print:hidden">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2.5">
