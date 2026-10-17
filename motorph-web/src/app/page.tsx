@@ -247,8 +247,8 @@ function AnimatedBackground() {
 // ─── Login Page ─────────────────────────────────────────────────────────────────
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState('mgarcia@motorph.com');
-  const [password, setPassword] = useState('123abc');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -287,11 +287,7 @@ export default function LoginPage() {
     }
   };
 
-  const setDemoRole = (user: string, pass: string) => {
-    setUsername(user);
-    setPassword(pass);
-    setError(null);
-  };
+
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
@@ -386,46 +382,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Role Switcher Demo Bar */}
-          <div className="mt-6 pt-5 border-t border-slate-100">
-            <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Instant Demo Roles (Click to Fill):
-            </span>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => setDemoRole('mgarcia@motorph.com', '123abc')}
-                className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-left hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer"
-              >
-                <div className="font-semibold text-rose-700">Admin (CEO)</div>
-                <div className="text-[10px] text-slate-500 truncate">mgarcia@motorph.com</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDemoRole('amvillanueva@motorph.com', '123abc')}
-                className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-left hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer"
-              >
-                <div className="font-semibold text-amber-700">HR Manager</div>
-                <div className="text-[10px] text-slate-500 truncate">amvillanueva@motorph.com</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDemoRole('ralvaro@motorph.com', '123abc')}
-                className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-left hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer"
-              >
-                <div className="font-semibold text-[#3456D4]">Payroll Head</div>
-                <div className="text-[10px] text-slate-500 truncate">ralvaro@motorph.com</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDemoRole('ratienza@motorph.com', '123abc')}
-                className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-left hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer"
-              >
-                <div className="font-semibold text-emerald-700">Employee (ESS)</div>
-                <div className="text-[10px] text-slate-500 truncate">ratienza@motorph.com</div>
-              </button>
-            </div>
-          </div>
+
         </div>
 
         {/* Footer info */}

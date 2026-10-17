@@ -3,7 +3,17 @@ import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'motorph_ias2_super_secure_jwt_secret_key_2026';
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error(
+      '[auth] JWT_SECRET environment variable is not set. ' +
+        'Set it in .env (local) or Vercel Dashboard > Settings > Environment Variables.'
+    );
+  }
+  return secret;
+}
+
 export const AUTH_COOKIE_NAME = 'motorph_session';
 
 export interface UserSessionPayload {
@@ -16,12 +26,12 @@ export interface UserSessionPayload {
 }
 
 export function signToken(payload: UserSessionPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: '8h' });
 }
 
 export function verifyToken(token: string): UserSessionPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as UserSessionPayload;
+    return jwt.verify(token, getJwtSecret()) as UserSessionPayload;
   } catch {
     return null;
   }

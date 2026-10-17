@@ -22,7 +22,7 @@ Built for **AOOP** & **IAS2** (Information Assurance & Security 2) — Team **CT
 
 ## 📑 Table of Contents
 
-- [🌐 Live Deployment & Credentials](#-live-deployment--credentials)
+- [🌐 Live Deployment](#-live-deployment)
 - [✨ Key System Highlights](#-key-system-highlights)
 - [🏗️ Technology Architecture](#️-technology-architecture)
 - [🛡️ Security Architecture & IAS2 Controls (R1–R8)](#️-security-architecture--ias2-controls-r1r8)
@@ -35,21 +35,14 @@ Built for **AOOP** & **IAS2** (Information Assurance & Security 2) — Team **CT
 
 ---
 
-## 🌐 Live Deployment & Credentials
+## 🌐 Live Deployment
 
 > **Production Application:** [https://motorph-eps.vercel.app](https://motorph-eps.vercel.app)  
 > **Source Repository:** [https://github.com/j4ffyy/MotorPH-Enterprise-Payroll-System](https://github.com/j4ffyy/MotorPH-Enterprise-Payroll-System)
 
-### Demo Role Accounts
-
-| Role | Username | Password | Access Level & Scope |
-|------|----------|----------|----------------------|
-| **CEO / Admin** | `garcia.manuel` | `admin123` | Full administrative control: Company-wide Payroll Engine, Employee Directory CRUD, Audit Logs, System Settings. |
-| **HR Manager** | `lim.antonio` | `hr123` | Workforce Administration: Employee Directory (view/create/update), Leave Request approvals, personal My Payslip. |
-| **Payroll Officer** | `san-jose.bianca` | `payroll123` | Financial Operations: Workforce-wide Payroll Computation, Bank Remittance summary, personal My Payslip. |
-| **Regular Employee** | `reyes.sofia` | `123abc` | Employee Self-Service (ESS): Personal My Payslip, Timesheet Clock-In/Clock-Out, Leave Submissions. |
-
-> **Security Note:** All credentials are authenticated via BCrypt (10 salt rounds) against salted hashes. Plaintext passwords or backdoor credentials are strictly barred and validated via automated unit testing.
+> **Access:** Contact the system administrator for login credentials.
+> All accounts use BCrypt-hashed passwords (10 salt rounds) authenticated server-side.
+> No plaintext credentials are stored, committed to this repository, or exposed on the login page.
 
 ---
 
