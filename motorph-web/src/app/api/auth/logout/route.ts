@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server';
-import { AUTH_COOKIE_NAME, getSession } from '@/lib/auth';
-import { CSRF_COOKIE_NAME } from '@/lib/csrf';
+import { getSession, AUTH_COOKIE_NAME } from '@/lib/auth';
 import { createAuditLogger } from '@/lib/auditLog';
+import { successResponse } from '@/lib/apiResponse';
 
 /**
  * POST /api/auth/logout
@@ -20,7 +19,7 @@ import { createAuditLogger } from '@/lib/auditLog';
 export async function POST(request: Request) {
   const session = await getSession();
 
-  const response = NextResponse.json({ success: true });
+  const response = successResponse({ success: true });
 
   // Clear JWT session cookie
   response.cookies.delete(AUTH_COOKIE_NAME);

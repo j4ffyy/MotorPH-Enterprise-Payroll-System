@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { getPHDateString, getPHTTimeString } from '@/lib/timeUtils';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 export async function GET(request: Request) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     const { searchParams } = new URL(request.url);
@@ -29,10 +31,10 @@ export async function GET(request: Request) {
       take: 100,
     });
 
-    return NextResponse.json({ timesheets });
+    return successResponse({ timesheets });
   } catch (error) {
     console.error('Fetch timesheet error:', error);
-    return NextResponse.json({ error: 'Failed to retrieve timesheet records' }, { status: 500 });
+    return errorResponse('Failed to retrieve timesheet records', 500);
   }
 }
 
@@ -41,12 +43,11 @@ export async function POST(request: Request) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
-    const now = new Date();
-    const logDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    const logTime = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const logDate = getPHDateString(); // YYYY-MM-DD in PH Time
+    const logTime = getPHTTimeString(); // HH:MM:SS in PH Time
 
     // Check if already clocked in today
     const existing = await prisma.timesheet.findFirst({
@@ -54,9 +55,9 @@ export async function POST(request: Request) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Already clocked in today. Use Clock Out to record your departure.' },
-        { status: 409 }
+      return errorResponse(
+        'Already clocked in today. Use Clock Out to record your departure.',
+        409
       );
     }
 
@@ -76,14 +77,14 @@ export async function POST(request: Request) {
     const displayH = h % 12 || 12;
     const displayTime = `${displayH}:${String(m).padStart(2, '0')} ${period}`;
 
-    return NextResponse.json({
+    return successResponse({
       success: true,
       message: `Clocked in at ${displayTime} — Status: ${attStatus}`,
       log: newLog,
     });
   } catch (error) {
     console.error('Clock in error:', error);
-    return NextResponse.json({ error: 'Failed to record clock-in' }, { status: 500 });
+    return errorResponse('Failed to record clock-in', 500);
   }
 }
 
@@ -92,37 +93,27 @@ export async function PUT(request: Request) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
-    const now = new Date();
-    const logDate = now.toISOString().split('T')[0];
-    const logOutTime = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const logDate = getPHDateString();
+    const logOutTime = getPHTTimeString(); // HH:MM:SS in PH Time
 
     // Find today's clock-in record (or most recent unclosed shift)
     const existing = await prisma.timesheet.findFirst({
       where: {
         eid: session.eid,
-        OR: [
-          { logDate },
-          { logOutTime: null },
-        ],
+        OR: [{ logDate }, { logOutTime: null }],
       },
       orderBy: { attendanceId: 'desc' },
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'No clock-in record found for today. Please clock in first.' },
-        { status: 404 }
-      );
+      return errorResponse('No clock-in record found for today. Please clock in first.', 404);
     }
 
     if (existing.logOutTime) {
-      return NextResponse.json(
-        { error: 'Already clocked out today.' },
-        { status: 409 }
-      );
+      return errorResponse('Already clocked out today.', 409);
     }
 
     const updated = await prisma.timesheet.update({
@@ -144,13 +135,13 @@ export async function PUT(request: Request) {
     const displayH = outH % 12 || 12;
     const displayTime = `${displayH}:${String(outM).padStart(2, '0')} ${period}`;
 
-    return NextResponse.json({
+    return successResponse({
       success: true,
       message: `Clocked out at ${displayTime} — ${hoursWorked}h ${minsWorked}m worked today`,
       log: updated,
     });
   } catch (error) {
     console.error('Clock out error:', error);
-    return NextResponse.json({ error: 'Failed to record clock-out' }, { status: 500 });
+    return errorResponse('Failed to record clock-out', 500);
   }
 }

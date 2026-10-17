@@ -2,7 +2,9 @@
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
-    <div className={`bg-white border border-slate-200 rounded-2xl p-5 shadow-sm animate-pulse ${className}`}>
+    <div
+      className={`bg-white border border-slate-200 rounded-2xl p-5 shadow-sm animate-pulse ${className}`}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="h-3 w-24 bg-slate-200 rounded-full" />
         <div className="h-8 w-8 bg-slate-100 rounded-lg" />
@@ -80,7 +82,10 @@ export default function PageSkeleton({
       {!showCards && !showTable && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[0, 1].map((i) => (
-            <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-3">
+            <div
+              key={i}
+              className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-3"
+            >
               <div className="h-4 w-40 bg-slate-200 rounded-md" />
               {[...Array(5)].map((_, j) => (
                 <div key={j} className="flex justify-between py-1">

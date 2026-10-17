@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Seeding script for MotorPH Web Migration
 // Implements Control 1 (Externalized config) and Security Best Practice: Bcrypt Hashing for all accounts
 // Full Data Parity with 2024 Legacy Project (MotorPH_EPS_AOOP_Latest / payrollsystem_db_v10.sql)

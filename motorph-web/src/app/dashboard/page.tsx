@@ -30,7 +30,6 @@ export default async function DashboardPage() {
     }),
   ]);
 
-
   return (
     <AppShell user={session}>
       <div className="space-y-6">
@@ -48,7 +47,8 @@ export default async function DashboardPage() {
                 Welcome back, {employee?.firstName} {employee?.lastName}
               </h1>
               <p className="text-sm text-slate-300 mt-1">
-                {employee?.designation?.name} &bull; {employee?.designation?.department?.name} Department
+                {employee?.designation?.name} &bull; {employee?.designation?.department?.name}{' '}
+                Department
               </p>
             </div>
 
@@ -146,11 +146,15 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <span className="text-slate-500 block">Work Email</span>
-                <span className="font-semibold text-[#0F1E36] truncate block">{employee?.username}</span>
+                <span className="font-semibold text-[#0F1E36] truncate block">
+                  {employee?.username}
+                </span>
               </div>
               <div>
                 <span className="text-slate-500 block">Contact Number</span>
-                <span className="font-semibold text-[#0F1E36]">{employee?.phoneNumber || 'N/A'}</span>
+                <span className="font-semibold text-[#0F1E36]">
+                  {employee?.phoneNumber || 'N/A'}
+                </span>
               </div>
               <div className="col-span-2">
                 <span className="text-slate-500 block">Residential Address</span>
@@ -158,12 +162,18 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <span className="text-slate-500 block">Immediate Supervisor</span>
-                <span className="font-semibold text-slate-700">{employee?.supervisor?.name || 'Direct Executive'}</span>
+                <span className="font-semibold text-slate-700">
+                  {employee?.supervisor?.name || 'Direct Executive'}
+                </span>
               </div>
               <div>
                 <span className="text-slate-500 block">Rice Subsidy / Allowances</span>
                 <span className="font-semibold text-slate-700">
-                  {formatPHP((employee?.components?.riceSubsidy || 0) + (employee?.components?.phoneAllowance || 0) + (employee?.components?.clothingAllowance || 0))}
+                  {formatPHP(
+                    (employee?.components?.riceSubsidy || 0) +
+                      (employee?.components?.phoneAllowance || 0) +
+                      (employee?.components?.clothingAllowance || 0)
+                  )}
                 </span>
               </div>
             </div>

@@ -18,13 +18,7 @@ export default function MotorPHLogo({ className = '', size = 48 }: MotorPHLogoPr
       <rect width="512" height="512" rx="120" fill="#6c8ef5" />
 
       {/* Motorcycle Icon */}
-      <g
-        fill="none"
-        stroke="#ffffff"
-        strokeWidth="24"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <g fill="none" stroke="#ffffff" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round">
         {/* Front Wheel */}
         <circle cx="380" cy="340" r="60" />
         {/* Rear Wheel */}

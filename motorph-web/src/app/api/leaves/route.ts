@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { requirePermission, isManager } from '@/lib/rbac';
@@ -6,6 +6,7 @@ import { validate, ApplyLeaveSchema, UpdateLeaveStatusSchema } from '@/lib/valid
 import { parseBody } from '@/lib/parseBody';
 import { createAuditLogger } from '@/lib/auditLog';
 import { getClientIp } from '@/lib/rateLimit';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * GET /api/leaves
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     const { searchParams } = new URL(request.url);
@@ -40,10 +41,10 @@ export async function GET(request: NextRequest) {
       orderBy: { dateFiled: 'desc' },
     });
 
-    return NextResponse.json({ leaves });
+    return successResponse({ leaves });
   } catch (error) {
     console.error('Fetch leaves error:', error);
-    return NextResponse.json({ error: 'Failed to retrieve leave records' }, { status: 500 });
+    return errorResponse('Failed to retrieve leave records', 500);
   }
 }
 
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     // R7: Body size limit
@@ -93,10 +94,10 @@ export async function POST(request: NextRequest) {
     const audit = createAuditLogger(session, getClientIp(request));
     await audit('LEAVE_APPLIED', 'LEAVE', leaveId, null, { dateFrom, dateTo, reasonForLeave });
 
-    return NextResponse.json({ success: true, leave: newLeave });
+    return successResponse({ success: true, leave: newLeave });
   } catch (error) {
     console.error('Apply leave error:', error);
-    return NextResponse.json({ error: 'Failed to submit leave application' }, { status: 500 });
+    return errorResponse('Failed to submit leave application', 500);
   }
 }
 
@@ -113,7 +114,7 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     // R3: Centralized RBAC — replaces inline `session.role === 'ADMIN' || session.role === 'HR'`
@@ -133,7 +134,7 @@ export async function PUT(request: NextRequest) {
     // R1: Capture before state
     const before = await prisma.leave.findUnique({ where: { leaveId } });
     if (!before) {
-      return NextResponse.json({ error: 'Leave record not found' }, { status: 404 });
+      return errorResponse('Leave record not found', 404);
     }
 
     const updated = await prisma.leave.update({
@@ -144,14 +145,11 @@ export async function PUT(request: NextRequest) {
     // R1: Audit log approval/rejection
     const audit = createAuditLogger(session, getClientIp(request));
     const action = leaveStatus === 'Approved' ? 'LEAVE_APPROVED' : 'LEAVE_REJECTED';
-    await audit(action, 'LEAVE', leaveId,
-      { leaveStatus: before.leaveStatus },
-      { leaveStatus }
-    );
+    await audit(action, 'LEAVE', leaveId, { leaveStatus: before.leaveStatus }, { leaveStatus });
 
-    return NextResponse.json({ success: true, leave: updated });
+    return successResponse({ success: true, leave: updated });
   } catch (error) {
     console.error('Update leave error:', error);
-    return NextResponse.json({ error: 'Failed to update leave request' }, { status: 500 });
+    return errorResponse('Failed to update leave request', 500);
   }
 }

@@ -21,7 +21,12 @@ export default function EmployeesLoading() {
           <div className="h-8 w-8 bg-slate-200 rounded-full animate-pulse" />
         </div>
         <div className="flex-1 p-6">
-          <PageSkeleton title="Employee Directory" subtitle="Loading workforce records..." showTable rows={10} />
+          <PageSkeleton
+            title="Employee Directory"
+            subtitle="Loading workforce records..."
+            showTable
+            rows={10}
+          />
         </div>
       </div>
     </div>

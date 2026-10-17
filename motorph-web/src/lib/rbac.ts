@@ -24,32 +24,30 @@ import type { UserSessionPayload } from './auth';
 // ── Permission Registry ───────────────────────────────────────────────────────
 
 export type Permission =
-  | 'read:own'           // own profile, own leaves, own timesheet
-  | 'read:all'           // any employee record
-  | 'write:employee'     // create / update employee records
-  | 'write:salary'       // modify payroll components / salary
-  | 'run:payroll'        // execute payroll calculation
-  | 'approve:leave'      // approve / reject leave requests
-  | 'manage:roles'       // change employee roles (admin only)
-  | 'view:govids'        // view SSS, TIN, PhilHealth numbers
-  | 'write:own'          // update own phone/address (self-service);
+  | 'read:own' // own profile, own leaves, own timesheet
+  | 'read:all' // any employee record
+  | 'write:employee' // create / update employee records
+  | 'write:salary' // modify payroll components / salary
+  | 'run:payroll' // execute payroll calculation
+  | 'approve:leave' // approve / reject leave requests
+  | 'manage:roles' // change employee roles (admin only)
+  | 'view:govids' // view SSS, TIN, PhilHealth numbers
+  | 'write:own'; // update own phone/address (self-service);
 
 const ROLE_PERMISSIONS: Record<string, Permission[]> = {
-  ADMIN:    [
-    'read:own', 'read:all',
-    'write:employee', 'write:salary',
-    'run:payroll', 'approve:leave',
-    'manage:roles', 'view:govids', 'write:own',
+  ADMIN: [
+    'read:own',
+    'read:all',
+    'write:employee',
+    'write:salary',
+    'run:payroll',
+    'approve:leave',
+    'manage:roles',
+    'view:govids',
+    'write:own',
   ],
-  HR:       [
-    'read:own', 'read:all',
-    'write:employee', 'approve:leave',
-    'view:govids', 'write:own',
-  ],
-  PAYROLL:  [
-    'read:own', 'read:all',
-    'run:payroll', 'view:govids', 'write:own',
-  ],
+  HR: ['read:own', 'read:all', 'write:employee', 'approve:leave', 'view:govids', 'write:own'],
+  PAYROLL: ['read:own', 'read:all', 'run:payroll', 'view:govids', 'write:own'],
   EMPLOYEE: ['read:own', 'write:own'],
 };
 
@@ -58,10 +56,7 @@ const ROLE_PERMISSIONS: Record<string, Permission[]> = {
 /**
  * Returns true if the session's role has the requested permission.
  */
-export function hasPermission(
-  session: UserSessionPayload,
-  permission: Permission
-): boolean {
+export function hasPermission(session: UserSessionPayload, permission: Permission): boolean {
   const perms = ROLE_PERMISSIONS[session.role] ?? [];
   return perms.includes(permission);
 }
@@ -139,7 +134,11 @@ export function filterEmployeeResponse<T extends Record<string, unknown>>(
   session: UserSessionPayload
 ): T {
   if (!hasPermission(session, 'view:govids')) {
-    const { govIds: _govIds, password: _pw, ...safe } = employee as {
+    const {
+      govIds: _govIds,
+      password: _pw,
+      ...safe
+    } = employee as {
       govIds?: unknown;
       password?: unknown;
     } & Record<string, unknown>;

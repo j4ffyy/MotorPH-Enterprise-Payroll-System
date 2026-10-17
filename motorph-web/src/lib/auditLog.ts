@@ -68,22 +68,16 @@ export type AuditAction =
   | 'CSRF_VALIDATION_FAILED'
   | 'ACCESS_DENIED';
 
-export type ResourceType =
-  | 'EMPLOYEE'
-  | 'PAYROLL'
-  | 'LEAVE'
-  | 'TIMESHEET'
-  | 'AUTH'
-  | 'SYSTEM';
+export type ResourceType = 'EMPLOYEE' | 'PAYROLL' | 'LEAVE' | 'TIMESHEET' | 'AUTH' | 'SYSTEM';
 
 export interface AuditEventParams {
-  session:      UserSessionPayload;
-  action:       AuditAction;
+  session: UserSessionPayload;
+  action: AuditAction;
   resourceType: ResourceType;
-  resourceId:   string | number;
-  before?:      Record<string, unknown> | null;
-  after?:       Record<string, unknown> | null;
-  ipAddress?:   string;
+  resourceId: string | number;
+  before?: Record<string, unknown> | null;
+  after?: Record<string, unknown> | null;
+  ipAddress?: string;
 }
 
 // ── Core Logger ───────────────────────────────────────────────────────────────
@@ -112,31 +106,33 @@ export async function logAudit(params: AuditEventParams): Promise<void> {
       return JSON.stringify(safe);
     };
 
-    await (prisma as unknown as {
-      auditLog: {
-        create: (args: {
-          data: {
-            actorEid: number;
-            actorRole: string;
-            action: string;
-            resourceType: string;
-            resourceId: string;
-            before: string | null;
-            after: string | null;
-            ipAddress: string;
-          }
-        }) => Promise<unknown>
+    await (
+      prisma as unknown as {
+        auditLog: {
+          create: (args: {
+            data: {
+              actorEid: number;
+              actorRole: string;
+              action: string;
+              resourceType: string;
+              resourceId: string;
+              before: string | null;
+              after: string | null;
+              ipAddress: string;
+            };
+          }) => Promise<unknown>;
+        };
       }
-    }).auditLog.create({
+    ).auditLog.create({
       data: {
-        actorEid:     params.session.eid,
-        actorRole:    params.session.role,
-        action:       params.action,
+        actorEid: params.session.eid,
+        actorRole: params.session.role,
+        action: params.action,
         resourceType: params.resourceType,
-        resourceId:   String(params.resourceId),
-        before:       sanitize(params.before ?? null),
-        after:        sanitize(params.after ?? null),
-        ipAddress:    params.ipAddress ?? 'unknown',
+        resourceId: String(params.resourceId),
+        before: sanitize(params.before ?? null),
+        after: sanitize(params.after ?? null),
+        ipAddress: params.ipAddress ?? 'unknown',
       },
     });
   } catch (err) {

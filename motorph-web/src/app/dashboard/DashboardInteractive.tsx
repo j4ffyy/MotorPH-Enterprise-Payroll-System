@@ -43,7 +43,9 @@ export default function DashboardInteractive({
       {clockedIn ? (
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs">
           <CheckCircle2 size={16} className="text-emerald-300" />
-          <span>Clocked in today at <strong className="font-mono text-white">{time}</strong></span>
+          <span>
+            Clocked in today at <strong className="font-mono text-white">{time}</strong>
+          </span>
         </div>
       ) : (
         <button
@@ -56,9 +58,7 @@ export default function DashboardInteractive({
         </button>
       )}
 
-      {message && (
-        <span className="text-[11px] text-cyan-300 font-medium">{message}</span>
-      )}
+      {message && <span className="text-[11px] text-cyan-300 font-medium">{message}</span>}
     </div>
   );
 }
