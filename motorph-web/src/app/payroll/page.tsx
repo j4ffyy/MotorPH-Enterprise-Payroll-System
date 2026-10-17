@@ -159,7 +159,10 @@ export default function PayrollPage() {
   const totalTax = payrolls.reduce((acc, p) => acc + (p.withholdingTax || 0), 0);
   const totalStatutory = payrolls.reduce(
     (acc, p) =>
-      acc + (p.sssContribution || 0) + (p.philhealthContribution || 0) + (p.pagibigContribution || 0),
+      acc +
+      (p.sssContribution || 0) +
+      (p.philhealthContribution || 0) +
+      (p.pagibigContribution || 0),
     0
   );
 
@@ -193,7 +196,8 @@ export default function PayrollPage() {
               Payroll Calculation Engine
             </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Real-time statutory tax schedules, allowances, deductions, and automated net disbursement.
+              Real-time statutory tax schedules, allowances, deductions, and automated net
+              disbursement.
             </p>
           </div>
 
@@ -291,9 +295,15 @@ export default function PayrollPage() {
         {/* Print-Only Official Payroll Register Header */}
         <div className="hidden print:block text-center mb-4">
           <h2 className="text-xl font-black uppercase text-black">MotorPH Corporation</h2>
-          <p className="text-xs text-gray-700">7 Jupiter Avenue, Makati Commercial Center, Metro Manila</p>
-          <h3 className="text-sm font-bold uppercase mt-2 text-black">Official Company Payroll Register &amp; Compensation Breakdown</h3>
-          <p className="text-xs text-gray-600">Cutoff Period: {formatHumanDate(periodStart)} to {formatHumanDate(periodEnd)}</p>
+          <p className="text-xs text-gray-700">
+            7 Jupiter Avenue, Makati Commercial Center, Metro Manila
+          </p>
+          <h3 className="text-sm font-bold uppercase mt-2 text-black">
+            Official Company Payroll Register &amp; Compensation Breakdown
+          </h3>
+          <p className="text-xs text-gray-600">
+            Cutoff Period: {formatHumanDate(periodStart)} to {formatHumanDate(periodEnd)}
+          </p>
         </div>
 
         {/* Enhanced Compensation Breakdown & Deductions Table Container */}
@@ -314,7 +324,8 @@ export default function PayrollPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Itemized item-level earnings, mandatory government deductions, and take-home disbursement.
+                  Itemized item-level earnings, mandatory government deductions, and take-home
+                  disbursement.
                 </p>
               </div>
 
@@ -437,10 +448,7 @@ export default function PayrollPage() {
                       <span>Mandatory Statutory Deductions</span>
                     </div>
                   </th>
-                  <th
-                    colSpan={2}
-                    className="py-3 px-5 bg-[#EBF0FF]/80 text-[#3456D4] text-center"
-                  >
+                  <th colSpan={2} className="py-3 px-5 bg-[#EBF0FF]/80 text-[#3456D4] text-center">
                     <div className="flex items-center justify-center gap-1.5">
                       <Wallet size={13} className="text-[#4166F5]" />
                       <span>Disbursement Summary</span>
@@ -458,39 +466,55 @@ export default function PayrollPage() {
                   {/* Earnings */}
                   <th className="py-3.5 px-5 whitespace-nowrap bg-emerald-50/30 text-slate-800">
                     <div>Basic Rate</div>
-                    <div className="text-[9px] text-slate-400 font-normal lowercase">monthly basic</div>
+                    <div className="text-[9px] text-slate-400 font-normal lowercase">
+                      monthly basic
+                    </div>
                   </th>
                   <th className="py-3.5 px-5 whitespace-nowrap bg-emerald-50/30 text-slate-800">
                     <div>Benefits</div>
-                    <div className="text-[9px] text-emerald-600 font-normal lowercase">rice / phone / clothing</div>
+                    <div className="text-[9px] text-emerald-600 font-normal lowercase">
+                      rice / phone / clothing
+                    </div>
                   </th>
                   <th className="py-3.5 px-5 whitespace-nowrap bg-emerald-50/40 text-[#0F1E36] font-extrabold border-r border-slate-200">
                     <div>Gross Income</div>
-                    <div className="text-[9px] text-slate-500 font-normal lowercase">salary + benefits + ot</div>
+                    <div className="text-[9px] text-slate-500 font-normal lowercase">
+                      salary + benefits + ot
+                    </div>
                   </th>
 
                   {/* Statutory Deductions */}
                   <th className="py-3.5 px-4 whitespace-nowrap bg-rose-50/20 text-slate-700">
                     <div>SSS</div>
-                    <div className="text-[9px] text-slate-400 font-normal lowercase">5% (max ₱1,500)</div>
+                    <div className="text-[9px] text-slate-400 font-normal lowercase">
+                      5% (max ₱1,500)
+                    </div>
                   </th>
                   <th className="py-3.5 px-4 whitespace-nowrap bg-rose-50/20 text-slate-700">
                     <div>PhilHealth</div>
-                    <div className="text-[9px] text-slate-400 font-normal lowercase">2.5% premium</div>
+                    <div className="text-[9px] text-slate-400 font-normal lowercase">
+                      2.5% premium
+                    </div>
                   </th>
                   <th className="py-3.5 px-4 whitespace-nowrap bg-rose-50/20 text-slate-700">
                     <div>Pag-IBIG</div>
-                    <div className="text-[9px] text-slate-400 font-normal lowercase">2% (max ₱200)</div>
+                    <div className="text-[9px] text-slate-400 font-normal lowercase">
+                      2% (max ₱200)
+                    </div>
                   </th>
                   <th className="py-3.5 px-5 whitespace-nowrap bg-rose-50/30 text-[#3456D4] font-bold border-r border-slate-200">
                     <div>W/Tax</div>
-                    <div className="text-[9px] text-slate-500 font-normal lowercase">TRAIN brackets</div>
+                    <div className="text-[9px] text-slate-500 font-normal lowercase">
+                      TRAIN brackets
+                    </div>
                   </th>
 
                   {/* Net Pay & Action */}
                   <th className="py-3.5 px-5 whitespace-nowrap text-emerald-700 font-black">
                     <div>Net Take-Home</div>
-                    <div className="text-[9px] text-emerald-600 font-normal lowercase">final payout</div>
+                    <div className="text-[9px] text-emerald-600 font-normal lowercase">
+                      final payout
+                    </div>
                   </th>
                   <th className="py-3.5 px-5 whitespace-nowrap text-right">Payslip</th>
                 </tr>
@@ -516,10 +540,7 @@ export default function PayrollPage() {
                   filteredPayrolls.map((p) => {
                     const initials = getInitials(p.name);
                     return (
-                      <tr
-                        key={p.eid}
-                        className="hover:bg-slate-50/90 transition-all group"
-                      >
+                      <tr key={p.eid} className="hover:bg-slate-50/90 transition-all group">
                         {/* EID */}
                         <td className="py-4 px-5 font-mono font-bold text-slate-400 group-hover:text-slate-700">
                           #{p.eid}
@@ -613,7 +634,10 @@ export default function PayrollPage() {
                             onClick={() => setActivePayslip(p)}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-[#0F1E36] text-slate-700 hover:text-white border border-slate-200 hover:border-[#0F1E36] transition-all text-xs font-semibold shadow-xs cursor-pointer group/btn"
                           >
-                            <Receipt size={13} className="text-[#4166F5] group-hover/btn:text-white transition-colors" />
+                            <Receipt
+                              size={13}
+                              className="text-[#4166F5] group-hover/btn:text-white transition-colors"
+                            />
                             <span>View Slip</span>
                           </button>
                         </td>
@@ -694,8 +718,12 @@ export default function PayrollPage() {
                     <Receipt size={16} />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-[#0F1E36]">Official MotorPH Payslip</h3>
-                    <p className="text-[11px] text-slate-400">Authenticated Statutory Payroll Record</p>
+                    <h3 className="text-base font-extrabold text-[#0F1E36]">
+                      Official MotorPH Payslip
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Authenticated Statutory Payroll Record
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -772,28 +800,46 @@ export default function PayrollPage() {
                     </h4>
                     <div className="mt-2 space-y-1.5 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-slate-600 print:text-gray-700">Basic Monthly Rate:</span>
-                        <span className="text-slate-900 font-semibold">{formatPHP(activePayslip.basicSalary)}</span>
+                        <span className="text-slate-600 print:text-gray-700">
+                          Basic Monthly Rate:
+                        </span>
+                        <span className="text-slate-900 font-semibold">
+                          {formatPHP(activePayslip.basicSalary)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 print:text-gray-700">Overtime Pay:</span>
-                        <span className="text-slate-900">{formatPHP(activePayslip.overtimePay || 0)}</span>
+                        <span className="text-slate-900">
+                          {formatPHP(activePayslip.overtimePay || 0)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 print:text-gray-700">Rice Subsidy:</span>
-                        <span className="text-slate-900">{formatPHP(activePayslip.riceSubsidy || 0)}</span>
+                        <span className="text-slate-900">
+                          {formatPHP(activePayslip.riceSubsidy || 0)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 print:text-gray-700">Phone Allowance:</span>
-                        <span className="text-slate-900">{formatPHP(activePayslip.phoneAllowance || 0)}</span>
+                        <span className="text-slate-900">
+                          {formatPHP(activePayslip.phoneAllowance || 0)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-600 print:text-gray-700">Clothing Allowance:</span>
-                        <span className="text-slate-900">{formatPHP(activePayslip.clothingAllowance || 0)}</span>
+                        <span className="text-slate-600 print:text-gray-700">
+                          Clothing Allowance:
+                        </span>
+                        <span className="text-slate-900">
+                          {formatPHP(activePayslip.clothingAllowance || 0)}
+                        </span>
                       </div>
                       <div className="flex justify-between pt-2 border-t border-slate-200 font-bold text-[#0F1E36]">
                         <span>Gross Earnings:</span>
-                        <span>{formatPHP((activePayslip.grossIncome || 0) + (activePayslip.totalBenefits || 0))}</span>
+                        <span>
+                          {formatPHP(
+                            (activePayslip.grossIncome || 0) + (activePayslip.totalBenefits || 0)
+                          )}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -806,20 +852,32 @@ export default function PayrollPage() {
                     </h4>
                     <div className="mt-2 space-y-1.5 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-slate-600 print:text-gray-700">SSS Contribution:</span>
-                        <span className="text-slate-900 font-semibold">{formatPHP(activePayslip.sssContribution)}</span>
+                        <span className="text-slate-600 print:text-gray-700">
+                          SSS Contribution:
+                        </span>
+                        <span className="text-slate-900 font-semibold">
+                          {formatPHP(activePayslip.sssContribution)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 print:text-gray-700">PhilHealth:</span>
-                        <span className="text-slate-900 font-semibold">{formatPHP(activePayslip.philhealthContribution)}</span>
+                        <span className="text-slate-900 font-semibold">
+                          {formatPHP(activePayslip.philhealthContribution)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 print:text-gray-700">Pag-IBIG:</span>
-                        <span className="text-slate-900 font-semibold">{formatPHP(activePayslip.pagibigContribution)}</span>
+                        <span className="text-slate-900 font-semibold">
+                          {formatPHP(activePayslip.pagibigContribution)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-600 print:text-gray-700">Withholding Tax (TRAIN):</span>
-                        <span className="text-slate-900 font-semibold">{formatPHP(activePayslip.withholdingTax)}</span>
+                        <span className="text-slate-600 print:text-gray-700">
+                          Withholding Tax (TRAIN):
+                        </span>
+                        <span className="text-slate-900 font-semibold">
+                          {formatPHP(activePayslip.withholdingTax)}
+                        </span>
                       </div>
                       <div className="flex justify-between pt-2 border-t border-slate-200 print:border-black font-bold text-rose-700 print:text-black">
                         <span>Total Deductions:</span>
@@ -848,11 +906,15 @@ export default function PayrollPage() {
                 <div className="mt-8 pt-6 border-t border-slate-200 print:border-black grid grid-cols-2 gap-8 text-center text-xs">
                   <div>
                     <div className="w-48 mx-auto border-b border-slate-400 print:border-black mb-1"></div>
-                    <span className="text-slate-500 print:text-black">Prepared By: Payroll Officer</span>
+                    <span className="text-slate-500 print:text-black">
+                      Prepared By: Payroll Officer
+                    </span>
                   </div>
                   <div>
                     <div className="w-48 mx-auto border-b border-slate-400 print:border-black mb-1"></div>
-                    <span className="text-slate-500 print:text-black">Received By: Employee Signature</span>
+                    <span className="text-slate-500 print:text-black">
+                      Received By: Employee Signature
+                    </span>
                   </div>
                 </div>
               </div>

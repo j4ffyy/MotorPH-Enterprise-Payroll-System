@@ -10,8 +10,5 @@ export function successResponse(data: any, status = 200) {
 }
 
 export function errorResponse(message: string, status = 400, details?: any) {
-  return NextResponse.json(
-    details ? { error: message, details } : { error: message },
-    { status }
-  );
+  return NextResponse.json(details ? { error: message, details } : { error: message }, { status });
 }

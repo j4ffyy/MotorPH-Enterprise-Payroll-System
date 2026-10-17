@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
         },
         supervisor: true,
         components: true,
-        govIds: true,    // R5: filtered per role by filterEmployeeResponse()
+        govIds: true, // R5: filtered per role by filterEmployeeResponse()
       },
       orderBy: { eid: 'asc' },
     });
@@ -72,7 +72,6 @@ export async function GET(request: NextRequest) {
     // Cache private — not for CDN/shared caches (contains PII)
     res.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
     return res;
-
   } catch (error) {
     console.error('Fetch employees error:', error);
     return errorResponse('Failed to retrieve employees', 500);
@@ -108,10 +107,26 @@ export async function POST(request: NextRequest) {
     if (valErr) return valErr;
 
     const {
-      eid, firstName, lastName, birthday, address, phoneNumber,
-      username, password, designationId, supervisorId, status,
-      basicSalary, riceSubsidy, phoneAllowance, clothingAllowance,
-      sssNum, philhealthNum, tinNum, pagibigNum, role,
+      eid,
+      firstName,
+      lastName,
+      birthday,
+      address,
+      phoneNumber,
+      username,
+      password,
+      designationId,
+      supervisorId,
+      status,
+      basicSalary,
+      riceSubsidy,
+      phoneAllowance,
+      clothingAllowance,
+      sssNum,
+      philhealthNum,
+      tinNum,
+      pagibigNum,
+      role,
     } = data;
 
     let finalEid = eid ? Number(eid) : null;
@@ -179,9 +194,10 @@ export async function POST(request: NextRequest) {
     });
 
     // R5: Strip password from response
-    const { password: _pw, ...safeEmployee } = newEmployee as typeof newEmployee & { password?: string };
+    const { password: _pw, ...safeEmployee } = newEmployee as typeof newEmployee & {
+      password?: string;
+    };
     return successResponse({ success: true, employee: safeEmployee }, 201);
-
   } catch (error) {
     console.error('Create employee error:', error);
     return errorResponse('Failed to create employee', 500);

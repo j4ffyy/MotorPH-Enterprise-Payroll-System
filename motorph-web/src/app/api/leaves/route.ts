@@ -145,10 +145,7 @@ export async function PUT(request: NextRequest) {
     // R1: Audit log approval/rejection
     const audit = createAuditLogger(session, getClientIp(request));
     const action = leaveStatus === 'Approved' ? 'LEAVE_APPROVED' : 'LEAVE_REJECTED';
-    await audit(action, 'LEAVE', leaveId,
-      { leaveStatus: before.leaveStatus },
-      { leaveStatus }
-    );
+    await audit(action, 'LEAVE', leaveId, { leaveStatus: before.leaveStatus }, { leaveStatus });
 
     return successResponse({ success: true, leave: updated });
   } catch (error) {

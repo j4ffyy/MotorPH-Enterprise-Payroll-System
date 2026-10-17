@@ -34,7 +34,7 @@ interface RateLimitEntry {
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
 const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 15 * 60 * 1000;  // 15-minute sliding window
+const WINDOW_MS = 15 * 60 * 1000; // 15-minute sliding window
 const LOCKOUT_MS = 15 * 60 * 1000; // 15-minute lockout after MAX_ATTEMPTS
 
 /**
@@ -105,9 +105,7 @@ export function resetRateLimit(identifier: string): void {
  * Vercel sets the real IP in x-forwarded-for.
  */
 export function getClientIp(request: Request): string {
-  const forwarded = (request as Request & { headers: Headers }).headers.get(
-    'x-forwarded-for'
-  );
+  const forwarded = (request as Request & { headers: Headers }).headers.get('x-forwarded-for');
   if (forwarded) return forwarded.split(',')[0].trim();
   return 'unknown';
 }

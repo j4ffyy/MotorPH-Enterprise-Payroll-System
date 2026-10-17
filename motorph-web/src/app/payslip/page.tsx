@@ -85,7 +85,10 @@ export default function PayslipPage() {
             padding: 0 !important;
           }
           /* Hide app navigation, headers, footers, and non-printable blocks */
-          nav, header, footer, .print\\:hidden {
+          nav,
+          header,
+          footer,
+          .print\\:hidden {
             display: none !important;
           }
           /* Force page dimensions and eliminate default browser print margins/headers */
@@ -115,14 +118,17 @@ export default function PayslipPage() {
                 Official Payroll Record
               </span>
               <span className="text-xs text-slate-400">&bull;</span>
-              <span className="text-xs text-slate-500 font-medium">Confidential Employee Payslip</span>
+              <span className="text-xs text-slate-500 font-medium">
+                Confidential Employee Payslip
+              </span>
             </div>
             <h1 className="text-2xl font-extrabold text-[#0F1E36] tracking-tight flex items-center gap-2.5">
               <FileText className="text-[#4166F5]" size={26} />
               My Payslip
             </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Individual earnings breakdown, statutory government contributions, and net take-home pay.
+              Individual earnings breakdown, statutory government contributions, and net take-home
+              pay.
             </p>
           </div>
 
@@ -225,7 +231,6 @@ export default function PayslipPage() {
         {/* Printable Official Payslip Sheet */}
         {payslip ? (
           <div className="printable-payslip-container bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm max-w-4xl mx-auto space-y-4">
-            
             {/* Payslip Header */}
             <div className="text-center pb-3 border-b border-slate-200 print:border-black">
               <div className="flex justify-center mb-1.5">
@@ -248,7 +253,9 @@ export default function PayslipPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-3 text-xs border-b border-slate-200 print:border-black bg-slate-50/60 print:bg-transparent rounded-2xl px-5">
               <div className="space-y-1.5">
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Employee Name:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Employee Name:
+                  </span>{' '}
                   <span className="font-extrabold text-[#0F1E36] print:text-black text-sm">
                     {payslip.name}
                   </span>
@@ -258,7 +265,9 @@ export default function PayslipPage() {
                   <strong className="text-slate-800 print:text-black">{payslip.designation}</strong>
                 </div>
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Department:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Department:
+                  </span>{' '}
                   <span className="text-slate-800 print:text-black">{payslip.department}</span>
                 </div>
                 <div>
@@ -271,25 +280,37 @@ export default function PayslipPage() {
 
               <div className="sm:text-right space-y-1.5">
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Employee ID:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Employee ID:
+                  </span>{' '}
                   <span className="font-mono font-extrabold text-[#0F1E36] print:text-black text-sm">
                     #{payslip.eid}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Payroll Cutoff:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Payroll Cutoff:
+                  </span>{' '}
                   <strong className="text-slate-800 print:text-black">
                     {payslip.periodStart} to {payslip.periodEnd}
                   </strong>
                 </div>
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Disbursement Date:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Disbursement Date:
+                  </span>{' '}
                   <span className="text-slate-800 print:text-black">
-                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    {new Date().toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 print:text-gray-700 font-medium">Hourly Base Rate:</span>{' '}
+                  <span className="text-slate-500 print:text-gray-700 font-medium">
+                    Hourly Base Rate:
+                  </span>{' '}
                   <span className="font-mono text-slate-800 print:text-black">
                     {formatPHP(payslip.hourlyRate)}/hr
                   </span>
@@ -308,8 +329,12 @@ export default function PayslipPage() {
                   </h4>
                   <div className="mt-2.5 space-y-1.5 font-mono text-xs">
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Basic Monthly Salary</span>
-                      <span className="text-slate-900 font-semibold">{formatPHP(payslip.basicSalary)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Basic Monthly Salary
+                      </span>
+                      <span className="text-slate-900 font-semibold">
+                        {formatPHP(payslip.basicSalary)}
+                      </span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
                       <span className="text-slate-600 print:text-gray-800 font-sans">
@@ -318,22 +343,34 @@ export default function PayslipPage() {
                       <span className="text-slate-900">{formatPHP(payslip.overtimePay || 0)}</span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Rice Subsidy</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Rice Subsidy
+                      </span>
                       <span className="text-slate-900">{formatPHP(payslip.riceSubsidy || 0)}</span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Phone Allowance</span>
-                      <span className="text-slate-900">{formatPHP(payslip.phoneAllowance || 0)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Phone Allowance
+                      </span>
+                      <span className="text-slate-900">
+                        {formatPHP(payslip.phoneAllowance || 0)}
+                      </span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Clothing Allowance</span>
-                      <span className="text-slate-900">{formatPHP(payslip.clothingAllowance || 0)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Clothing Allowance
+                      </span>
+                      <span className="text-slate-900">
+                        {formatPHP(payslip.clothingAllowance || 0)}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-between pt-2.5 mt-3 border-t-2 border-emerald-300 font-bold text-[#0F1E36] text-sm font-mono">
                   <span className="font-sans">Total Gross Earnings:</span>
-                  <span>{formatPHP((payslip.grossIncome || 0) + (payslip.totalBenefits || 0))}</span>
+                  <span>
+                    {formatPHP((payslip.grossIncome || 0) + (payslip.totalBenefits || 0))}
+                  </span>
                 </div>
               </div>
 
@@ -346,20 +383,36 @@ export default function PayslipPage() {
                   </h4>
                   <div className="mt-2.5 space-y-1.5 font-mono text-xs">
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">SSS Contribution (RA 11199)</span>
-                      <span className="text-slate-900 font-semibold">{formatPHP(payslip.sssContribution)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        SSS Contribution (RA 11199)
+                      </span>
+                      <span className="text-slate-900 font-semibold">
+                        {formatPHP(payslip.sssContribution)}
+                      </span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">PhilHealth (UHC Act 2.5%)</span>
-                      <span className="text-slate-900 font-semibold">{formatPHP(payslip.philhealthContribution)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        PhilHealth (UHC Act 2.5%)
+                      </span>
+                      <span className="text-slate-900 font-semibold">
+                        {formatPHP(payslip.philhealthContribution)}
+                      </span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Pag-IBIG / HDMF (Circ. 460)</span>
-                      <span className="text-slate-900 font-semibold">{formatPHP(payslip.pagibigContribution)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Pag-IBIG / HDMF (Circ. 460)
+                      </span>
+                      <span className="text-slate-900 font-semibold">
+                        {formatPHP(payslip.pagibigContribution)}
+                      </span>
                     </div>
                     <div className="flex justify-between py-0.5 border-b border-slate-100">
-                      <span className="text-slate-600 print:text-gray-800 font-sans">Withholding Tax (TRAIN Law)</span>
-                      <span className="text-slate-900 font-semibold">{formatPHP(payslip.withholdingTax)}</span>
+                      <span className="text-slate-600 print:text-gray-800 font-sans">
+                        Withholding Tax (TRAIN Law)
+                      </span>
+                      <span className="text-slate-900 font-semibold">
+                        {formatPHP(payslip.withholdingTax)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -389,27 +442,36 @@ export default function PayslipPage() {
             <div className="pt-4 border-t border-slate-200 print:border-black grid grid-cols-2 gap-8 text-center text-xs">
               <div>
                 <div className="w-48 mx-auto border-b border-slate-400 print:border-black mb-1.5"></div>
-                <span className="text-slate-600 print:text-black font-medium">Prepared By: Finance / Payroll Officer</span>
+                <span className="text-slate-600 print:text-black font-medium">
+                  Prepared By: Finance / Payroll Officer
+                </span>
               </div>
               <div>
                 <div className="w-48 mx-auto border-b border-slate-400 print:border-black mb-1.5"></div>
-                <span className="text-slate-600 print:text-black font-medium">Received By: {payslip.name}</span>
+                <span className="text-slate-600 print:text-black font-medium">
+                  Received By: {payslip.name}
+                </span>
               </div>
             </div>
-
           </div>
         ) : (
           <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-3">
                 <RefreshCw size={24} className="animate-spin text-[#4166F5]" />
-                <p className="text-sm font-semibold text-slate-600">Calculating your official payslip...</p>
+                <p className="text-sm font-semibold text-slate-600">
+                  Calculating your official payslip...
+                </p>
               </div>
             ) : (
               <div>
                 <FileText size={36} className="mx-auto text-slate-300 mb-2" />
-                <p className="text-sm font-semibold text-slate-700">No payroll record found for this cutoff.</p>
-                <p className="text-xs text-slate-400 mt-1">Select a valid date range and click Update.</p>
+                <p className="text-sm font-semibold text-slate-700">
+                  No payroll record found for this cutoff.
+                </p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Select a valid date range and click Update.
+                </p>
               </div>
             )}
           </div>

@@ -16,10 +16,7 @@ import { successResponse, errorResponse } from '@/lib/apiResponse';
  *   R3 — RBAC: role-scoped response via filterEmployeeResponse()
  *   R5 — PII Minimization: govIds and password stripped per role
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ eid: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ eid: string }> }) {
   try {
     const session = await getSession();
     if (!session) {
@@ -45,9 +42,9 @@ export async function GET(
         components: true,
         variables: true,
         govIds: true,
-        leaves:     { orderBy: { dateFiled: 'desc' }, take: 10 },
-        timesheets: { orderBy: { logDate: 'desc' },   take: 15 },
-        payrolls:   { orderBy: { periodEnd: 'desc' }, take: 6 },
+        leaves: { orderBy: { dateFiled: 'desc' }, take: 10 },
+        timesheets: { orderBy: { logDate: 'desc' }, take: 15 },
+        payrolls: { orderBy: { periodEnd: 'desc' }, take: 6 },
       },
     });
 
@@ -62,7 +59,6 @@ export async function GET(
     );
 
     return successResponse({ employee: safeEmployee });
-
   } catch (error) {
     console.error('Fetch employee detail error:', error);
     return errorResponse('Failed to retrieve employee details', 500);
@@ -79,10 +75,7 @@ export async function GET(
  *   R1 — Audit Logging: captures before/after state for every update
  *   R7 — Body Size: parseBody() enforces 64KB limit
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ eid: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ eid: string }> }) {
   try {
     const session = await getSession();
     if (!session) {
@@ -96,7 +89,7 @@ export async function PUT(
       return errorResponse('Invalid employee ID', 400);
     }
 
-    const isSelf  = session.eid === targetEid;
+    const isSelf = session.eid === targetEid;
     const isAdmin = hasPermission(session, 'write:employee');
 
     // R4: Only self OR elevated role can update
@@ -130,10 +123,10 @@ export async function PUT(
       });
 
       // R1: Audit log self-update
-      await audit('EMPLOYEE_UPDATED', 'EMPLOYEE', targetEid,
-        before as Record<string, unknown>,
-        { phoneNumber: data.phoneNumber, address: data.address }
-      );
+      await audit('EMPLOYEE_UPDATED', 'EMPLOYEE', targetEid, before as Record<string, unknown>, {
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+      });
 
       const { password: _pw, ...safe } = updated as typeof updated & { password?: string };
       return successResponse({ success: true, employee: safe });
@@ -160,43 +153,50 @@ export async function PUT(
       include: { components: true, govIds: true },
     });
 
-    const salary    = data.basicSalary ? Number(data.basicSalary) : undefined;
+    const salary = data.basicSalary ? Number(data.basicSalary) : undefined;
     const dailyRate = salary ? Number((salary / 26).toFixed(2)) : undefined;
     const hourlyRate = dailyRate ? Number((dailyRate / 8).toFixed(2)) : undefined;
 
     const updated = await prisma.employee.update({
       where: { eid: targetEid },
       data: {
-        firstName:    data.firstName,
-        lastName:     data.lastName,
-        birthday:     data.birthday,
-        address:      data.address,
-        phoneNumber:  data.phoneNumber,
-        status:       data.status,
-        role:         data.role,
-        isActive:     data.isActive !== undefined ? data.isActive : undefined,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        birthday: data.birthday,
+        address: data.address,
+        phoneNumber: data.phoneNumber,
+        status: data.status,
+        role: data.role,
+        isActive: data.isActive !== undefined ? data.isActive : undefined,
         designationId: data.designationId ? Number(data.designationId) : undefined,
-        supervisorId:  data.supervisorId  ? Number(data.supervisorId) : undefined,
-        components: salary ? {
-          upsert: {
-            create: {
-              basicSalary: salary,
-              riceSubsidy: Number(data.riceSubsidy) || 1500,
-              phoneAllowance: Number(data.phoneAllowance) || 0,
-              clothingAllowance: Number(data.clothingAllowance) || 0,
-              halfMonthRate: salary / 2,
-              hourlyRate: hourlyRate || 0,
-            },
-            update: {
-              basicSalary: salary,
-              riceSubsidy: data.riceSubsidy !== undefined ? Number(data.riceSubsidy) : undefined,
-              phoneAllowance: data.phoneAllowance !== undefined ? Number(data.phoneAllowance) : undefined,
-              clothingAllowance: data.clothingAllowance !== undefined ? Number(data.clothingAllowance) : undefined,
-              halfMonthRate: salary / 2,
-              hourlyRate: hourlyRate,
-            },
-          },
-        } : undefined,
+        supervisorId: data.supervisorId ? Number(data.supervisorId) : undefined,
+        components: salary
+          ? {
+              upsert: {
+                create: {
+                  basicSalary: salary,
+                  riceSubsidy: Number(data.riceSubsidy) || 1500,
+                  phoneAllowance: Number(data.phoneAllowance) || 0,
+                  clothingAllowance: Number(data.clothingAllowance) || 0,
+                  halfMonthRate: salary / 2,
+                  hourlyRate: hourlyRate || 0,
+                },
+                update: {
+                  basicSalary: salary,
+                  riceSubsidy:
+                    data.riceSubsidy !== undefined ? Number(data.riceSubsidy) : undefined,
+                  phoneAllowance:
+                    data.phoneAllowance !== undefined ? Number(data.phoneAllowance) : undefined,
+                  clothingAllowance:
+                    data.clothingAllowance !== undefined
+                      ? Number(data.clothingAllowance)
+                      : undefined,
+                  halfMonthRate: salary / 2,
+                  hourlyRate: hourlyRate,
+                },
+              },
+            }
+          : undefined,
         govIds: {
           upsert: {
             create: {
@@ -217,19 +217,21 @@ export async function PUT(
     });
 
     // R1: Audit log admin update with before/after
-    const auditAction = data.role !== before?.role ? 'EMPLOYEE_ROLE_CHANGED'
-      : data.isActive === false              ? 'EMPLOYEE_DEACTIVATED'
-      : data.basicSalary !== undefined       ? 'SALARY_UPDATED'
-      : 'EMPLOYEE_UPDATED';
+    const auditAction =
+      data.role !== before?.role
+        ? 'EMPLOYEE_ROLE_CHANGED'
+        : data.isActive === false
+          ? 'EMPLOYEE_DEACTIVATED'
+          : data.basicSalary !== undefined
+            ? 'SALARY_UPDATED'
+            : 'EMPLOYEE_UPDATED';
 
-    await audit(auditAction, 'EMPLOYEE', targetEid,
-      before   as unknown as Record<string, unknown>,
-      { ...data }
-    );
+    await audit(auditAction, 'EMPLOYEE', targetEid, before as unknown as Record<string, unknown>, {
+      ...data,
+    });
 
     const { password: _pw, ...safe } = updated as typeof updated & { password?: string };
     return successResponse({ success: true, employee: safe });
-
   } catch (error) {
     console.error('Update employee error:', error);
     return errorResponse('Failed to update employee', 500);

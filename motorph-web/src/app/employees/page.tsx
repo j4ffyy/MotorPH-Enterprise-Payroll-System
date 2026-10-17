@@ -87,7 +87,8 @@ export default function EmployeesPage() {
   };
 
   const openAddModal = () => {
-    const maxEid = employees.length > 0 ? Math.max(...employees.map((e) => Number(e.eid) || 0)) : 10000;
+    const maxEid =
+      employees.length > 0 ? Math.max(...employees.map((e) => Number(e.eid) || 0)) : 10000;
     const nextEid = maxEid + 1;
     setNewForm({
       eid: String(nextEid),
@@ -137,9 +138,7 @@ export default function EmployeesPage() {
       String(emp.eid).includes(query) ||
       (emp.username && emp.username.toLowerCase().includes(query));
 
-    const matchDept = selectedDept
-      ? emp.designation?.department?.name === selectedDept
-      : true;
+    const matchDept = selectedDept ? emp.designation?.department?.name === selectedDept : true;
 
     return matchSearch && matchDept;
   });
@@ -223,7 +222,9 @@ export default function EmployeesPage() {
                 {loading ? (
                   [...Array(8)].map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td className="py-3 px-4"><div className="h-4 w-12 bg-slate-200 rounded" /></td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-12 bg-slate-200 rounded" />
+                      </td>
                       <td className="py-3 px-4">
                         <div className="h-4 w-32 bg-slate-200 rounded mb-1" />
                         <div className="h-3 w-20 bg-slate-100 rounded" />
@@ -232,10 +233,18 @@ export default function EmployeesPage() {
                         <div className="h-4 w-28 bg-slate-200 rounded mb-1" />
                         <div className="h-3 w-16 bg-slate-100 rounded" />
                       </td>
-                      <td className="py-3 px-4"><div className="h-5 w-16 bg-slate-200 rounded-full" /></td>
-                      <td className="py-3 px-4"><div className="h-4 w-20 bg-slate-200 rounded" /></td>
-                      <td className="py-3 px-4"><div className="h-5 w-16 bg-slate-200 rounded-full" /></td>
-                      <td className="py-3 px-4 text-right"><div className="h-7 w-20 bg-slate-200 rounded-lg ml-auto" /></td>
+                      <td className="py-3 px-4">
+                        <div className="h-5 w-16 bg-slate-200 rounded-full" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-20 bg-slate-200 rounded" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-5 w-16 bg-slate-200 rounded-full" />
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="h-7 w-20 bg-slate-200 rounded-lg ml-auto" />
+                      </td>
                     </tr>
                   ))
                 ) : filteredEmployees.length === 0 ? (
@@ -326,23 +335,33 @@ export default function EmployeesPage() {
                   <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div>
                       <span className="text-slate-500 block">Department</span>
-                      <span className="text-slate-800 font-medium">{selectedEmp.designation?.department?.name}</span>
+                      <span className="text-slate-800 font-medium">
+                        {selectedEmp.designation?.department?.name}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Supervisor</span>
-                      <span className="text-slate-800 font-medium">{selectedEmp.supervisor?.name || 'Executive Level'}</span>
+                      <span className="text-slate-800 font-medium">
+                        {selectedEmp.supervisor?.name || 'Executive Level'}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Work Email</span>
-                      <span className="text-slate-800 font-medium truncate block">{selectedEmp.username}</span>
+                      <span className="text-slate-800 font-medium truncate block">
+                        {selectedEmp.username}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Phone</span>
-                      <span className="text-slate-800 font-medium">{selectedEmp.phoneNumber || 'N/A'}</span>
+                      <span className="text-slate-800 font-medium">
+                        {selectedEmp.phoneNumber || 'N/A'}
+                      </span>
                     </div>
                     <div className="col-span-2">
                       <span className="text-slate-500 block">Address</span>
-                      <span className="text-slate-800 font-medium">{selectedEmp.address || 'N/A'}</span>
+                      <span className="text-slate-800 font-medium">
+                        {selectedEmp.address || 'N/A'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -374,15 +393,21 @@ export default function EmployeesPage() {
                     </div>
                     <div>
                       <span className="text-slate-500 block">Rice Subsidy</span>
-                      <span className="text-slate-700">{formatPHP(selectedEmp.components?.riceSubsidy || 0)}</span>
+                      <span className="text-slate-700">
+                        {formatPHP(selectedEmp.components?.riceSubsidy || 0)}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Phone Allowance</span>
-                      <span className="text-slate-700">{formatPHP(selectedEmp.components?.phoneAllowance || 0)}</span>
+                      <span className="text-slate-700">
+                        {formatPHP(selectedEmp.components?.phoneAllowance || 0)}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 block">Clothing Allowance</span>
-                      <span className="text-slate-700">{formatPHP(selectedEmp.components?.clothingAllowance || 0)}</span>
+                      <span className="text-slate-700">
+                        {formatPHP(selectedEmp.components?.clothingAllowance || 0)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -396,19 +421,27 @@ export default function EmployeesPage() {
                   <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono">
                     <div>
                       <span className="text-slate-500 font-sans block">SSS Number</span>
-                      <span className="text-slate-800 font-semibold">{selectedEmp.govIds?.sssNum || 'None'}</span>
+                      <span className="text-slate-800 font-semibold">
+                        {selectedEmp.govIds?.sssNum || 'None'}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 font-sans block">PhilHealth ID</span>
-                      <span className="text-slate-800 font-semibold">{selectedEmp.govIds?.philhealthNum || 'None'}</span>
+                      <span className="text-slate-800 font-semibold">
+                        {selectedEmp.govIds?.philhealthNum || 'None'}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 font-sans block">TIN</span>
-                      <span className="text-slate-800 font-semibold">{selectedEmp.govIds?.tinNum || 'None'}</span>
+                      <span className="text-slate-800 font-semibold">
+                        {selectedEmp.govIds?.tinNum || 'None'}
+                      </span>
                     </div>
                     <div>
                       <span className="text-slate-500 font-sans block">Pag-IBIG Number</span>
-                      <span className="text-slate-800 font-semibold">{selectedEmp.govIds?.pagibigNum || 'None'}</span>
+                      <span className="text-slate-800 font-semibold">
+                        {selectedEmp.govIds?.pagibigNum || 'None'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -501,7 +534,9 @@ export default function EmployeesPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-600 font-medium block mb-1">Work Email / Username *</label>
+                    <label className="text-slate-600 font-medium block mb-1">
+                      Work Email / Username *
+                    </label>
                     <input
                       type="email"
                       required
@@ -512,7 +547,9 @@ export default function EmployeesPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-600 font-medium block mb-1">Initial Password *</label>
+                    <label className="text-slate-600 font-medium block mb-1">
+                      Initial Password *
+                    </label>
                     <input
                       type="text"
                       required
@@ -525,7 +562,9 @@ export default function EmployeesPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-600 font-medium block mb-1">Basic Monthly Salary (PHP) *</label>
+                    <label className="text-slate-600 font-medium block mb-1">
+                      Basic Monthly Salary (PHP) *
+                    </label>
                     <input
                       type="number"
                       required
@@ -535,7 +574,9 @@ export default function EmployeesPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-slate-600 font-medium block mb-1">Employment Status</label>
+                    <label className="text-slate-600 font-medium block mb-1">
+                      Employment Status
+                    </label>
                     <select
                       value={newForm.status}
                       onChange={(e) => setNewForm({ ...newForm, status: e.target.value })}

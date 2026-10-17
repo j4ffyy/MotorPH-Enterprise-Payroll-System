@@ -51,10 +51,7 @@ export async function POST(request: NextRequest) {
     // ── C3: Parameterized DB Lookup (via Prisma ORM) ────────────────
     const employee = await prisma.employee.findFirst({
       where: {
-        OR: [
-          { username: username.trim() },
-          { eid: Number(username) || -1 },
-        ],
+        OR: [{ username: username.trim() }, { eid: Number(username) || -1 }],
       },
       include: {
         designation: {
@@ -77,7 +74,12 @@ export async function POST(request: NextRequest) {
     if (!isValid) {
       // R1: Audit log failed login attempt (non-repudiation for security events)
       await logAudit({
-        session: { eid: employee.eid, username: employee.username || '', name: '', role: employee.role },
+        session: {
+          eid: employee.eid,
+          username: employee.username || '',
+          name: '',
+          role: employee.role,
+        },
         action: 'LOGIN_FAILED',
         resourceType: 'AUTH',
         resourceId: employee.eid,
@@ -123,7 +125,12 @@ export async function POST(request: NextRequest) {
 
     // R1: Audit log successful login (accountability)
     await logAudit({
-      session: { eid: employee.eid, username: employee.username || '', name: payload.name, role: employee.role },
+      session: {
+        eid: employee.eid,
+        username: employee.username || '',
+        name: payload.name,
+        role: employee.role,
+      },
       action: 'LOGIN_SUCCESS',
       resourceType: 'AUTH',
       resourceId: employee.eid,

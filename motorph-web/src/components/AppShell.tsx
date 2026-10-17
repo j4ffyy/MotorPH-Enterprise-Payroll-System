@@ -143,7 +143,9 @@ export default function AppShell({ children, user }: AppShellProps) {
             <div className="hidden sm:flex flex-col text-right">
               <span className="text-sm font-semibold text-white">{user.name}</span>
               <div className="flex items-center justify-end gap-1.5 mt-0.5">
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getRoleBadgeColor(user.role)}`}>
+                <span
+                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getRoleBadgeColor(user.role)}`}
+                >
                   {user.role}
                 </span>
                 <span className="text-xs text-slate-300">ID: #{user.eid}</span>
@@ -189,7 +191,6 @@ export default function AppShell({ children, user }: AppShellProps) {
                   </Link>
                 );
               })}
-
           </nav>
         </aside>
 

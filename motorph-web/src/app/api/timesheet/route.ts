@@ -103,19 +103,13 @@ export async function PUT(request: Request) {
     const existing = await prisma.timesheet.findFirst({
       where: {
         eid: session.eid,
-        OR: [
-          { logDate },
-          { logOutTime: null },
-        ],
+        OR: [{ logDate }, { logOutTime: null }],
       },
       orderBy: { attendanceId: 'desc' },
     });
 
     if (!existing) {
-      return errorResponse(
-        'No clock-in record found for today. Please clock in first.',
-        404
-      );
+      return errorResponse('No clock-in record found for today. Please clock in first.', 404);
     }
 
     if (existing.logOutTime) {

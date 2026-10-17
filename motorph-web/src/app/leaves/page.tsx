@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation';
 import AppShell from '@/components/AppShell';
 import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth';
 import { LeavesLoading } from '@/components/RouteSkeletons';
-import {
-  CalendarCheck,
-  Plus,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Calendar,
-} from 'lucide-react';
+import { CalendarCheck, Plus, CheckCircle2, XCircle, Clock, Calendar } from 'lucide-react';
 
 export default function LeavesPage() {
   const router = useRouter();
@@ -172,7 +165,9 @@ export default function LeavesPage() {
                       </td>
                       {isManager && (
                         <td className="py-3 px-4 font-medium text-[#0F1E36]">
-                          {l.employee ? `${l.employee.lastName}, ${l.employee.firstName}` : `EID: #${l.eid}`}
+                          {l.employee
+                            ? `${l.employee.lastName}, ${l.employee.firstName}`
+                            : `EID: #${l.eid}`}
                           <div className="text-[10px] text-slate-500 font-normal">
                             {l.employee?.designation?.name}
                           </div>
@@ -189,8 +184,8 @@ export default function LeavesPage() {
                             l.leaveStatus === 'Approved'
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : l.leaveStatus === 'Rejected'
-                              ? 'bg-rose-50 text-rose-700 border-rose-200'
-                              : 'bg-amber-50 text-amber-700 border-amber-200'
+                                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                : 'bg-amber-50 text-amber-700 border-amber-200'
                           }`}
                         >
                           {l.leaveStatus === 'Approved' && <CheckCircle2 size={12} />}
@@ -248,7 +243,9 @@ export default function LeavesPage() {
 
               <form onSubmit={handleApply} className="mt-4 space-y-4 text-xs">
                 <div>
-                  <label className="text-slate-600 font-medium block mb-1">Leave Category / Reason *</label>
+                  <label className="text-slate-600 font-medium block mb-1">
+                    Leave Category / Reason *
+                  </label>
                   <select
                     value={form.reasonForLeave}
                     onChange={(e) => setForm({ ...form, reasonForLeave: e.target.value })}
