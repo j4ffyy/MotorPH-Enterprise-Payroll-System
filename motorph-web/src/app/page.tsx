@@ -7,7 +7,8 @@ import MotorPHLogo from '@/components/MotorPHLogo';
 import { setCachedUser } from '@/lib/clientAuth';
 
 // ─── Animated Canvas Background ────────────────────────────────────────────────
-type ShapeType = 'square' | 'circle' | 'triangle' | 'cross' | 'hexagon' | 'diamond' | 'dash' | 'star';
+type ShapeType =
+  'square' | 'circle' | 'triangle' | 'cross' | 'hexagon' | 'diamond' | 'dash' | 'star';
 
 interface Shape {
   x: number;
@@ -55,8 +56,10 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: Shape) {
       break;
     case 'cross':
       ctx.beginPath();
-      ctx.moveTo(-size / 2, 0); ctx.lineTo(size / 2, 0);
-      ctx.moveTo(0, -size / 2); ctx.lineTo(0, size / 2);
+      ctx.moveTo(-size / 2, 0);
+      ctx.lineTo(size / 2, 0);
+      ctx.moveTo(0, -size / 2);
+      ctx.lineTo(0, size / 2);
       ctx.stroke();
       break;
     case 'hexagon': {
@@ -82,8 +85,10 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: Shape) {
       break;
     case 'dash':
       ctx.beginPath();
-      ctx.moveTo(-size / 2, -3); ctx.lineTo(size / 2, -3);
-      ctx.moveTo(-size / 2, 3);  ctx.lineTo(size / 2, 3);
+      ctx.moveTo(-size / 2, -3);
+      ctx.lineTo(size / 2, -3);
+      ctx.moveTo(-size / 2, 3);
+      ctx.lineTo(size / 2, 3);
       ctx.stroke();
       break;
     case 'star': {
@@ -103,15 +108,15 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: Shape) {
   ctx.restore();
 }
 
-const REPEL_RADIUS = 110;   // px — how far the cursor influence reaches
-const REPEL_FORCE  = 4.5;   // push strength
-const DAMPING      = 0.92;  // how fast shapes slow back down
+const REPEL_RADIUS = 110; // px — how far the cursor influence reaches
+const REPEL_FORCE = 4.5; // push strength
+const DAMPING = 0.92; // how fast shapes slow back down
 
 function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shapesRef = useRef<Shape[]>([]);
-  const rafRef    = useRef<number>(0);
-  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef = useRef<number>(0);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -119,11 +124,20 @@ function AnimatedBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const types: ShapeType[] = ['square', 'circle', 'triangle', 'cross', 'hexagon', 'diamond', 'dash', 'star'];
+    const types: ShapeType[] = [
+      'square',
+      'circle',
+      'triangle',
+      'cross',
+      'hexagon',
+      'diamond',
+      'dash',
+      'star',
+    ];
     const COUNT = 100;
 
     const resize = () => {
-      canvas.width  = window.innerWidth;
+      canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
@@ -143,17 +157,20 @@ function AnimatedBackground() {
     shapesRef.current = Array.from({ length: COUNT }, () => {
       const bvx = (Math.random() - 0.5) * 0.35;
       const bvy = (Math.random() - 0.5) * 0.35;
-      const ba  = 0.18 + Math.random() * 0.27;
+      const ba = 0.18 + Math.random() * 0.27;
       return {
-        x:           Math.random() * window.innerWidth,
-        y:           Math.random() * window.innerHeight,
-        size:        18 + Math.random() * 34,
-        type:        types[Math.floor(Math.random() * types.length)],
-        vx: bvx, vy: bvy,
-        baseVx: bvx, baseVy: bvy,
-        rotation:    Math.random() * Math.PI * 2,
-        rotSpeed:    (Math.random() - 0.5) * 0.010,
-        alpha: ba,   baseAlpha: ba,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 18 + Math.random() * 34,
+        type: types[Math.floor(Math.random() * types.length)],
+        vx: bvx,
+        vy: bvy,
+        baseVx: bvx,
+        baseVy: bvy,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        alpha: ba,
+        baseAlpha: ba,
         highlighted: false,
       };
     });
@@ -165,18 +182,18 @@ function AnimatedBackground() {
 
       for (const s of shapesRef.current) {
         // ── Cursor repulsion ──────────────────────────────────────
-        const dx   = s.x - mx;
-        const dy   = s.y - my;
+        const dx = s.x - mx;
+        const dy = s.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < REPEL_RADIUS && dist > 0.5) {
           // Push away from cursor, stronger when closer
-          const force = (REPEL_RADIUS - dist) / REPEL_RADIUS * REPEL_FORCE;
+          const force = ((REPEL_RADIUS - dist) / REPEL_RADIUS) * REPEL_FORCE;
           s.vx += (dx / dist) * force;
           s.vy += (dy / dist) * force;
           s.highlighted = true;
           s.alpha = Math.min(s.baseAlpha * 2.2, 0.95);
-          s.rotSpeed = s.rotSpeed * 1.08;            // spin faster on touch
+          s.rotSpeed = s.rotSpeed * 1.08; // spin faster on touch
         } else {
           s.highlighted = false;
           // Gently drift back toward base velocity & alpha
@@ -187,15 +204,18 @@ function AnimatedBackground() {
 
         // Speed cap so shapes don't fly off-screen too fast
         const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-        if (speed > 8) { s.vx = (s.vx / speed) * 8; s.vy = (s.vy / speed) * 8; }
+        if (speed > 8) {
+          s.vx = (s.vx / speed) * 8;
+          s.vy = (s.vy / speed) * 8;
+        }
 
         s.x += s.vx;
         s.y += s.vy;
         s.rotation += s.rotSpeed;
 
         // Wrap edges
-        if (s.x < -60) s.x = canvas.width  + 60;
-        if (s.x > canvas.width  + 60) s.x = -60;
+        if (s.x < -60) s.x = canvas.width + 60;
+        if (s.x > canvas.width + 60) s.x = -60;
         if (s.y < -60) s.y = canvas.height + 60;
         if (s.y > canvas.height + 60) s.y = -60;
 
@@ -236,7 +256,9 @@ export default function LoginPage() {
   // By the time the user types credentials and clicks Sign In,
   // the serverless compute is already awake — no cold-start delay.
   useEffect(() => {
-    fetch('/api/cron/keep-alive').catch(() => {/* silent — non-critical */});
+    fetch('/api/cron/keep-alive').catch(() => {
+      /* silent — non-critical */
+    });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -286,7 +308,8 @@ export default function LoginPage() {
             transform: 'translate(-50%, -50%)',
             width: '700px',
             height: '500px',
-            background: 'radial-gradient(ellipse at center, rgba(65,102,245,0.06) 0%, transparent 70%)',
+            background:
+              'radial-gradient(ellipse at center, rgba(65,102,245,0.06) 0%, transparent 70%)',
             borderRadius: '50%',
           }}
         />
@@ -336,9 +359,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Password
-              </label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Password</label>
               <input
                 type="password"
                 required
@@ -409,7 +430,9 @@ export default function LoginPage() {
 
         {/* Footer info */}
         <div className="mt-8 text-center text-xs text-slate-500">
-          <p className="font-medium text-slate-600">MotorPH Enterprise Payroll System — TEAM CTRL+ALT+ELITE</p>
+          <p className="font-medium text-slate-600">
+            MotorPH Enterprise Payroll System — TEAM CTRL+ALT+ELITE
+          </p>
           <p className="text-[11px] text-slate-400 mt-1">
             Mapúa Malayan Digital College &bull; Term 1 AY 2026-2027
           </p>

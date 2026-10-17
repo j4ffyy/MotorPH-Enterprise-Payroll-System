@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { requirePermission, isPayrollAdmin } from '@/lib/rbac';
 import { validate, PayrollCalculateSchema } from '@/lib/validators';
 import { parseBody } from '@/lib/parseBody';
 import { createAuditLogger } from '@/lib/auditLog';
-import { calculateFullPayroll } from '@/lib/payrollCalculator';
+import { PayrollCalculatorService } from '@/lib/payrollCalculator';
 import { getClientIp } from '@/lib/rateLimit';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * POST /api/payroll/calculate
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     // R3: Centralized RBAC — replaces inline `session.role === 'ADMIN' || session.role === 'PAYROLL'`
@@ -57,23 +58,28 @@ export async function POST(request: NextRequest) {
     });
 
     const payrollResults = employees.map((emp) => {
-      const basicSalary       = emp.components?.basicSalary || 25000;
-      const riceSubsidy       = emp.components?.riceSubsidy || 1500;
-      const phoneAllowance    = emp.components?.phoneAllowance || 0;
+      const basicSalary = emp.components?.basicSalary || 25000;
+      const riceSubsidy = emp.components?.riceSubsidy || 1500;
+      const phoneAllowance = emp.components?.phoneAllowance || 0;
       const clothingAllowance = emp.components?.clothingAllowance || 0;
-      const overtimeHours     = emp.variables?.overTime || 0;
-      const holidayPay        = emp.variables?.holidayPay || 0;
-      const performanceBonus  = emp.variables?.performanceBonus || 0;
+      const overtimeHours = emp.variables?.overTime || 0;
+      const holidayPay = emp.variables?.holidayPay || 0;
+      const performanceBonus = emp.variables?.performanceBonus || 0;
 
-      const breakdown = calculateFullPayroll({
-        basicSalary, riceSubsidy, phoneAllowance,
-        clothingAllowance, overtimeHours, holidayPay, performanceBonus,
+      const breakdown = PayrollCalculatorService.calculateFullPayroll({
+        basicSalary,
+        riceSubsidy,
+        phoneAllowance,
+        clothingAllowance,
+        overtimeHours,
+        holidayPay,
+        performanceBonus,
       });
 
       return {
-        eid:         emp.eid,
-        name:        `${emp.lastName}, ${emp.firstName}`,
-        department:  emp.designation?.department?.name || 'Unassigned',
+        eid: emp.eid,
+        name: `${emp.lastName}, ${emp.firstName}`,
+        department: emp.designation?.department?.name || 'Unassigned',
         designation: emp.designation?.name || 'Staff',
         periodStart,
         periodEnd,
@@ -86,18 +92,14 @@ export async function POST(request: NextRequest) {
 
     // R1: Audit log payroll run — critical event for non-repudiation
     const audit = createAuditLogger(session, getClientIp(request));
-    await audit('PAYROLL_CALCULATED', 'PAYROLL',
-      `${periodStart}_${periodEnd}`,
-      null,
-      {
-        periodStart,
-        periodEnd,
-        employeeCount: payrollResults.length,
-        targetEid: targetEid ?? 'ALL',
-      }
-    );
+    await audit('PAYROLL_CALCULATED', 'PAYROLL', `${periodStart}_${periodEnd}`, null, {
+      periodStart,
+      periodEnd,
+      employeeCount: payrollResults.length,
+      targetEid: targetEid ?? 'ALL',
+    });
 
-    return NextResponse.json({
+    return successResponse({
       success: true,
       periodStart,
       periodEnd,
@@ -106,6 +108,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Payroll calculation error:', error);
-    return NextResponse.json({ error: 'Failed to compute payroll' }, { status: 500 });
+    return errorResponse('Failed to compute payroll', 500);
   }
 }

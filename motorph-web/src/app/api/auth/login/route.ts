@@ -6,6 +6,7 @@ import { generateCsrfToken, setCsrfCookie } from '@/lib/csrf';
 import { validate, LoginSchema } from '@/lib/validators';
 import { parseBody } from '@/lib/parseBody';
 import { logAudit } from '@/lib/auditLog';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * POST /api/auth/login
@@ -18,15 +19,6 @@ import { logAudit } from '@/lib/auditLog';
  *   R1 — Audit Logging: LOGIN_SUCCESS / LOGIN_FAILED events
  *   R2 — Input Validation: LoginSchema (length bounds, trim)
  *   R7 — Body Size: parseBody() enforces 64KB limit
- *
- * Authentication flow:
- *   1. Validate input presence
- *   2. Check IP-based rate limit
- *   3. Look up employee via Prisma (parameterized)
- *   4. Verify bcrypt password hash
- *   5. Issue JWT in HttpOnly+Secure+SameSite=Lax cookie
- *   6. Issue CSRF token in readable SameSite=Strict cookie
- *   7. Reset rate limit counter on success
  */
 export async function POST(request: NextRequest) {
   try {
@@ -59,10 +51,7 @@ export async function POST(request: NextRequest) {
     // ── C3: Parameterized DB Lookup (via Prisma ORM) ────────────────
     const employee = await prisma.employee.findFirst({
       where: {
-        OR: [
-          { username: username.trim() },
-          { eid: Number(username) || -1 },
-        ],
+        OR: [{ username: username.trim() }, { eid: Number(username) || -1 }],
       },
       include: {
         designation: {
@@ -73,17 +62,11 @@ export async function POST(request: NextRequest) {
 
     if (!employee) {
       // Do NOT reveal whether the username exists (prevents user enumeration)
-      return NextResponse.json(
-        { error: 'Invalid username or password' },
-        { status: 401 }
-      );
+      return errorResponse('Invalid username or password', 401);
     }
 
     if (!employee.isActive) {
-      return NextResponse.json(
-        { error: 'Account is deactivated. Please contact HR.' },
-        { status: 403 }
-      );
+      return errorResponse('Account is deactivated. Please contact HR.', 403);
     }
 
     // ── Password Verification ───────────────────────────────────────
@@ -91,16 +74,18 @@ export async function POST(request: NextRequest) {
     if (!isValid) {
       // R1: Audit log failed login attempt (non-repudiation for security events)
       await logAudit({
-        session: { eid: employee.eid, username: employee.username || '', name: '', role: employee.role },
+        session: {
+          eid: employee.eid,
+          username: employee.username || '',
+          name: '',
+          role: employee.role,
+        },
         action: 'LOGIN_FAILED',
         resourceType: 'AUTH',
         resourceId: employee.eid,
         ipAddress: clientIp,
       });
-      return NextResponse.json(
-        { error: 'Invalid username or password' },
-        { status: 401 }
-      );
+      return errorResponse('Invalid username or password', 401);
     }
 
     // ── Successful Login ────────────────────────────────────────────
@@ -118,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     const token = signToken(payload);
 
-    const response = NextResponse.json({
+    const response = successResponse({
       success: true,
       user: payload,
     });
@@ -140,7 +125,12 @@ export async function POST(request: NextRequest) {
 
     // R1: Audit log successful login (accountability)
     await logAudit({
-      session: { eid: employee.eid, username: employee.username || '', name: payload.name, role: employee.role },
+      session: {
+        eid: employee.eid,
+        username: employee.username || '',
+        name: payload.name,
+        role: employee.role,
+      },
       action: 'LOGIN_SUCCESS',
       resourceType: 'AUTH',
       resourceId: employee.eid,
@@ -150,9 +140,6 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     console.error('Login error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected authentication error occurred.' },
-      { status: 500 }
-    );
+    return errorResponse('An unexpected authentication error occurred.', 500);
   }
 }

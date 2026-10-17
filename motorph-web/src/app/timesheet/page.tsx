@@ -7,11 +7,22 @@ import { getCachedUser, setCachedUser, clearCachedUser } from '@/lib/clientAuth'
 import { TimesheetLoading } from '@/components/RouteSkeletons';
 import { Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from 'lucide-react';
 
-// Format YYYY-MM-DD → MM/DD/YYYY
+// Format YYYY-MM-DD → Month DD, YYYY
 function formatDate(dateStr: string): string {
   if (!dateStr) return '—';
-  const [year, month, day] = dateStr.split('-');
-  return `${month}/${day}/${year}`;
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    const [year, month, day] = parts.map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+  }
+  return dateStr;
 }
 
 // Format HH:MM:SS → H:MM AM/PM
@@ -28,7 +39,7 @@ function calcHoursWorked(inTime: string, outTime: string): string {
   if (!inTime || !outTime) return '—';
   const [inH, inM, inS] = inTime.split(':').map(Number);
   const [outH, outM, outS] = outTime.split(':').map(Number);
-  const diff = (outH * 3600 + outM * 60 + outS) - (inH * 3600 + inM * 60 + inS);
+  const diff = outH * 3600 + outM * 60 + outS - (inH * 3600 + inM * 60 + inS);
   if (diff <= 0) return '—';
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
@@ -65,7 +76,8 @@ export default function TimesheetPage() {
         const utcDate = d.toISOString().split('T')[0];
         const localDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const tr = records.find(
-          (r) => r.eid === u?.eid && (r.logDate === utcDate || r.logDate === localDate || !r.logOutTime)
+          (r) =>
+            r.eid === u?.eid && (r.logDate === utcDate || r.logDate === localDate || !r.logOutTime)
         );
         setTodayRecord(tr || null);
       }
@@ -107,7 +119,10 @@ export default function TimesheetPage() {
     try {
       const res = await fetch('/api/timesheet', { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) { showToast(data.error || 'Clock-in failed', 'error'); return; }
+      if (!res.ok) {
+        showToast(data.error || 'Clock-in failed', 'error');
+        return;
+      }
       showToast(data.message || 'Clocked in!', 'success');
       loadTimesheets(currentUser, viewAll);
     } catch {
@@ -122,7 +137,10 @@ export default function TimesheetPage() {
     try {
       const res = await fetch('/api/timesheet', { method: 'PUT' });
       const data = await res.json();
-      if (!res.ok) { showToast(data.error || 'Clock-out failed', 'error'); return; }
+      if (!res.ok) {
+        showToast(data.error || 'Clock-out failed', 'error');
+        return;
+      }
       showToast(data.message || 'Clocked out!', 'success');
       loadTimesheets(currentUser, viewAll);
     } catch {
@@ -135,21 +153,18 @@ export default function TimesheetPage() {
   if (!currentUser) return <TimesheetLoading />;
 
   const isManager = currentUser.role === 'ADMIN' || currentUser.role === 'HR';
-  const hasClockedIn  = !!todayRecord;
+  const hasClockedIn = !!todayRecord;
   const hasClockedOut = !!todayRecord?.logOutTime;
   const colSpan = viewAll ? 7 : 6;
 
   return (
     <AppShell user={currentUser}>
       <div className="space-y-6">
-
         {/* Toast notification */}
         {toast && (
           <div
             className={`fixed top-20 right-6 z-50 px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2 transition-all ${
-              toast.type === 'success'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-rose-600 text-white'
+              toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
             }`}
           >
             {toast.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
@@ -172,7 +187,11 @@ export default function TimesheetPage() {
           <div className="flex items-center gap-3 flex-wrap">
             {isManager && (
               <button
-                onClick={() => { const n = !viewAll; setViewAll(n); loadTimesheets(currentUser, n); }}
+                onClick={() => {
+                  const n = !viewAll;
+                  setViewAll(n);
+                  loadTimesheets(currentUser, n);
+                }}
                 className={`px-3 py-2 rounded-xl text-xs font-medium border transition ${
                   viewAll
                     ? 'bg-[#0F1E36] text-white border-[#0F1E36]'
@@ -219,11 +238,11 @@ export default function TimesheetPage() {
 
         {/* Today's status banner */}
         {hasClockedIn && (
-          <div className={`p-4 rounded-2xl border flex items-center gap-3 text-sm ${
-            hasClockedOut
-              ? 'bg-emerald-50 border-emerald-200'
-              : 'bg-[#EBF0FF] border-[#C7D3FF]'
-          }`}>
+          <div
+            className={`p-4 rounded-2xl border flex items-center gap-3 text-sm ${
+              hasClockedOut ? 'bg-emerald-50 border-emerald-200' : 'bg-[#EBF0FF] border-[#C7D3FF]'
+            }`}
+          >
             <Clock size={18} className={hasClockedOut ? 'text-emerald-600' : 'text-[#4166F5]'} />
             <div>
               <span className="font-semibold text-[#0F1E36]">
@@ -232,7 +251,11 @@ export default function TimesheetPage() {
               <span className="text-slate-500 ml-2 text-xs">
                 In: {formatTime(todayRecord.logTime)}
                 {hasClockedOut && (
-                  <> &nbsp;·&nbsp; Out: {formatTime(todayRecord.logOutTime)} &nbsp;·&nbsp; Hours worked: {calcHoursWorked(todayRecord.logTime, todayRecord.logOutTime)}</>
+                  <>
+                    {' '}
+                    &nbsp;·&nbsp; Out: {formatTime(todayRecord.logOutTime)} &nbsp;·&nbsp; Hours
+                    worked: {calcHoursWorked(todayRecord.logTime, todayRecord.logOutTime)}
+                  </>
                 )}
               </span>
             </div>
@@ -270,26 +293,38 @@ export default function TimesheetPage() {
                 ) : (
                   timesheets.map((ts) => (
                     <tr key={ts.attendanceId} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3.5 px-5 text-slate-400 font-mono text-xs">#{ts.attendanceId}</td>
+                      <td className="py-3.5 px-5 text-slate-400 font-mono text-xs">
+                        #{ts.attendanceId}
+                      </td>
                       {viewAll && (
                         <td className="py-3.5 px-5 font-semibold text-[#0F1E36]">
-                          {ts.employee ? `${ts.employee.lastName}, ${ts.employee.firstName}` : `EID: #${ts.eid}`}
-                          <div className="text-[10px] text-slate-400 font-normal">{ts.employee?.designation?.name}</div>
+                          {ts.employee
+                            ? `${ts.employee.lastName}, ${ts.employee.firstName}`
+                            : `EID: #${ts.eid}`}
+                          <div className="text-[10px] text-slate-400 font-normal">
+                            {ts.employee?.designation?.name}
+                          </div>
                         </td>
                       )}
 
                       {/* Date — MM/DD/YYYY */}
-                      <td className="py-3.5 px-5 text-slate-700 font-medium">{formatDate(ts.logDate)}</td>
+                      <td className="py-3.5 px-5 text-slate-700 font-medium">
+                        {formatDate(ts.logDate)}
+                      </td>
 
                       {/* Clock In — H:MM AM/PM */}
                       <td className="py-3.5 px-5">
-                        <span className="font-mono font-semibold text-[#0F1E36]">{formatTime(ts.logTime)}</span>
+                        <span className="font-mono font-semibold text-[#0F1E36]">
+                          {formatTime(ts.logTime)}
+                        </span>
                       </td>
 
                       {/* Clock Out */}
                       <td className="py-3.5 px-5">
                         {ts.logOutTime ? (
-                          <span className="font-mono font-semibold text-slate-700">{formatTime(ts.logOutTime)}</span>
+                          <span className="font-mono font-semibold text-slate-700">
+                            {formatTime(ts.logOutTime)}
+                          </span>
                         ) : (
                           <span className="text-slate-400 italic text-[11px]">Not yet</span>
                         )}
@@ -315,7 +350,11 @@ export default function TimesheetPage() {
                               : 'bg-amber-50 text-amber-700 border-amber-200'
                           }`}
                         >
-                          {ts.attStatus === 'Present' ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
+                          {ts.attStatus === 'Present' ? (
+                            <CheckCircle2 size={11} />
+                          ) : (
+                            <AlertCircle size={11} />
+                          )}
                           {ts.attStatus}
                         </span>
                       </td>

@@ -1,16 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --accent: #4166F5;
-  --accent-light: #EBF0FF;
-  --accent-dark: #3050D0;
+  --accent: #4166f5;
+  --accent-light: #ebf0ff;
+  --accent-dark: #3050d0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+}
+
+@media print {
+  @page {
+    size: portrait;
+    margin: 8mm;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
 }

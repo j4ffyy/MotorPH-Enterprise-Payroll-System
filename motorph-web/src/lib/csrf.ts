@@ -59,9 +59,7 @@ export async function getCsrfToken(): Promise<string> {
  * @param request The incoming NextRequest.
  * @returns NextResponse with 403 if CSRF is invalid, or null if valid.
  */
-export async function validateCsrf(
-  request: NextRequest
-): Promise<NextResponse | null> {
+export async function validateCsrf(request: NextRequest): Promise<NextResponse | null> {
   // Skip validation for safe methods
   const safeMethod = ['GET', 'HEAD', 'OPTIONS'].includes(request.method);
   if (safeMethod) return null;
@@ -71,24 +69,15 @@ export async function validateCsrf(
   const headerToken = request.headers.get(CSRF_HEADER_NAME);
 
   if (!cookieToken || !headerToken) {
-    return NextResponse.json(
-      { error: 'CSRF token missing. Request rejected.' },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: 'CSRF token missing. Request rejected.' }, { status: 403 });
   }
 
   // Constant-time comparison to prevent timing attacks
   const cookieBuf = Buffer.from(cookieToken, 'hex');
   const headerBuf = Buffer.from(headerToken, 'hex');
 
-  if (
-    cookieBuf.length !== headerBuf.length ||
-    !crypto.timingSafeEqual(cookieBuf, headerBuf)
-  ) {
-    return NextResponse.json(
-      { error: 'CSRF token mismatch. Request rejected.' },
-      { status: 403 }
-    );
+  if (cookieBuf.length !== headerBuf.length || !crypto.timingSafeEqual(cookieBuf, headerBuf)) {
+    return NextResponse.json({ error: 'CSRF token mismatch. Request rejected.' }, { status: 403 });
   }
 
   return null; // Valid — proceed with the request
@@ -105,7 +94,7 @@ export function setCsrfCookie(response: NextResponse, token: string): void {
   response.cookies.set({
     name: CSRF_COOKIE_NAME,
     value: token,
-    httpOnly: false,   // Must be readable by JS (double-submit pattern)
+    httpOnly: false, // Must be readable by JS (double-submit pattern)
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     path: '/',

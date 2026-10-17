@@ -62,12 +62,6 @@ export async function parseBody<T = unknown>(
     const data = JSON.parse(text) as T;
     return [data, null];
   } catch {
-    return [
-      null,
-      NextResponse.json(
-        { error: 'Invalid JSON in request body.' },
-        { status: 400 }
-      ),
-    ];
+    return [null, NextResponse.json({ error: 'Invalid JSON in request body.' }, { status: 400 })];
   }
 }

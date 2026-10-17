@@ -78,11 +78,11 @@ export function calculateWithholdingTax(taxableIncome: number): number {
   } else if (taxableIncome <= 33333.0) {
     return Number(((taxableIncome - 20833.0) * 0.15).toFixed(2));
   } else if (taxableIncome <= 66667.0) {
-    return Number((1875.0 + (taxableIncome - 33333.0) * 0.20).toFixed(2));
+    return Number((1875.0 + (taxableIncome - 33333.0) * 0.2).toFixed(2));
   } else if (taxableIncome <= 166667.0) {
     return Number((8541.67 + (taxableIncome - 66667.0) * 0.25).toFixed(2));
   } else if (taxableIncome <= 666667.0) {
-    return Number((33541.67 + (taxableIncome - 166667.0) * 0.30).toFixed(2));
+    return Number((33541.67 + (taxableIncome - 166667.0) * 0.3).toFixed(2));
   } else {
     return Number((183541.67 + (taxableIncome - 666667.0) * 0.35).toFixed(2));
   }
@@ -108,7 +108,9 @@ export function calculateFullPayroll(input: EmployeePayrollInput): PayrollBreakd
   const overtimePay = Number((hourlyRate * 1.25 * overtimeHours).toFixed(2));
 
   // Gross Income
-  const grossIncome = Number((basicSalary + overtimePay + holidayPay + performanceBonus).toFixed(2));
+  const grossIncome = Number(
+    (basicSalary + overtimePay + holidayPay + performanceBonus).toFixed(2)
+  );
 
   // Total Non-taxable Benefits
   const totalBenefits = Number((riceSubsidy + phoneAllowance + clothingAllowance).toFixed(2));
@@ -153,4 +155,35 @@ export function formatPHP(value: number): string {
     currency: 'PHP',
     minimumFractionDigits: 2,
   }).format(value);
+}
+
+/**
+ * Object-Oriented Service Wrapper for MotorPH Payroll Calculation Engine
+ * Encapsulates statutory computation rules (SSS, PhilHealth, Pag-IBIG, TRAIN Law Tax)
+ * in accordance with modular OOP design principles.
+ */
+export class PayrollCalculatorService {
+  public static calculateSSS(monthlyBasic: number): number {
+    return calculateSSS(monthlyBasic);
+  }
+
+  public static calculatePhilHealth(monthlyBasic: number): number {
+    return calculatePhilHealth(monthlyBasic);
+  }
+
+  public static calculatePagIBIG(monthlyBasic: number): number {
+    return calculatePagIBIG(monthlyBasic);
+  }
+
+  public static calculateWithholdingTax(taxableIncome: number): number {
+    return calculateWithholdingTax(taxableIncome);
+  }
+
+  public static calculateFullPayroll(input: EmployeePayrollInput): PayrollBreakdown {
+    return calculateFullPayroll(input);
+  }
+
+  public static formatPHP(value: number): string {
+    return formatPHP(value);
+  }
 }
