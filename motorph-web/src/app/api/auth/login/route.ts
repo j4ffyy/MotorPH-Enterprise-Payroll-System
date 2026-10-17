@@ -34,6 +34,15 @@ export async function POST(request: NextRequest) {
     const clientIp = getClientIp(request);
     const rateCheck = checkRateLimit(clientIp);
     if (!rateCheck.allowed) {
+      // R1: Audit log the rate-limit trigger — non-repudiation for brute-force attempts
+      // Uses a system-level session since we don't yet know who is attempting to log in
+      await logAudit({
+        session: { eid: 0, username: data.username, name: 'SYSTEM', role: 'SYSTEM' },
+        action: 'RATE_LIMIT_TRIGGERED',
+        resourceType: 'AUTH',
+        resourceId: data.username,
+        ipAddress: clientIp,
+      });
       return NextResponse.json(
         {
           error: `Too many failed attempts. Please try again in ${rateCheck.retryAfterSeconds} seconds.`,
