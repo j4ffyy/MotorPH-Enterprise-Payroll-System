@@ -3,13 +3,25 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   // Generate a cryptographically secure 128-bit random nonce encoded as base64
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const isDev = process.env.NODE_ENV === 'development';
 
   // Build the Content-Security-Policy header with the dynamic per-request nonce
-  // Notice: 'unsafe-inline' is completely omitted for scripts.
-  // 'strict-dynamic' instructs modern browsers to trust scripts loaded by the nonced root script.
+  // In development mode, React requires 'unsafe-eval' for callstack debugging.
+  // In production, 'unsafe-eval' is strictly omitted for maximum security.
+  const scriptSrcValues = [
+    "'self'",
+    `'nonce-${nonce}'`,
+    "'strict-dynamic'",
+    isDev ? "'unsafe-eval'" : '',
+    'https://*.vercel.app',
+    'https://vercel.live',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   const cspHeader = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://*.vercel.app https://vercel.live`,
+    `script-src ${scriptSrcValues}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self' https://fonts.gstatic.com data:",
@@ -22,8 +34,6 @@ export function middleware(request: NextRequest) {
   ].join('; ');
 
   // Clone request headers and pass both 'x-nonce' and 'content-security-policy'
-  // Next.js App Router reads 'x-nonce' and automatically applies the nonce attribute
-  // to every internal script tag it emits for streaming hydration and bundling.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('content-security-policy', cspHeader);
@@ -49,13 +59,6 @@ export const config = {
      * - Image optimization (/_next/image/*)
      * - Static asset files (favicon.ico, robots.txt, etc.)
      */
-    {
-      source:
-        '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)',
-      missing: [
-        { type: 'header', key: 'next-router-prefetch' },
-        { type: 'header', key: 'purpose', value: 'prefetch' },
-      ],
-    },
+    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|logo.svg).*)',
   ],
 };

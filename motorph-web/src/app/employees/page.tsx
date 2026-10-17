@@ -17,6 +17,7 @@ import {
   CreditCard,
   Building,
   Lock,
+  Loader2,
 } from 'lucide-react';
 import { formatPHP } from '@/lib/payrollCalculator';
 
@@ -27,6 +28,7 @@ export default function EmployeesPage() {
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('');
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedEmp, setSelectedEmp] = useState<any | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -113,6 +115,7 @@ export default function EmployeesPage() {
 
   const handleCreateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       const res = await fetch('/api/employees', {
         method: 'POST',
@@ -127,6 +130,8 @@ export default function EmployeesPage() {
       alert('Employee created successfully!');
     } catch (err: any) {
       alert(err.message || 'Error creating employee');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -615,15 +620,18 @@ export default function EmployeesPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium"
+                    disabled={submitting}
+                    className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-[#0F1E36] hover:bg-[#1A2E4E] text-white font-medium shadow-md shadow-[#0F1E36]/20"
+                    disabled={submitting}
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0F1E36] hover:bg-[#1A2E4E] text-white font-medium shadow-md shadow-[#0F1E36]/20 disabled:opacity-60 cursor-pointer"
                   >
-                    Save Employee
+                    {submitting && <Loader2 size={16} className="animate-spin" />}
+                    <span>{submitting ? 'Saving Employee...' : 'Save Employee'}</span>
                   </button>
                 </div>
               </form>

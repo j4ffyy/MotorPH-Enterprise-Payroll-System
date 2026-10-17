@@ -36,12 +36,18 @@ export default function AppShell({ children, user }: AppShellProps) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [navigatingHref, setNavigatingHref] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
       setCachedUser(user);
     }
   }, [user]);
+
+  // Reset navigation loading state when pathname changes
+  useEffect(() => {
+    setNavigatingHref(null);
+  }, [pathname]);
 
   const isAdminOrHR = user.role === 'ADMIN' || user.role === 'HR';
   const isPayrollAdmin = user.role === 'ADMIN' || user.role === 'PAYROLL';
@@ -114,12 +120,12 @@ export default function AppShell({ children, user }: AppShellProps) {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       {/* Top Navbar - Deep Night Blue */}
-      <header className="sticky top-0 z-40 bg-[#0F1E36] text-white shadow-md border-b border-[#1A2E4E] print:hidden">
+      <header className="sticky top-0 z-40 bg-[#0F1E36] text-white shadow-md border-b border-[#1A2E4E]">
         <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10"
+              className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/15 cursor-pointer"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -157,7 +163,7 @@ export default function AppShell({ children, user }: AppShellProps) {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="p-2 rounded-lg text-slate-300 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1"
+              className="p-2 rounded-lg text-slate-300 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1 cursor-pointer"
               title="Sign Out"
             >
               <LogOut size={18} />
@@ -169,25 +175,30 @@ export default function AppShell({ children, user }: AppShellProps) {
       {/* Main Container */}
       <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 flex gap-5">
         {/* Desktop Sidebar Navigation - Clean White Card with Night Blue Accents */}
-        <aside className="hidden lg:block w-52 shrink-0 print:hidden">
+        <aside className="hidden lg:block w-52 shrink-0">
           <nav className="sticky top-24 space-y-1 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-sm">
             {navItems
               .filter((item) => item.visible)
               .map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
+                const isNavigating = navigatingHref === item.href;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    onClick={() => setNavigatingHref(item.href)}
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       isActive
                         ? 'bg-[#0F1E36] text-white shadow-md shadow-[#0F1E36]/20'
                         : 'text-slate-600 hover:text-[#0F1E36] hover:bg-slate-100'
                     }`}
                   >
-                    <Icon size={18} className={isActive ? 'text-[#a5baff]' : 'text-slate-500'} />
-                    <span>{item.label}</span>
+                    <div className="flex items-center gap-3">
+                      <Icon size={18} className={isActive ? 'text-[#a5baff]' : 'text-slate-500'} />
+                      <span>{item.label}</span>
+                    </div>
+                    {isNavigating && <Loader2 size={16} className="animate-spin text-[#4166F5]" />}
                   </Link>
                 );
               })}
@@ -206,7 +217,7 @@ export default function AppShell({ children, user }: AppShellProps) {
                 <span className="font-bold text-[#0F1E36]">Navigation</span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-1 rounded-lg text-slate-500 hover:text-slate-900"
+                  className="p-1 rounded-lg text-slate-500 hover:text-slate-900 cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -217,19 +228,28 @@ export default function AppShell({ children, user }: AppShellProps) {
                   .map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
+                    const isNavigating = navigatingHref === item.href;
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                        onClick={() => {
+                          setNavigatingHref(item.href);
+                          setMobileMenuOpen(false);
+                        }}
+                        className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                           isActive
                             ? 'bg-[#0F1E36] text-white'
                             : 'text-slate-600 hover:text-[#0F1E36] hover:bg-slate-100'
                         }`}
                       >
-                        <Icon size={18} />
-                        <span>{item.label}</span>
+                        <div className="flex items-center gap-3">
+                          <Icon size={18} />
+                          <span>{item.label}</span>
+                        </div>
+                        {isNavigating && (
+                          <Loader2 size={16} className="animate-spin text-[#4166F5]" />
+                        )}
                       </Link>
                     );
                   })}
