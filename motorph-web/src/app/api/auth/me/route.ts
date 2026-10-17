@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession, getCurrentEmployee } from '@/lib/auth';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * GET /api/auth/me
@@ -13,7 +14,7 @@ import { getSession, getCurrentEmployee } from '@/lib/auth';
 export async function GET() {
   const session = await getSession();
   if (!session) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    return successResponse({ authenticated: false }, 200);
   }
 
   const employee = await getCurrentEmployee();
@@ -49,9 +50,10 @@ export async function GET() {
       })()
     : null;
 
-  return NextResponse.json({
+  return successResponse({
     authenticated: true,
     user: session,
     employee: safeEmployee,
   });
 }
+

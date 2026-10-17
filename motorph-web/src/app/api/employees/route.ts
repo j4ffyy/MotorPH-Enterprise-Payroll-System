@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession, hashPassword } from '@/lib/auth';
-import { requirePermission, requireSelfOrElevated, filterEmployeeResponse } from '@/lib/rbac';
+import { requirePermission, filterEmployeeResponse } from '@/lib/rbac';
 import { validate, CreateEmployeeSchema } from '@/lib/validators';
 import { parseBody } from '@/lib/parseBody';
 import { createAuditLogger } from '@/lib/auditLog';
 import { getClientIp } from '@/lib/rateLimit';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * GET /api/employees
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     // R3: Centralized RBAC — replaces inline `session.role === 'EMPLOYEE'` check
@@ -67,14 +68,14 @@ export async function GET(request: NextRequest) {
       filterEmployeeResponse(emp as unknown as Record<string, unknown>, session)
     );
 
-    const response = NextResponse.json({ employees: filtered });
+    const res = successResponse({ employees: filtered });
     // Cache private — not for CDN/shared caches (contains PII)
-    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
-    return response;
+    res.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
+    return res;
 
   } catch (error) {
     console.error('Fetch employees error:', error);
-    return NextResponse.json({ error: 'Failed to retrieve employees' }, { status: 500 });
+    return errorResponse('Failed to retrieve employees', 500);
   }
 }
 
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session || (session.role !== 'ADMIN' && session.role !== 'HR')) {
-      return NextResponse.json({ error: 'Unauthorized. HR/Admin access required.' }, { status: 403 });
+      return errorResponse('Unauthorized. HR/Admin access required.', 403);
     }
 
     // R3: Centralized permission check
@@ -124,10 +125,7 @@ export async function POST(request: NextRequest) {
 
     const existing = await prisma.employee.findUnique({ where: { eid: finalEid } });
     if (existing) {
-      return NextResponse.json(
-        { error: `Employee ID ${finalEid} already exists` },
-        { status: 400 }
-      );
+      return errorResponse(`Employee ID ${finalEid} already exists`, 400);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -182,10 +180,10 @@ export async function POST(request: NextRequest) {
 
     // R5: Strip password from response
     const { password: _pw, ...safeEmployee } = newEmployee as typeof newEmployee & { password?: string };
-    return NextResponse.json({ success: true, employee: safeEmployee });
+    return successResponse({ success: true, employee: safeEmployee }, 201);
 
   } catch (error) {
     console.error('Create employee error:', error);
-    return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 });
+    return errorResponse('Failed to create employee', 500);
   }
 }

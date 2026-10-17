@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { requirePermission, isPayrollAdmin } from '@/lib/rbac';
 import { validate, PayrollCalculateSchema } from '@/lib/validators';
 import { parseBody } from '@/lib/parseBody';
 import { createAuditLogger } from '@/lib/auditLog';
-import { calculateFullPayroll } from '@/lib/payrollCalculator';
+import { PayrollCalculatorService } from '@/lib/payrollCalculator';
 import { getClientIp } from '@/lib/rateLimit';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * POST /api/payroll/calculate
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     // R3: Centralized RBAC — replaces inline `session.role === 'ADMIN' || session.role === 'PAYROLL'`
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       const holidayPay        = emp.variables?.holidayPay || 0;
       const performanceBonus  = emp.variables?.performanceBonus || 0;
 
-      const breakdown = calculateFullPayroll({
+      const breakdown = PayrollCalculatorService.calculateFullPayroll({
         basicSalary, riceSubsidy, phoneAllowance,
         clothingAllowance, overtimeHours, holidayPay, performanceBonus,
       });
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    return NextResponse.json({
+    return successResponse({
       success: true,
       periodStart,
       periodEnd,
@@ -106,6 +107,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Payroll calculation error:', error);
-    return NextResponse.json({ error: 'Failed to compute payroll' }, { status: 500 });
+    return errorResponse('Failed to compute payroll', 500);
   }
 }

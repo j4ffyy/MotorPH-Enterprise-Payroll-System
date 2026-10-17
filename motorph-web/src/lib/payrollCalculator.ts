@@ -154,3 +154,35 @@ export function formatPHP(value: number): string {
     minimumFractionDigits: 2,
   }).format(value);
 }
+
+/**
+ * Object-Oriented Service Wrapper for MotorPH Payroll Calculation Engine
+ * Encapsulates statutory computation rules (SSS, PhilHealth, Pag-IBIG, TRAIN Law Tax)
+ * in accordance with modular OOP design principles.
+ */
+export class PayrollCalculatorService {
+  public static calculateSSS(monthlyBasic: number): number {
+    return calculateSSS(monthlyBasic);
+  }
+
+  public static calculatePhilHealth(monthlyBasic: number): number {
+    return calculatePhilHealth(monthlyBasic);
+  }
+
+  public static calculatePagIBIG(monthlyBasic: number): number {
+    return calculatePagIBIG(monthlyBasic);
+  }
+
+  public static calculateWithholdingTax(taxableIncome: number): number {
+    return calculateWithholdingTax(taxableIncome);
+  }
+
+  public static calculateFullPayroll(input: EmployeePayrollInput): PayrollBreakdown {
+    return calculateFullPayroll(input);
+  }
+
+  public static formatPHP(value: number): string {
+    return formatPHP(value);
+  }
+}
+

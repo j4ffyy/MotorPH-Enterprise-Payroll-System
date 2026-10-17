@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { requireSelfOrElevated, filterEmployeeResponse, hasPermission } from '@/lib/rbac';
@@ -6,6 +6,7 @@ import { validate, UpdateEmployeeAdminSchema, UpdateEmployeeSelfSchema } from '@
 import { parseBody } from '@/lib/parseBody';
 import { createAuditLogger } from '@/lib/auditLog';
 import { getClientIp } from '@/lib/rateLimit';
+import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 /**
  * GET /api/employees/[eid]
@@ -22,19 +23,17 @@ export async function GET(
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     const { eid } = await params;
     const targetEid = Number(eid);
 
     if (isNaN(targetEid)) {
-      return NextResponse.json({ error: 'Invalid employee ID' }, { status: 400 });
+      return errorResponse('Invalid employee ID', 400);
     }
 
     // R4: CRITICAL — Horizontal Privilege Escalation Prevention
-    // EMPLOYEE role cannot read another employee's profile (salary, SSS, TIN, etc.)
-    // Replaces previous inline: if (session.role === 'EMPLOYEE' && session.eid !== targetEid)
     const deny = requireSelfOrElevated(session, targetEid);
     if (deny) return deny;
 
@@ -53,7 +52,7 @@ export async function GET(
     });
 
     if (!employee) {
-      return NextResponse.json({ error: 'Employee not found' }, { status: 404 });
+      return errorResponse('Employee not found', 404);
     }
 
     // R5: Strip govIds/password based on requesting role
@@ -62,11 +61,11 @@ export async function GET(
       session
     );
 
-    return NextResponse.json({ employee: safeEmployee });
+    return successResponse({ employee: safeEmployee });
 
   } catch (error) {
     console.error('Fetch employee detail error:', error);
-    return NextResponse.json({ error: 'Failed to retrieve employee details' }, { status: 500 });
+    return errorResponse('Failed to retrieve employee details', 500);
   }
 }
 
@@ -87,14 +86,14 @@ export async function PUT(
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     const { eid } = await params;
     const targetEid = Number(eid);
 
     if (isNaN(targetEid)) {
-      return NextResponse.json({ error: 'Invalid employee ID' }, { status: 400 });
+      return errorResponse('Invalid employee ID', 400);
     }
 
     const isSelf  = session.eid === targetEid;
@@ -102,7 +101,7 @@ export async function PUT(
 
     // R4: Only self OR elevated role can update
     if (!isSelf && !isAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return errorResponse('Forbidden', 403);
     }
 
     // R7: Body size limit
@@ -137,7 +136,7 @@ export async function PUT(
       );
 
       const { password: _pw, ...safe } = updated as typeof updated & { password?: string };
-      return NextResponse.json({ success: true, employee: safe });
+      return successResponse({ success: true, employee: safe });
     }
 
     // R3: Only ADMIN/HR can do full updates
@@ -147,18 +146,12 @@ export async function PUT(
 
     // R3: Salary changes require write:salary permission
     if (data.basicSalary !== undefined && !hasPermission(session, 'write:salary')) {
-      return NextResponse.json(
-        { error: 'Forbidden. Your role cannot modify salary components.' },
-        { status: 403 }
-      );
+      return errorResponse('Forbidden. Your role cannot modify salary components.', 403);
     }
 
     // R3: Role changes require manage:roles permission
     if (data.role !== undefined && !hasPermission(session, 'manage:roles')) {
-      return NextResponse.json(
-        { error: 'Forbidden. Your role cannot change employee roles.' },
-        { status: 403 }
-      );
+      return errorResponse('Forbidden. Your role cannot change employee roles.', 403);
     }
 
     // R1: Capture before state for audit
@@ -235,10 +228,10 @@ export async function PUT(
     );
 
     const { password: _pw, ...safe } = updated as typeof updated & { password?: string };
-    return NextResponse.json({ success: true, employee: safe });
+    return successResponse({ success: true, employee: safe });
 
   } catch (error) {
     console.error('Update employee error:', error);
-    return NextResponse.json({ error: 'Failed to update employee' }, { status: 500 });
+    return errorResponse('Failed to update employee', 500);
   }
 }

@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   FileText,
+  Loader2,
 } from 'lucide-react';
 import MotorPHLogo from './MotorPHLogo';
 
@@ -113,7 +114,7 @@ export default function AppShell({ children, user }: AppShellProps) {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       {/* Top Navbar - Deep Night Blue */}
-      <header className="sticky top-0 z-40 bg-[#0F1E36] text-white shadow-md border-b border-[#1A2E4E]">
+      <header className="sticky top-0 z-40 bg-[#0F1E36] text-white shadow-md border-b border-[#1A2E4E] print:hidden">
         <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -166,7 +167,7 @@ export default function AppShell({ children, user }: AppShellProps) {
       {/* Main Container */}
       <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 flex gap-5">
         {/* Desktop Sidebar Navigation - Clean White Card with Night Blue Accents */}
-        <aside className="hidden lg:block w-52 shrink-0">
+        <aside className="hidden lg:block w-52 shrink-0 print:hidden">
           <nav className="sticky top-24 space-y-1 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-sm">
             {navItems
               .filter((item) => item.visible)
