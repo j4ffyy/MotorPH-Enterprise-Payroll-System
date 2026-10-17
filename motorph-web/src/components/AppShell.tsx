@@ -37,6 +37,7 @@ export default function AppShell({ children, user }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [navigatingHref, setNavigatingHref] = useState<string | null>(null);
+  const [isMinLoading, setIsMinLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -44,10 +45,18 @@ export default function AppShell({ children, user }: AppShellProps) {
     }
   }, [user]);
 
-  // Reset navigation loading state when pathname changes
+  // Handle minimum display timer (1.2 seconds) before hiding loader
   useEffect(() => {
-    setNavigatingHref(null);
-  }, [pathname]);
+    if (!navigatingHref) return;
+
+    setIsMinLoading(true);
+    const timer = setTimeout(() => {
+      setIsMinLoading(false);
+      setNavigatingHref(null);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [navigatingHref, pathname]);
 
   const isAdminOrHR = user.role === 'ADMIN' || user.role === 'HR';
   const isPayrollAdmin = user.role === 'ADMIN' || user.role === 'PAYROLL';
@@ -119,7 +128,7 @@ export default function AppShell({ children, user }: AppShellProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-      {/* Top Navbar - Deep Night Blue */}
+      {/* Top Navbar */}
       <header className="sticky top-0 z-40 bg-[#0F1E36] text-white shadow-md border-b border-[#1A2E4E]">
         <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -144,13 +153,14 @@ export default function AppShell({ children, user }: AppShellProps) {
             </Link>
           </div>
 
-          {/* Right Header: User Info & Logout */}
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col text-right">
               <span className="text-sm font-semibold text-white">{user.name}</span>
               <div className="flex items-center justify-end gap-1.5 mt-0.5">
                 <span
-                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getRoleBadgeColor(user.role)}`}
+                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getRoleBadgeColor(
+                    user.role
+                  )}`}
                 >
                   {user.role}
                 </span>
@@ -173,8 +183,8 @@ export default function AppShell({ children, user }: AppShellProps) {
       </header>
 
       {/* Main Container */}
-      <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 flex gap-5">
-        {/* Desktop Sidebar Navigation - Clean White Card with Night Blue Accents */}
+      <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 flex gap-5 relative">
+        {/* Desktop Sidebar Navigation */}
         <aside className="hidden lg:block w-52 shrink-0">
           <nav className="sticky top-24 space-y-1 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-sm">
             {navItems
@@ -182,13 +192,14 @@ export default function AppShell({ children, user }: AppShellProps) {
               .map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
-                const isNavigating = navigatingHref === item.href;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setNavigatingHref(item.href)}
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    onClick={() => {
+                      if (pathname !== item.href) setNavigatingHref(item.href);
+                    }}
+                    className={`flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       isActive
                         ? 'bg-[#0F1E36] text-white shadow-md shadow-[#0F1E36]/20'
                         : 'text-slate-600 hover:text-[#0F1E36] hover:bg-slate-100'
@@ -198,7 +209,6 @@ export default function AppShell({ children, user }: AppShellProps) {
                       <Icon size={18} className={isActive ? 'text-[#a5baff]' : 'text-slate-500'} />
                       <span>{item.label}</span>
                     </div>
-                    {isNavigating && <Loader2 size={16} className="animate-spin text-[#4166F5]" />}
                   </Link>
                 );
               })}
@@ -212,7 +222,7 @@ export default function AppShell({ children, user }: AppShellProps) {
               className="fixed inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="relative w-72 max-w-xs bg-white h-full p-4 border-r border-slate-200 flex flex-col z-10 shadow-2xl">
+            <div className="relative w-72 max-w-xs bg-white h-full p-4 border-r border-slate-200 flex flex-col z-15 shadow-2xl">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <span className="font-bold text-[#0F1E36]">Navigation</span>
                 <button
@@ -228,16 +238,15 @@ export default function AppShell({ children, user }: AppShellProps) {
                   .map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
-                    const isNavigating = navigatingHref === item.href;
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
                         onClick={() => {
-                          setNavigatingHref(item.href);
+                          if (pathname !== item.href) setNavigatingHref(item.href);
                           setMobileMenuOpen(false);
                         }}
-                        className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                        className={`flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                           isActive
                             ? 'bg-[#0F1E36] text-white'
                             : 'text-slate-600 hover:text-[#0F1E36] hover:bg-slate-100'
@@ -247,9 +256,6 @@ export default function AppShell({ children, user }: AppShellProps) {
                           <Icon size={18} />
                           <span>{item.label}</span>
                         </div>
-                        {isNavigating && (
-                          <Loader2 size={16} className="animate-spin text-[#4166F5]" />
-                        )}
                       </Link>
                     );
                   })}
@@ -258,8 +264,18 @@ export default function AppShell({ children, user }: AppShellProps) {
           </div>
         )}
 
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0">{children}</main>
+        {/* Main Content Area with the Payroll Engine-style Centered Loader */}
+        <main className="flex-1 min-w-0 relative">
+          {(navigatingHref || isMinLoading) && (
+            <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-xs z-50 flex items-center justify-center rounded-3xl min-h-[500px]">
+              <div className="bg-white px-8 py-6 rounded-2xl shadow-xl border border-slate-200 flex flex-col items-center gap-3">
+                <Loader2 className="w-8 h-8 animate-spin text-[#3456D4]" />
+                <span className="text-sm font-medium text-slate-600">Loading module data...</span>
+              </div>
+            </div>
+          )}
+          {children}
+        </main>
       </div>
     </div>
   );
