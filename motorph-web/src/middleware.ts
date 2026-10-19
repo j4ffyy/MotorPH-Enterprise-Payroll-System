@@ -6,15 +6,24 @@ export function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV === 'development';
 
   // Build the Content-Security-Policy header with the dynamic per-request nonce
-  // In development mode, React requires 'unsafe-eval' for callstack debugging.
-  // In production, 'unsafe-eval' is strictly omitted for maximum security.
+  // In development mode, React requires 'unsafe-eval' for callstack debugging and 'unsafe-inline' for style injection.
+  // In production, 'unsafe-eval' and 'unsafe-inline' are strictly omitted for maximum security and OWASP ZAP compliance.
   const scriptSrcValues = [
     "'self'",
     `'nonce-${nonce}'`,
     "'strict-dynamic'",
     isDev ? "'unsafe-eval'" : '',
-    'https://*.vercel.app',
+    'https://motorph-eps.vercel.app',
     'https://vercel.live',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const styleSrcValues = [
+    "'self'",
+    `'nonce-${nonce}'`,
+    'https://fonts.googleapis.com',
+    isDev ? "'unsafe-inline'" : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -22,10 +31,10 @@ export function middleware(request: NextRequest) {
   const cspHeader = [
     "default-src 'self'",
     `script-src ${scriptSrcValues}`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https:",
+    `style-src ${styleSrcValues}`,
+    "img-src 'self' data: blob: https://motorph-eps.vercel.app",
     "font-src 'self' https://fonts.gstatic.com data:",
-    "connect-src 'self' https://*.neon.tech https://*.vercel-insights.com https://vitals.vercel-insights.com https://vercel.live wss://ws-us3.pusher.com",
+    "connect-src 'self' https://motorph-eps.vercel.app https://vitals.vercel-insights.com https://vercel.live",
     "frame-ancestors 'none'",
     "object-src 'none'",
     "base-uri 'self'",

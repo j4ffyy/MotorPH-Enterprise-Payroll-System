@@ -238,8 +238,7 @@ function AnimatedBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0 }}
+      className="absolute inset-0 w-full h-full pointer-events-none z-0"
     />
   );
 }
@@ -295,23 +294,11 @@ export default function LoginPage() {
       <AnimatedBackground />
 
       {/* Soft radial glow behind the card */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '700px',
-            height: '500px',
-            background:
-              'radial-gradient(ellipse at center, rgba(65,102,245,0.06) 0%, transparent 70%)',
-            borderRadius: '50%',
-          }}
-        />
+      <div className="absolute inset-0 pointer-events-none z-[1]">
+        <div className="hero-radial-glow" />
       </div>
 
-      <div className="w-full max-w-md relative" style={{ zIndex: 2 }}>
+      <div className="w-full max-w-md relative z-[2]">
         {/* Brand Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl shadow-[#4166F5]/20 mb-4 overflow-hidden">

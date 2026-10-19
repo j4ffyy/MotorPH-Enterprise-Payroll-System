@@ -417,7 +417,7 @@ export default function PayrollPage() {
 
           {/* Premium Multi-Tier Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse" style={{ minWidth: '1160px' }}>
+            <table className="w-full min-w-[1160px] text-left border-collapse">
               <thead>
                 {/* Master Group Tier Header */}
                 <tr className="border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider">
