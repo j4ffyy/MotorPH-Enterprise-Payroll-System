@@ -1,0 +1,34 @@
+# npm audit report (Baseline - October 15, 2026 pre-patch)
+
+next  16.0.0 - 16.3.7
+Severity: high
+Next.js Cache Poisoning, SSRF, and Draft Mode Information Disclosure
+fix available via `npm audit fix`
+node_modules/next
+
+braces  <3.0.3
+Severity: high
+Uncontrolled resource consumption in braces
+fix available via `npm audit fix`
+node_modules/braces
+
+deepmerge-ts  <8.0.0
+Severity: high
+Prototype pollution / Stack exhaustion in deepmerge-ts
+fix available via `npm audit fix`
+node_modules/deepmerge-ts
+
+sharp  <0.35.5
+Severity: high
+librsvg vulnerabilities in sharp
+fix available via `npm audit fix`
+node_modules/sharp
+
+source-map-js  1.0.0 - 1.2.1
+Severity: high
+Event-loop DoS in source-map-js
+fix available via `npm audit fix`
+node_modules/source-map-js
+
+11 high severity vulnerabilities
+

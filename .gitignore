@@ -1,2 +1,10 @@
 # Legacy Java project — excluded from repo
 /MotorPH_EPS_AOOP_Latest/
+
+# Private assessment and evaluation packages (shared directly via view links only)
+*.xlsx
+*.xlsx.bak
+**/terminal assessment files/
+**/final test results/
+**/old test results/
+implementation_log_dump.txt

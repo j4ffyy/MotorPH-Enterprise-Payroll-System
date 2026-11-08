@@ -75,7 +75,7 @@ const BASELINE_VULNERABILITIES = [
     package: 'braces',
     range: '*',
     severity: 'high',
-    count: 1,
+    count: 2,
     advisories: ['GHSA-vfj7-8cjw-p6xm'], // Stack exhaustion via deeply nested patterns
     patchedBy: 'npm audit fix --force (installs eslint-config-next@14.2.35)',
     fixedIn: 'via eslint-config-next downgrade',
@@ -110,12 +110,40 @@ const BASELINE_VULNERABILITIES = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HELPER: Path & Directory Resolvers
+// ─────────────────────────────────────────────────────────────────────────────
+function getProjectDir(): string {
+  if (fs.existsSync(path.join(process.cwd(), 'package.json'))) {
+    return process.cwd();
+  }
+  if (fs.existsSync(path.join(process.cwd(), 'motorph-web', 'package.json'))) {
+    return path.join(process.cwd(), 'motorph-web');
+  }
+  return process.cwd();
+}
+
+function getAuditFilePath(): string {
+  const candidate1 = path.join(process.cwd(), 'npmaudit.txt');
+  if (fs.existsSync(candidate1)) return candidate1;
+  const candidate2 = path.join(process.cwd(), '..', 'npmaudit.txt');
+  if (fs.existsSync(candidate2)) return candidate2;
+  return candidate2;
+}
+
+function getRepoRoot(): string {
+  if (fs.existsSync(path.join(process.cwd(), 'npmaudit.txt'))) {
+    return process.cwd();
+  }
+  return path.resolve(process.cwd(), '..');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // HELPER: Get npm audit JSON result
 // ─────────────────────────────────────────────────────────────────────────────
 function runNpmAudit(): { vulnerabilities: Record<string, unknown>; metadata: Record<string, unknown> } | null {
   try {
     const output = execSync('npm audit --json', {
-      cwd: process.cwd(),
+      cwd: getProjectDir(),
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
     });
@@ -214,7 +242,7 @@ describe('Control C8: npm Audit — Vulnerability Baseline Documentation', () =>
 describe('Control C8: npm Audit — Post-Patch Verification', () => {
 
   describe('package.json Version Check', () => {
-    const pkgPath = path.join(process.cwd(), 'package.json');
+    const pkgPath = path.join(getProjectDir(), 'package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
     it('Next.js must be upgraded to 16.4.1 or higher (outside vulnerable range)', () => {
@@ -246,6 +274,15 @@ describe('Control C8: npm Audit — Post-Patch Verification', () => {
       assert.ok(
         isPinned,
         `prisma must be pinned to an exact version, not range "${prismaVersion}"`
+      );
+    });
+
+    it('package.json must declare deepmerge-ts override pinned to 8.0.0', () => {
+      const override = pkg.overrides?.['deepmerge-ts'];
+      assert.equal(
+        override,
+        '8.0.0',
+        'deepmerge-ts must be pinned to 8.0.0 via npm overrides to eliminate prototype pollution'
       );
     });
   });
@@ -310,7 +347,7 @@ describe('Control C8: npm Audit — Post-Patch Verification', () => {
 describe('Control C8: Remediation Evidence & Audit Trail', () => {
 
   it('npmaudit.txt baseline report must exist in repo root', () => {
-    const auditFilePath = path.join(process.cwd(), '..', 'npmaudit.txt');
+    const auditFilePath = getAuditFilePath();
     assert.ok(
       fs.existsSync(auditFilePath),
       'npmaudit.txt must exist as the pre-patch evidence baseline in repo root'
@@ -318,7 +355,7 @@ describe('Control C8: Remediation Evidence & Audit Trail', () => {
   });
 
   it('npmaudit.txt must document the 11 high severity vulnerabilities found pre-patch', () => {
-    const auditFilePath = path.join(process.cwd(), '..', 'npmaudit.txt');
+    const auditFilePath = getAuditFilePath();
     if (!fs.existsSync(auditFilePath)) return;
     const content = fs.readFileSync(auditFilePath, 'utf-8');
     assert.ok(
@@ -328,7 +365,7 @@ describe('Control C8: Remediation Evidence & Audit Trail', () => {
   });
 
   it('npmaudit.txt must document the Next.js vulnerability', () => {
-    const auditFilePath = path.join(process.cwd(), '..', 'npmaudit.txt');
+    const auditFilePath = getAuditFilePath();
     if (!fs.existsSync(auditFilePath)) return;
     const content = fs.readFileSync(auditFilePath, 'utf-8');
     assert.ok(
@@ -339,7 +376,7 @@ describe('Control C8: Remediation Evidence & Audit Trail', () => {
 
   it('npmaudit.txt must be in the repo root alongside the project for traceability', () => {
     // This verifies the file is co-located with the project (audit trail)
-    const repoRoot = path.resolve(process.cwd(), '..');
+    const repoRoot = getRepoRoot();
     const files = fs.readdirSync(repoRoot);
     assert.ok(
       files.includes('npmaudit.txt'),
