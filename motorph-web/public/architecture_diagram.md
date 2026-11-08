@@ -4,11 +4,12 @@
 ```mermaid
 graph TB
     subgraph CLIENT["🌐 Browser / Client Layer"]
-        BROWSER["Next.js 16 React App\nMotorPH EPS UI"]
+        BROWSER["Next.js 16.4.1 React 19 App\nMotorPH EPS UI"]
     end
 
     subgraph EDGE["☁️ Vercel Edge Network"]
         HEADERS["🛡️ R8: Security Headers\nX-Frame-Options: DENY\nX-Content-Type-Options: nosniff\nReferrer-Policy\nPermissions-Policy\nHSTS max-age=63072000"]
+        CRON["⏰ Vercel Cron Job\nGET /api/cron/keep-alive\nPings DB every 4 min\nPrevents Neon cold start"]
     end
 
     subgraph MIDDLEWARE["🔐 Next.js Middleware (src/middleware.ts)"]
@@ -31,11 +32,13 @@ graph TB
     end
 
     subgraph ROUTES["🔌 Next.js API Routes"]
-        LOGIN["/api/auth/login\nBCrypt verify (10 rounds)\nJWT sign → HttpOnly cookie"]
-        EMP["/api/employees\n/api/employees/[eid]"]
-        PAY["/api/payroll\nStatutory computation\nSSS/PhilHealth/Pag-IBIG/BIR"]
-        LEAVES["/api/leaves"]
-        AUDIT["/api/audit-logs\nADMIN only"]
+        LOGIN["/api/auth/login\nBCrypt verify (10 rounds)\nJWT sign → HttpOnly cookie\n+ R1 Audit: LOGIN event"]
+        LOGOUT["/api/auth/logout\nClears JWT + CSRF cookies\n+ R1 Audit: LOGOUT event"]
+        ME["/api/auth/me\nGET: session validation\nR5: strips password + govIds"]
+        EMP["/api/employees\n/api/employees/[eid]\nCRUD with RBAC + IDOR guards"]
+        PAY["/api/payroll/calculate\nStatutory computation\nSSS/PhilHealth/Pag-IBIG/BIR"]
+        LEAVES["/api/leaves\nLeave request CRUD"]
+        TIME["/api/timesheet\nGET: view logs\nPOST: clock-in\nPUT: clock-out"]
     end
 
     subgraph ORM["🗄️ Data Layer"]
@@ -49,6 +52,7 @@ graph TB
 
     %% Edges
     BROWSER -->|"HTTPS request"| EDGE
+    CRON -->|"SELECT 1 keep-alive"| DB
     EDGE -->|"x-nonce header injected"| MIDDLEWARE
     MIDDLEWARE --> RATELIMIT
     RATELIMIT -->|"Pass (≤5 attempts)"| VALIDATION
@@ -59,7 +63,8 @@ graph TB
     RBAC_LAYER -->|"HTTP 403"| BROWSER
     ROUTES --> ORM
     ORM --> DB
-    ROUTES -->|"logAuditEvent()"| AUDITLOG
+    LOGIN -->|"logAuditEvent()"| AUDITLOG
+    LOGOUT -->|"logAuditEvent()"| AUDITLOG
 
     %% Styling
     classDef security fill:#dc2626,stroke:#991b1b,color:#fff,font-weight:bold
@@ -72,18 +77,32 @@ graph TB
     class DB,TABLES db
     class MIDDLEWARE,RATELIMIT,VALIDATION,RBAC_LAYER middleware
     class EDGE edge
-    class ROUTES route
+    class ROUTES,LOGIN,LOGOUT,ME,EMP,PAY,LEAVES,TIME route
 ```
 
 ## Security Pillar Mapping
 
 | Control | Security Pillar | Implementation |
 |---------|----------------|----------------|
-| **R1 AuditLog** | Accountability + Non-Repudiation | Immutable DB records with who/what/when/IP |
+| **R1 AuditLog** | Accountability + Non-Repudiation | Immutable DB records with who/what/when/IP; LOGIN + LOGOUT events captured |
 | **R2 Zod** | Integrity | Schema validation blocks malformed/malicious input |
 | **R3 RBAC** | Confidentiality | Role-scoped data access via JWT claims |
 | **R4 IDOR** | Confidentiality | Self-check prevents horizontal privilege escalation |
-| **R5 PII Filter** | Confidentiality | passwordHash stripped; govIds redacted by role |
+| **R5 PII Filter** | Confidentiality | passwordHash stripped; govIds redacted by role; `/api/auth/me` returns minimal fields |
 | **R6 Rate Limit** | Authenticity | Brute-force prevention on identity verification |
-| **R7 CSRF** | Integrity | Double-submit cookie stops forged state mutations |
+| **R7 CSRF** | Integrity | Double-submit cookie stops forged state mutations; cleared on logout |
 | **R8 Headers/CSP** | Integrity + Confidentiality | Nonce CSP, HSTS, X-Frame-Options, CORS lockdown |
+
+## API Route Inventory
+
+| Route | Methods | Auth Required | Notes |
+|-------|---------|--------------|-------|
+| `/api/auth/login` | POST | ❌ Public | BCrypt + JWT issue |
+| `/api/auth/logout` | POST | ✅ Session | Clears JWT + CSRF cookies; R1 audit |
+| `/api/auth/me` | GET | ✅ Session | Returns safe session fields only (R5) |
+| `/api/employees` | GET, POST | ✅ RBAC | Role-gated CRUD |
+| `/api/employees/[eid]` | GET, PUT, DELETE | ✅ RBAC + IDOR | Self-check enforced |
+| `/api/payroll/calculate` | POST | ✅ RBAC | SSS/PhilHealth/Pag-IBIG/BIR computation |
+| `/api/leaves` | GET, POST, PUT | ✅ RBAC | Leave request management |
+| `/api/timesheet` | GET, POST, PUT | ✅ Session | Clock-in / clock-out / view logs |
+| `/api/cron/keep-alive` | GET | ⚙️ Cron | Neon DB ping — no user auth |
