@@ -32,6 +32,7 @@ Built for **AOOP** & **IAS2** (Information Assurance & Security 2) — Team **CT
 - [🔌 REST API Reference](#-rest-api-reference)
 - [🚀 Local Development & Setup](#-local-development--setup)
 - [👥 Team CTRL+ALT+ELITE](#-team-ctrlaltelite)
+- [💼 Internship Relevance — Website Developer Intern](#-internship-relevance--website-developer-intern)
 
 ---
 
@@ -339,6 +340,96 @@ Navigate to `http://localhost:3000` in your web browser.
 **Group 8 — Mapúa Malayan Digital College (MMDC)**  
 - Advanced Object-Oriented Programming (AOOP)
 - Information Assurance and Security 2 (IAS2)
+
+---
+
+## 💼 Internship Relevance — Website Developer Intern
+
+> This section maps the **MotorPH Enterprise Payroll System** to the **Website Developer Intern** job description  
+> (suitable for BS Information Technology — Software Development, Network & Cybersecurity, Data Analytics).
+
+---
+
+### How This Project Aligns with the Role
+
+#### 🖥️ Front-End & Back-End Web Development
+This project is a **full-stack Next.js 16 web application** built from scratch and deployed to production on Vercel.
+
+| Job Requirement | What Was Built |
+|---|---|
+| Design, develop, and maintain company websites | Built all UI pages: dashboard, employee roster, payroll, payslips, timesheet, and leaves — using Next.js 16, React 19, Tailwind CSS 4, and Lucide React |
+| Implement website features & improve user experience | Role-adaptive sidebar navigation, dark-mode responsive layout, and modal-based employee registration (AppShell.tsx) |
+| Front-end development | React 19 Server Components, Turbopack, responsive dark-mode UI |
+| Back-end development | Next.js App Router API Routes — 13 REST endpoints handling auth, employees, payroll, timesheet, and leaves |
+
+---
+
+#### 🗄️ Database Management & Web Services / API Integration
+| Job Requirement | What Was Built |
+|---|---|
+| Support database management | Designed and managed a Neon Serverless PostgreSQL schema via Prisma 6.19 ORM (employees, payroll, timesheets, leaves, audit_logs tables) |
+| Integration of web services and APIs | Integrated Neon's connection pooling, JWT-based session service, and exposed a fully documented REST API (13 endpoints) consumed by the React frontend |
+
+---
+
+#### 🔐 Cybersecurity Best Practices — Website Security & Data Protection
+This is the most extensively implemented area of the project, covering 8 formally defined security controls (R1–R8):
+
+| Job Requirement | Security Control Implemented |
+|---|---|
+| Implement cybersecurity best practices | 8 discrete security controls (R1–R8) aligned with **OWASP Top 10 (2021)** |
+| Website security | HTTP Security Headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options) — `next.config.ts` |
+| Data protection | PII Minimization: SSS, TIN, PhilHealth, Pag-IBIG, and salary data redacted per role (R5 — `src/lib/pii.ts`) |
+| Prevent unauthorized access | Centralized RBAC Middleware (`requireAuth`, `requireRole`) + Horizontal Privilege Escalation (IDOR) prevention (R3, R4) |
+| Defend against brute-force attacks | Sliding-Window Rate Limiting: 5 failed login attempts per 15-minute window with `429 Too Many Requests` (R6 — `src/lib/rateLimit.ts`) |
+| Defend against CSRF attacks | Double-Submit Cookie CSRF Defense (`motorph_csrf` header + cookie matching on all state-altering requests) (R7 — `src/lib/csrf.ts`) |
+| Secure credential storage | BCrypt password hashing with 10 salt rounds — zero plaintext passwords stored or committed |
+| Secure session management | Stateless JWT tokens in HTTP-only, `SameSite=Strict`, `Secure` cookies |
+| Vulnerability disclosure | RFC 9116 `security.txt` and `robots.txt` PII crawl protection in `public/` |
+
+---
+
+#### 🧪 Website Testing, Debugging & Troubleshooting
+| Job Requirement | What Was Built |
+|---|---|
+| Perform website testing and debugging | **163 automated tests** using Node.js 22 native test runner across 3 test suites |
+| Ensure optimal functionality | 100% pass rate across statutory payroll, baseline security controls, and R1–R8 enterprise controls |
+| Troubleshooting | Identified and resolved IDOR vulnerability (employees accessing others' records), broken rate-limiting logic, and missing CSRF enforcement |
+
+**Test suites:**
+- `payrollCalculator.test.ts` — 19 tests for SSS, PhilHealth, Pag-IBIG, and BIR TRAIN Law statutory accuracy
+- `securityControls.test.ts` — 60 tests for RBAC boundaries, session cookie security, and input sanitization
+- `r1r8Controls.test.ts` — 84 tests verifying all 8 enterprise security controls
+
+---
+
+#### 📊 Website Performance Monitoring & Analytics
+| Job Requirement | What Was Built |
+|---|---|
+| Monitor website performance | Deployed to **Vercel** with built-in edge performance analytics and function execution monitoring |
+| Recommendations for improvements | Security hardening improvements formally documented in `Updated_Security_Implementation_Plan.md` and `implementation_log_dump.txt` |
+| Analyze website traffic and user behavior | Role-adaptive dashboard displays analytics for logged-in users; audit logs record every action with actor, role, IP address, and timestamp for behavioral analysis |
+
+---
+
+#### 📝 Documentation & Development Project Contribution
+| Job Requirement | What Was Built |
+|---|---|
+| Document technical processes | Full project documentation in this README (architecture, security controls matrix, API reference, setup guide) |
+| Contribute to development projects | Contributed to both AOOP (object-oriented software design) and IAS2 (security implementation) coursework projects simultaneously within the same codebase |
+| Software development lifecycle | Followed a structured SDLC: requirements → database schema design → API development → frontend build → security hardening → automated testing → production deployment |
+
+---
+
+#### 🎓 Learning Opportunities Covered
+
+| Learning Area | Evidence in This Project |
+|---|---|
+| **Front-end web development** | React 19, Next.js 16 Server Components, Tailwind CSS 4, responsive dark-mode UI |
+| **Back-end web development** | REST API design, server-side rendering, Prisma ORM, PostgreSQL |
+| **Software development lifecycle & project collaboration** | End-to-end SDLC from schema design to production deployment; group academic project (Team CTRL+ALT+ELITE, Group 8) |
+| **Network security & cybersecurity fundamentals** | OWASP Top 10 mitigations, HSTS, CSP, CSRF, RBAC, rate limiting, IDOR prevention, PII protection — 8 formal controls |
+| **Web analytics & data interpretation** | Audit log trail (actor, role, IP, timestamp), role-based dashboard analytics, payroll data computation and reporting |
 
 ---
 
